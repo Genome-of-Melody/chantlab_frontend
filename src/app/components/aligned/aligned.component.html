@@ -1,91 +1,110 @@
 <div class="alignment">
-    <div cdkDropList class="scrollable" *ngIf="aligned; else progressSpinner" (cdkDropListDropped)="drop($event)">
-        <div class="mode-selector">
-            <h3>Select display mode</h3>
-            <mat-button-toggle-group [(ngModel)]="displayMode" aria-label="Display Mode">
-                <mat-button-toggle value="volpiano">Volpiano</mat-button-toggle>
-                <mat-button-toggle value="raw">Raw</mat-button-toggle>
-            </mat-button-toggle-group>
-        </div>
-        <div *ngFor="let chant of aligned.chants; let volpianoIdx = index" class="card" cdkDrag>
-            <div *ngIf="alignmentPresent[volpianoIdx]">
-                <div *ngIf="alignmentUncollapsed[volpianoIdx]; else collapsed">
-                        <div class="chant">
-                            <div class="title-group" *ngIf="showHeaders">
-                                <div class="alignment-options">
-                                    <button mat-button class="collapse-button" (click)="collapseAlignment(volpianoIdx)">
-                                        <mat-icon>keyboard_arrow_up</mat-icon>
-                                    </button>
-                                    <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
-                                        <mat-icon>close</mat-icon>
-                                    </button>
-                                </div>
-                                <button mat-button class="title-button"
-                                (click)="showDetail(aligned.success.ids[volpianoIdx])">
-                                    {{ aligned.success.sources[volpianoIdx] }}
-                                </button>
-                            </div>
-                            <br>
-                            <div *ngFor="let word of chant; let wordIdx = index" class="word">
-                                <div *ngFor="let syllable of word; let lastSyllable = last; let sylIdx = index" [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
-                                    <div [attr.class]="displayMode">
-                                        <span class="neumes" *ngFor="let neume of syllable.volpiano; let neumeIdx = index">
-                                            <span *ngIf="showColors" [ngStyle]="getColor(neume)">{{ neume }}</span>
-                                            <span *ngIf="showConservation"
-                                                  [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ neume }}</span>
-                                            <span *ngIf="!showColors && !showConservation">{{ neume }}</span>
-                                        </span>
-                                    </div>
-                                    <div *ngIf="showText" class="text">
-                                        <span class="lyric">{{ syllable.text }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+  <div class="controls-wrapper">
+    <!-- Display controls and download -->
+
+    <div class="display-controls">
+      <h3>Display options</h3>
+      <mat-checkbox [(ngModel)]="showHeaders" class="header-checkbox">Show headers</mat-checkbox><br>
+      <mat-checkbox [(ngModel)]="showText" class="text-checkbox">Show text</mat-checkbox><br>
+      <mat-checkbox
+        [(ngModel)]="showColors"
+        (ngModelChange)="showConservation = false"
+        class="color-checkbox">
+        Show colors
+      </mat-checkbox><br>
+      <mat-checkbox
+        [(ngModel)]="showConservation"
+        (ngModelChange)="showColors = false"
+        class="conservation-checkbox">
+        Show conservation
+      </mat-checkbox>
+<!--      <span *ngIf="showConservation" class="conservation-indicator">-->
+<!--        Conservation of chant set: {{ conservationOfSet }}-->
+<!--      </span>-->
+      <br>
+      <button mat-raised-button (click)="downloadAligned()" color="primary" class="download-button">Download</button>
+    </div>
+
+    <div class="mode-selector">
+      <h3>Display mode</h3>
+      <mat-button-toggle-group [(ngModel)]="displayMode" aria-label="Display Mode">
+        <mat-button-toggle value="volpiano">Volpiano</mat-button-toggle>
+        <mat-button-toggle value="raw">Raw</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+
+    <div class="distance-matrix-wrapper">
+      <app-distance-matrix
+        [allDistances]="computeDistances()"
+        [names]="aligned.success.urls"></app-distance-matrix>
+    </div>
+
+  </div>
+
+  <div cdkDropList class="scrollable" *ngIf="aligned; else progressSpinner" (cdkDropListDropped)="drop($event)">
+
+      <div *ngFor="let chant of aligned.chants; let volpianoIdx = index" class="card" cdkDrag>
+        <div *ngIf="alignmentPresent[volpianoIdx]">
+          <div *ngIf="alignmentUncollapsed[volpianoIdx]; else collapsed">
+            <div class="chant">
+              <div class="title-group" *ngIf="showHeaders">
+                <div class="alignment-options">
+                  <button mat-button class="collapse-button" (click)="collapseAlignment(volpianoIdx)">
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                  </button>
+                  <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
+                    <mat-icon>close</mat-icon>
+                  </button>
                 </div>
-                <ng-template #collapsed>
-                    <div class="collapsed-chant">
-                        <div class="title-group" *ngIf="showHeaders">
-                            <div class="alignment-options">
-                                <button mat-button class="collapse-button" (click)="uncollapseAlignment(volpianoIdx)">
-                                    <mat-icon>keyboard_arrow_down</mat-icon>
-                                </button>
-                                <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
-                                    <mat-icon>close</mat-icon>
-                                </button>
-                            </div>
-                            <button mat-button class="title-button"
-                            (click)="showDetail(aligned.success.ids[volpianoIdx])">
-                                {{ aligned.success.sources[volpianoIdx] }}
-                            </button>
-                        </div>
-                    </div>
-                </ng-template>
+                <button mat-button class="title-button"
+                (click)="showDetail(aligned.success.ids[volpianoIdx])">
+                    {{ aligned.success.sources[volpianoIdx] }}
+                </button>
             </div>
-            <div class="detail" *ngIf="visibleDetails[aligned.success.ids[volpianoIdx]]">
-                <app-chant-details [id]="aligned.success.ids[volpianoIdx]"></app-chant-details>
-            </div> 
+            <br>
+            <div *ngFor="let word of chant; let wordIdx = index" class="word">
+              <div *ngFor="let syllable of word; let lastSyllable = last; let sylIdx = index" [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
+                <div [attr.class]="displayMode">
+                  <span class="neumes" *ngFor="let neume of syllable.volpiano; let neumeIdx = index">
+                    <span *ngIf="showColors" [ngStyle]="getColor(neume)">{{ neume }}</span>
+                    <span *ngIf="showConservation"
+                          [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ neume }}</span>
+                    <span *ngIf="!showColors && !showConservation">{{ neume }}</span>
+                  </span>
+                </div>
+                <div *ngIf="showText" class="text">
+                  <span class="lyric">{{ syllable.text }}</span>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #collapsed>
+            <div class="collapsed-chant">
+              <div class="title-group" *ngIf="showHeaders">
+                <div class="alignment-options">
+                  <button mat-button class="collapse-button" (click)="uncollapseAlignment(volpianoIdx)">
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                  </button>
+                  <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+                <button mat-button class="title-button"
+                (click)="showDetail(aligned.success.ids[volpianoIdx])">
+                  {{ aligned.success.sources[volpianoIdx] }}
+                </button>
+              </div>
+            </div>
+          </ng-template>
         </div>
-        <br>
-        <div *ngIf="showConservation" class="conservation-indicator">
-            Conservation of chant set: {{ conservationOfSet }}    
+        <div class="detail" *ngIf="visibleDetails[aligned.success.ids[volpianoIdx]]">
+            <app-chant-details [id]="aligned.success.ids[volpianoIdx]"></app-chant-details>
         </div>
-        <br>
-        <mat-checkbox [(ngModel)]="showHeaders" class="header-checkbox">Show headers</mat-checkbox><br>
-        <mat-checkbox [(ngModel)]="showText" class="text-checkbox">Show text</mat-checkbox><br>
-        <mat-checkbox
-            [(ngModel)]="showColors"
-            (ngModelChange)="showConservation = false"
-            class="color-checkbox">
-            Show colors
-        </mat-checkbox><br>
-        <mat-checkbox
-            [(ngModel)]="showConservation"
-            (ngModelChange)="showColors = false"
-            class="conservation-checkbox">
-            Show conservation
-        </mat-checkbox><br>
-        <button mat-raised-button (click)="downloadAligned()" color="primary" class="download-button">Download</button>
+      </div>
+
     </div>
     <ng-template #progressSpinner>
         <div class="spinner">

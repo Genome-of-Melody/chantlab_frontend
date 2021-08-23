@@ -1,0 +1,15 @@
+
+.distance-matrix-card {
+  width: fit-content;
+  background-color: white;
+}
+
+table.distance-matrix {
+  border: 0px solid black;
+  background-color: white;
+}
+
+td.distance-matrix {
+  border: 1px solid black;
+}
+

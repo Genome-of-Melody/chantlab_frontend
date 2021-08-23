@@ -4,6 +4,7 @@ import { take } from 'rxjs/operators';
 import { CsvTranslateService } from 'src/app/services/csv-translate.service';
 import { SearchFilterService } from 'src/app/services/search-filter.service';
 import { SavedFilterDialogComponent } from '../dialogs/saved-filter-dialog/saved-filter-dialog.component';
+import {IChant} from '../../interfaces/chant.interface';
 
 @Component({
   selector: 'app-search-filter',
@@ -22,6 +23,7 @@ export class SearchFilterComponent implements OnInit {
   checkedOffices: boolean[] = [];
   checkedAllGenres = true;
   checkedAllOffices = true;
+  hideIncompleteChants = true;
 
   visible = false;
 
@@ -37,7 +39,7 @@ export class SearchFilterComponent implements OnInit {
   }
 
   initGenresAndOffices(): void {
-    this.csvTranslateService.getAllValues("genres")
+    this.csvTranslateService.getAllValues('genres')
       .pipe(take(1))
       .subscribe(
         data => {
@@ -48,7 +50,7 @@ export class SearchFilterComponent implements OnInit {
           });
         }
       );
-    this.csvTranslateService.getAllValues("offices")
+    this.csvTranslateService.getAllValues('offices')
       .pipe(take(1))
       .subscribe(
         data => {
@@ -63,28 +65,31 @@ export class SearchFilterComponent implements OnInit {
   }
 
   getFilterSettings(): object {
-    let genres = [];
+    const genres = [];
     for (let g = 0; g < this.checkedGenres.length; g++) {
       if (this.checkedGenres[g]) {
         genres.push(this.genreIds[g]);
       }
     }
 
-    let offices = [];
+    const offices = [];
     for (let o = 0; o < this.checkedOffices.length; o++) {
       if (this.checkedOffices[o]) {
         offices.push(this.officeIds[o]);
       }
     }
 
+    const hideIncomplete = this.hideIncompleteChants;
+
     return {
-      "genres": genres,
-      "offices": offices
+      genres: genres,
+      offices: offices,
+      hideIncomplete: hideIncomplete
     };
   }
 
   saveFilter(showDialog: boolean = true): void {
-    let filterSettings = this.getFilterSettings();
+    const filterSettings = this.getFilterSettings();
     this.searchFilterService.setFilterSettings(filterSettings);
     if (showDialog) {
       this.dialog.open(SavedFilterDialogComponent);
@@ -92,15 +97,14 @@ export class SearchFilterComponent implements OnInit {
   }
 
   checkAllGenres(): void {
-    for (var i=0; i<this.checkedGenres.length; i++) {
+    for (let i = 0; i < this.checkedGenres.length; i++) {
       this.checkedGenres[i] = this.checkedAllGenres;
     }
   }
 
   checkAllOffices(): void {
-    for (var i=0; i<this.checkedOffices.length; i++) {
+    for (let i = 0; i < this.checkedOffices.length; i++) {
       this.checkedOffices[i] = this.checkedAllOffices;
     }
   }
-
 }

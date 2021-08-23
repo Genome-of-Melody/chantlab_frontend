@@ -1,0 +1,11 @@
+<mat-card cdkDrag class="distance-matrix-card">
+  <h3 align="center">Distance matrix</h3>
+  <table class="distance-matrix">
+    <tr class="distance-matrix" *ngFor="let name1 of names">
+      <td class="distance-matrix-header-column">{{ name1 }}</td>
+      <td class="distance-matrix" *ngFor="let name2 of names">
+        {{ allDistances.get(name1).get(name2) }}
+      </td>
+    </tr>
+  </table>
+</mat-card>

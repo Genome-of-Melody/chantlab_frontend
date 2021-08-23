@@ -7,6 +7,7 @@
 .syllable-nomargin {
     display: inline-block;
     height: fit-content;
+    margin-bottom: 0.6em;
 }
 
 .title-group {
@@ -17,6 +18,7 @@
 
 .download-button {
     margin: 20px;
+    width: fit-content;
 }
 
 .scrollable {
@@ -53,4 +55,22 @@
 
 .volpiano {
     font-size: 35px;
+}
+
+/* Layout */
+
+div.controls-wrapper {
+  display: flex;
+}
+
+div.display-controls {
+  display: inline-block;
+  float: left;
+  margin: 20px;
+}
+
+div.distance-matrix-wrapper {
+  display: inline;
+  float: right;
+  margin-right: 120px;
 }

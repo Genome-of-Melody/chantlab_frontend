@@ -8,11 +8,11 @@ export class ConservationProfileService {
   constructor() { }
 
   calculateConservationProfile(volpianos: string[]): object {
-    if (volpianos.length == 0) {
+    if (volpianos.length === 0) {
       return [];
     }
 
-    let conservationProfile = [];
+    const conservationProfile = [];
     let totalConservation = 0;
     let nonZeroConservations = 0;
 
@@ -23,17 +23,17 @@ export class ConservationProfileService {
 
     // loop over the volpianos and calculate the conservation value
     for (let pos = 0; pos < volpianos[0].length; pos++) {
-      let charsInPosition = [];
+      const charsInPosition = [];
       for (let volpianoIdx = 0; volpianoIdx < volpianos.length; volpianoIdx++) {
         charsInPosition.push(volpianos[volpianoIdx][pos]);
       }
-      let conservationInPosition = this.calculateConservationInPosition(charsInPosition);
+      const conservationInPosition = this.calculateConservationInPosition(charsInPosition);
       // append conservation value for current char
       // finish syllable if current char is '|'
       // finish word if current char is '~'
       for (let volpianoIdx = 0; volpianoIdx < volpianos.length; volpianoIdx++) {
-        let lastWordIdx = conservationProfile[volpianoIdx].length - 1;
-        let lastSyllableIdx = conservationProfile[volpianoIdx][lastWordIdx].length - 1;
+        const lastWordIdx = conservationProfile[volpianoIdx].length - 1;
+        const lastSyllableIdx = conservationProfile[volpianoIdx][lastWordIdx].length - 1;
         if (volpianos[volpianoIdx][pos] === '|') {
           conservationProfile[volpianoIdx][lastWordIdx].push([]);
         }
@@ -57,14 +57,14 @@ export class ConservationProfileService {
 
     const conservationOfSet = totalConservation / nonZeroConservations * volpianos.length;
     return {
-      "conservationProfile": conservationProfile,
-      "conservationOfSet": conservationOfSet
+      conservationProfile: conservationProfile,
+      conservationOfSet: conservationOfSet
     };
   }
 
   private calculateConservationInPosition(chars: string[]): object {
     const charNumber = chars.length;
-    let charCounts = {};
+    const charCounts = {};
 
     // calculate the number of occurrences of each character
     chars.forEach(char => {
@@ -77,7 +77,7 @@ export class ConservationProfileService {
     });
 
     // calculate char value for each character
-    let charLevels = {};
+    const charLevels = {};
     const insignificantChars = ['-', '~', '|', '1', '3', '4', '7'];
     Object.keys(charCounts).forEach(key => {
       if (insignificantChars.includes(key)) {

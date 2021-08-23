@@ -26,25 +26,27 @@
           <th>Office</th>
           <th>Dataset name</th>
         </tr>
-        <tr mat-cell
-          class="list-group-item"
-          *ngFor="let chant of chants; let i = index">
-          <td>
-            <mat-checkbox
-              class="margin-right"
-              [(ngModel)]="selected[pageIndex * pageSize + i]">
-            </mat-checkbox>
-          </td>
-          <td>
-            <a [routerLink]="['/chants', chant.id]">
-              {{ chant.incipit }}
-            </a>
-          </td>
-          <td>{{ chant.siglum }}, {{ chant.folio }}, {{ chant.position }}</td>
-          <td>{{ getGenreName(chant.genre_id) }}</td>
-          <td>{{ getOfficeName(chant.office_id) }}</td>
-          <td>{{ chant.dataset_name }}</td>
-        </tr>
+        <ng-container *ngFor="let chant of chants; let i = index">
+          <tr mat-cell
+            class="list-group-item"
+            *ngIf="!(searchFilterComponent.hideIncompleteChants && (!isChantComplete(chant)))">
+            <td>
+              <mat-checkbox
+                class="margin-right"
+                [(ngModel)]="selected[pageIndex * pageSize + i]">
+              </mat-checkbox>
+            </td>
+            <td>
+              <a [routerLink]="['/chants', chant.id]">
+                {{ chant.incipit }}
+              </a>
+            </td>
+            <td>{{ chant.siglum }}, {{ chant.folio }}, {{ chant.position }}</td>
+            <td>{{ getGenreName(chant.genre_id) }}</td>
+            <td>{{ getOfficeName(chant.office_id) }}</td>
+            <td>{{ chant.dataset_name }}</td>
+          </tr>
+        </ng-container>
       </table>
       <mat-paginator #paginator
         [length]="dataLength"

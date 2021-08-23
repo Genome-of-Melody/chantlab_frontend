@@ -19,7 +19,7 @@ export class DataUploadService {
     formData.append('file', fileToUpload, fileToUpload.name);
     formData.append('name', datasetName);
     return this.chantService.uploadData(formData)
-      .pipe(map(() => { 
+      .pipe(map(() => {
         this.dataSourceListService.refreshSources();
         return true;
       }));

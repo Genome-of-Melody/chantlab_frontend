@@ -44,6 +44,7 @@ import { SavedFilterDialogComponent } from './components/dialogs/saved-filter-di
 import { NameOnCreateDatasetComponent } from './components/dialogs/name-on-create-dataset/name-on-create-dataset.component';
 import { MissingDatasetNameDialogComponent } from './components/dialogs/missing-dataset-name-dialog/missing-dataset-name-dialog.component';
 import { DatasetCreatedDialogComponent } from './components/dialogs/dataset-created-dialog/dataset-created-dialog.component';
+import { DistanceMatrixComponent } from './components/distance-matrix/distance-matrix.component';
 
 
 @NgModule({
@@ -70,7 +71,8 @@ import { DatasetCreatedDialogComponent } from './components/dialogs/dataset-crea
     SavedFilterDialogComponent,
     NameOnCreateDatasetComponent,
     MissingDatasetNameDialogComponent,
-    DatasetCreatedDialogComponent
+    DatasetCreatedDialogComponent,
+    DistanceMatrixComponent
   ],
   imports: [
     BrowserModule,

@@ -13,6 +13,7 @@ import { CsvTranslateService } from 'src/app/services/csv-translate.service';
 import { DownloadService } from 'src/app/services/download.service';
 import { NameOnCreateDatasetComponent } from '../dialogs/name-on-create-dataset/name-on-create-dataset.component';
 import { NotEnoughToAlingDialogComponent } from '../dialogs/not-enough-to-aling-dialog/not-enough-to-aling-dialog.component';
+import {SearchFilterComponent} from '../search-filter/search-filter.component';
 
 @Component({
   selector: 'app-chant-list',
@@ -22,6 +23,7 @@ import { NotEnoughToAlingDialogComponent } from '../dialogs/not-enough-to-aling-
 export class ChantListComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(SearchFilterComponent, {static: true}) searchFilterComponent: SearchFilterComponent;
 
   allChants: IChant[];
   chants: IChant[];
@@ -70,15 +72,15 @@ export class ChantListComponent implements OnInit, OnDestroy {
         this.selected = [];
         if (data) {
           this.dataLength = data.length;
-          for (var i=0; i < data.length; i++) {
+          for (let i = 0; i < data.length; i++) {
             this.selected.push(false);
           }
         }
 
         this.pageIndex = event ? event.pageIndex : 0;
         this.pageSize = event ? event.pageSize : 50;
-        var start = this.pageIndex * this.pageSize;
-        var end = (this.pageIndex + 1) * this.pageSize;
+        const start = this.pageIndex * this.pageSize;
+        const end = (this.pageIndex + 1) * this.pageSize;
         if (data) {
           this.chants = data.slice(start, end);
         }
@@ -91,14 +93,14 @@ export class ChantListComponent implements OnInit, OnDestroy {
   }
 
   selectAll(): void {
-    for (var i=0; i<this.selected.length; i++) {
+    for (let i = 0; i < this.selected.length; i++) {
       this.selected[i] = this.selectedAll;
     }
   }
 
   getSelected(): number[] {
-    var checkboxChecked: number[] = [];
-    for (var i = 0; i < this.selected.length; i++) {
+    const checkboxChecked: number[] = [];
+    for (let i = 0; i < this.selected.length; i++) {
       if (this.selected[i]) {
         checkboxChecked.push(this.allChants[i].id);
       }
@@ -109,7 +111,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
 
   align(mode: string): void {
     // get list of selected chants
-    let selected = this.getSelected();
+    const selected = this.getSelected();
     if (selected.length < 2) {
       const dialogRef = this.dialog.open(
         NotEnoughToAlingDialogComponent
@@ -117,7 +119,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let result = this.alignmentService.setMode(mode);
+    const result = this.alignmentService.setMode(mode);
     if (result === 1) {
       // show error
       return;
@@ -128,36 +130,36 @@ export class ChantListComponent implements OnInit, OnDestroy {
   }
 
   getGenreName(genreId: string): string {
-    let genreName = this.csvTranslateService.getGenre(genreId);
+    const genreName = this.csvTranslateService.getGenre(genreId);
     return genreName;
   }
 
   getOfficeName(officeId: string): string {
     // replace a long category with simpler description
-    if (officeId === "office_x") {
-      return "Others";
+    if (officeId === 'office_x') {
+      return 'Others';
     }
 
-    let officeName = this.csvTranslateService.getOffice(officeId);
+    const officeName = this.csvTranslateService.getOffice(officeId);
     return officeName;
   }
 
   export(): void {
-    let selected = this.getSelected();
+    const selected = this.getSelected();
     this.chantExportService.exportChants(selected)
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(
         response => {
-          let blob = new Blob([response], { type: 'text/csv' });
-          this.downloadService.download(blob, "dataset.csv");
+          const blob = new Blob([response], { type: 'text/csv' });
+          this.downloadService.download(blob, 'dataset.csv');
         }
       );
   }
 
   createDataset(): void {
-    let selected = this.getSelected();
+    const selected = this.getSelected();
     if (selected.length < 1) {
-      alert("Select at least one chant");
+      alert('Select at least one chant');
       return;
     }
     let datasetName: string;
@@ -174,6 +176,15 @@ export class ChantListComponent implements OnInit, OnDestroy {
           datasetName = result;
           this.createDatasetService.createDataset(selected, datasetName);
         }
-      )
+      );
   }
+
+  isChantComplete(chant: IChant): boolean {
+    // This condition might get more complex later.
+    if (chant.incipit.endsWith('*')) {
+      return false;
+    }
+    return true;
+  }
+
 }
