@@ -27,4 +27,13 @@ export class DistanceMatrixComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  backgroundColorRGB(distance: number): string {
+    // Assumes distances are numbers between 0 and 1 for now.
+    const brightnessConstant = 170;
+    const rangeCoef = 255.0 - brightnessConstant;
+
+    const greenval = Math.round(rangeCoef * (1 - distance) + brightnessConstant);
+    const redval = Math.round(rangeCoef * distance + brightnessConstant);
+    return '' + redval + ',' + greenval + ',' + brightnessConstant;
+  }
 }

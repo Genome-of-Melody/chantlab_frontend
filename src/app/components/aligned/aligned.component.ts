@@ -243,7 +243,9 @@ export class AlignedComponent implements OnInit {
   }
 
   doShowDistanceMatrix(): void {
-    this.showDistanceMatrix = !this.showDistanceMatrix;
+    if (this.aligned) {
+      this.showDistanceMatrix = !this.showDistanceMatrix;
+    }
   }
   get showDistanceMatrixColor(): string {
     if (this.showDistanceMatrix) { return 'accent'; }

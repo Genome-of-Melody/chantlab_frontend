@@ -29,7 +29,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
   chants: IChant[];
   currentChant?: IChant;
   currentIndex = -1;
-  selected: boolean[];
+  selected: boolean[] = [];
   selectedAll: boolean;
 
   pageEvent = new BehaviorSubject<PageEvent>(null);
@@ -68,13 +68,18 @@ export class ChantListComponent implements OnInit, OnDestroy {
       .subscribe(
       ([data, event]) => {
         this.paginator.firstPage();
-        this.allChants = data;
-        this.selected = [];
-        if (data) {
-          this.dataLength = data.length;
-          for (let i = 0; i < data.length; i++) {
-            this.selected.push(false);
+
+        if (this.allChants !== data) {
+          this.selected = [];
+          if (data) {
+            this.dataLength = data.length;
+            for (let i = 0; i < data.length; i++) {
+              this.selected.push(false);
+            }
+            console.log('Selected: ' + this.selected.length);
+            console.log('N data points: ' + data.length);
           }
+          this.allChants = data;
         }
 
         this.pageIndex = event ? event.pageIndex : 0;
