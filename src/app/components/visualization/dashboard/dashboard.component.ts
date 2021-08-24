@@ -13,23 +13,23 @@ import { ChantService } from 'src/app/services/chant.service';
 export class DashboardComponent implements OnInit, OnDestroy {
 
   melodyStackedHistData: IStackedHistogram[];
-  melodyStackedHistTitle = "Melody Length by Genre";
-  melodyStackedHistGroupName = "dataset";
-  melodyStackedHistXName = "Number of neumes";
-  melodyStackedHistYName = "Number of data";
-  melodyStackedHistFigureID = "melody-stacked-hist";
+  melodyStackedHistTitle = 'Melody Length by Genre';
+  melodyStackedHistGroupName = 'dataset';
+  melodyStackedHistXName = 'Number of neumes';
+  melodyStackedHistYName = 'Number of data';
+  melodyStackedHistFigureID = 'melody-stacked-hist';
 
   textStackedHistData: IStackedHistogram[];
-  textStackedHistTitle = "Text Length by Genre";
-  textStackedHistGroupName = "dataset";
-  textStackedHistXName = "Number of words";
-  textStackedHistYName = "Number of data";
-  textStackedHistFigureID = "text-stacked-hist";
+  textStackedHistTitle = 'Text Length by Genre';
+  textStackedHistGroupName = 'dataset';
+  textStackedHistXName = 'Number of words';
+  textStackedHistYName = 'Number of data';
+  textStackedHistFigureID = 'text-stacked-hist';
 
   multiScatterData: IScatterData[];
-  multiScatterTitle = "Comparison of melody length and text length";
-  multiScatterXName = "Melody length (number of neumes)";
-  multiScatterYName = "Text length (number of words)";
+  multiScatterTitle = 'Comparison of melody length and text length';
+  multiScatterXName = 'Melody length (number of neumes)';
+  multiScatterYName = 'Text length (number of words)';
 
   private readonly componentDestroyed$ = new Subject();
 
@@ -45,24 +45,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
           if (all_data === null || all_data.length === 0) {
             return;
           }
-          let data = all_data.slice(0, 10000);
+          const data = all_data.slice(0, 10000);
           this.melodyStackedHistData = data.map(
             chant => ({
-              "value": chant.volpiano.split("---").length,
-              "group": chant.dataset_name
+              value: chant.volpiano.split('---').length,
+              group: chant.dataset_name
           }));
           this.textStackedHistData = data.map(
             chant => ({
-              "value": chant.full_text.split(" ").length,
-              "group": chant.dataset_name
+              value: chant.full_text.split(' ').length,
+              group: chant.dataset_name
           }));
           this.multiScatterData = data
               .map(
                 chant => ({
-                  "x": chant.volpiano.split('-').join('').length,
-                  "y": chant.full_text.split(" ").length,
-                  "group": chant.dataset_name,
-                  "id": chant.id
+                  x: chant.volpiano.split('-').join('').length,
+                  y: chant.full_text.split(' ').length,
+                  group: chant.dataset_name,
+                  id: chant.id
                 })
           );
         }

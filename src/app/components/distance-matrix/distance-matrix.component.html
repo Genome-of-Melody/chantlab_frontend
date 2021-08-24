@@ -4,7 +4,7 @@
     <tr class="distance-matrix" *ngFor="let name1 of names">
       <td class="distance-matrix-header-column">{{ name1 }}</td>
       <td class="distance-matrix" *ngFor="let name2 of names">
-        {{ allDistances.get(name1).get(name2) }}
+        {{ allDistances.get(name1).get(name2).toFixed(2) }}
       </td>
     </tr>
   </table>

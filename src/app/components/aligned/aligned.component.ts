@@ -29,6 +29,8 @@ export class AlignedComponent implements OnInit {
   showConservation = false;
   showText = true;
 
+  showDistanceMatrix = false;
+
   conservationProfile: number[][][][];
   conservationOfSet: number;
   conservationChanged = true;
@@ -230,9 +232,22 @@ export class AlignedComponent implements OnInit {
     }
     const distanceMap = this.distanceService.alignedAllDistances(
       this.aligned.success.volpianos,
-      this.aligned.success.urls);
+      this.aligned.success.urls,
+      false,
+      this.distanceService.alignedPairwiseRelativePositionsDifferent,
+      {
+        useEffectiveAlignedLength: true,
+        onlyCountNotes: false,
+      });
     return distanceMap;
   }
 
+  doShowDistanceMatrix(): void {
+    this.showDistanceMatrix = !this.showDistanceMatrix;
+  }
+  get showDistanceMatrixColor(): string {
+    if (this.showDistanceMatrix) { return 'accent'; }
+    return 'primary';
+  }
 
 }

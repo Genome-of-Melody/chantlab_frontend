@@ -10,7 +10,7 @@ import { SourceSelectionSavedDialogComponent } from '../dialogs/source-selection
   styleUrls: ['./select-data-source.component.css']
 })
 export class SelectDataSourceComponent implements OnInit {
-  
+
   dataSources: [number, string][];
   selectedDatasets = new Array<boolean>();
   displaySelection = true;
@@ -65,7 +65,7 @@ export class SelectDataSourceComponent implements OnInit {
 
         this.changeSelection(false);
       }
-    )
+    );
   }
 
 }
