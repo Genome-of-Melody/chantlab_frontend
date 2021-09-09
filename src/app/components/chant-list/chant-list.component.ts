@@ -76,8 +76,6 @@ export class ChantListComponent implements OnInit, OnDestroy {
             for (let i = 0; i < data.length; i++) {
               this.selected.push(false);
             }
-            console.log('Selected: ' + this.selected.length);
-            console.log('N data points: ' + data.length);
           }
           this.allChants = data;
         }
@@ -101,6 +99,16 @@ export class ChantListComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.selected.length; i++) {
       this.selected[i] = this.selectedAll;
     }
+  }
+
+  selectNone(): void {
+    for (let i = 0; i < this.selected.length; i++) {
+      this.selected[i] = false;
+    }
+  }
+
+  get nChantsSelected(): number {
+    return this.selected.filter(s => s).length;
   }
 
   getSelected(): number[] {

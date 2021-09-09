@@ -36,4 +36,6 @@ export class DistanceMatrixComponent implements OnInit {
     const redval = Math.round(rangeCoef * distance + brightnessConstant);
     return '' + redval + ',' + greenval + ',' + brightnessConstant;
   }
+
+  showCell(name1: string, name2: string): void {}
 }

@@ -3,8 +3,11 @@
   <table class="distance-matrix">
     <tr class="distance-matrix" *ngFor="let name1 of names">
       <td class="distance-matrix-header-column">{{ name1 }}</td>
-      <td class="distance-matrix" *ngFor="let name2 of names"
-          style="background-color: rgb({{ backgroundColorRGB(allDistances.get(name1).get(name2)) }})">
+      <td class="distance-matrix distance-matrix-cell"
+          *ngFor="let name2 of names"
+          style="background-color: rgb({{ backgroundColorRGB(allDistances.get(name1).get(name2)) }})"
+          (click)="showCell(name1, name2)"
+      >
         {{ allDistances.get(name1).get(name2).toFixed(2) }}
       </td>
     </tr>

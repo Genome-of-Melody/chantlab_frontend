@@ -15,8 +15,10 @@
         class="margin-right"
         (change)="selectAll()"
         [(ngModel)]="selectedAll">
-        Select all
+        Select/deselect all
+        <span style="float: right; margin-left: 20px">(Selected: {{ nChantsSelected }})</span>
       </mat-checkbox>
+
       <table>
         <tr>
           <th></th>

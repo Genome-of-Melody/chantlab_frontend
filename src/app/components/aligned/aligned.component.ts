@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AlignmentService } from 'src/app/services/alignment.service';
@@ -247,9 +247,21 @@ export class AlignedComponent implements OnInit {
       this.showDistanceMatrix = !this.showDistanceMatrix;
     }
   }
+  ensureDistanceMatrixClosed(): void {
+    if (this.showDistanceMatrix) { this.doShowDistanceMatrix(); }
+  }
   get showDistanceMatrixColor(): string {
     if (this.showDistanceMatrix) { return 'accent'; }
     return 'primary';
+  }
+
+  @HostListener('document:keyup', ['$event'])
+  onKeyUp(event: KeyboardEvent): void {
+    console.log('AlignedComponent onKeyUp(' + event.key + ')');
+    if (event.key === 'Escape') {
+      this.ensureDistanceMatrixClosed();
+    }
+    // event.preventDefault();
   }
 
 }

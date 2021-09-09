@@ -113,10 +113,14 @@
         </div>
     </ng-template>
 
-  <div *ngIf="showDistanceMatrix" class="distance-matrix-wrapper">
+  <!-- Display tools -->
+  <div *ngIf="showDistanceMatrix"
+       class="distance-matrix-wrapper"
+       (keyup)="onKeyUp($event)">
     <app-distance-matrix
       [allDistances]="computeDistances()"
-      [names]="aligned.success.urls"></app-distance-matrix>
+      [names]="aligned.success.urls"
+    ></app-distance-matrix>
   </div>
 
 </div>
