@@ -1,0 +1,41 @@
+<mat-card class="settings-group">
+  <mat-card-header class="settings-group">
+    <button *ngIf="alignmentSettingsVisible" mat-button class="collapse-button"
+            (click)="alignmentSettingsVisible = !alignmentSettingsVisible">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+    <button *ngIf="!alignmentSettingsVisible" mat-button class="collapse-button"
+            (click)="alignmentSettingsVisible = !alignmentSettingsVisible">
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+    <span class="settings-group-name">Alignment settings</span>
+  </mat-card-header>
+
+  <mat-card-content *ngIf="alignmentSettingsVisible" class="settings-group">
+    <mat-checkbox class="settings-item-active-element"
+      [(ngModel)]="settingsService.alignmentSettingsService.useTextSeparators">
+      Use word separators when performing alignment
+    </mat-checkbox>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="settings-group">
+  <mat-card-header class="settings-group">
+    <button *ngIf="dashboardSettingsVisible" mat-button class="collapse-button"
+            (click)="dashboardSettingsVisible = !dashboardSettingsVisible">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+    <button *ngIf="!dashboardSettingsVisible" mat-button class="collapse-button"
+            (click)="dashboardSettingsVisible = !dashboardSettingsVisible">
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+    <span class="settings-group-name">Dashboard settings</span>
+  </mat-card-header>
+
+  <mat-card-content *ngIf="dashboardSettingsVisible" class="settings-group">
+    <mat-checkbox class="settings-item-active-element"
+      [(ngModel)]="settingsService.dashboardSettingsService.useGrayscale">
+      Use only grayscale colors (mock setting value)
+    </mat-checkbox>
+  </mat-card-content>
+</mat-card>

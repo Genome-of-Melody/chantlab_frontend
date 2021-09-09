@@ -45,6 +45,8 @@ import { NameOnCreateDatasetComponent } from './components/dialogs/name-on-creat
 import { MissingDatasetNameDialogComponent } from './components/dialogs/missing-dataset-name-dialog/missing-dataset-name-dialog.component';
 import { DatasetCreatedDialogComponent } from './components/dialogs/dataset-created-dialog/dataset-created-dialog.component';
 import { DistanceMatrixComponent } from './components/distance-matrix/distance-matrix.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import {RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -72,7 +74,8 @@ import { DistanceMatrixComponent } from './components/distance-matrix/distance-m
     NameOnCreateDatasetComponent,
     MissingDatasetNameDialogComponent,
     DatasetCreatedDialogComponent,
-    DistanceMatrixComponent
+    DistanceMatrixComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -92,7 +95,8 @@ import { DistanceMatrixComponent } from './components/distance-matrix/distance-m
     MatDividerModule,
     MatProgressSpinnerModule,
     DragDropModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    RouterModule,
   ],
   entryComponents: [
     ChantDetailDialogComponent

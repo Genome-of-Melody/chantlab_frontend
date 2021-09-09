@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class NavigationComponent implements OnInit {
 
-  searchValue: string = "";
+  searchValue = '';
 
   constructor(
     private router: Router
@@ -18,9 +18,9 @@ export class NavigationComponent implements OnInit {
   }
 
   search(event): void {
-    let incipit: string = event.target.value;
+    const incipit: string = event.target.value;
     this.searchValue = null;
-    this.router.navigate(['/chants', {'incipit': incipit}]);
+    this.router.navigate(['/chants', {incipit}]);
   }
 
 }
