@@ -47,6 +47,7 @@ import { DatasetCreatedDialogComponent } from './components/dialogs/dataset-crea
 import { DistanceMatrixComponent } from './components/distance-matrix/distance-matrix.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import {RouterModule} from '@angular/router';
+import { DatasetListComponent } from './components/dataset-list/dataset-list.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import {RouterModule} from '@angular/router';
     MissingDatasetNameDialogComponent,
     DatasetCreatedDialogComponent,
     DistanceMatrixComponent,
-    SettingsComponent
+    SettingsComponent,
+    DatasetListComponent
   ],
   imports: [
     BrowserModule,

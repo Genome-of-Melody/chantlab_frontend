@@ -1,16 +1,26 @@
-<div class="upload-container">
-    <div class="upload-content">
-        <mat-card>
-            <h3>Upload data</h3>
-            <mat-form-field class="dataset-name">
-                <mat-label>Data source name</mat-label>
-                <input matInput type="text" [(ngModel)]="datasetName">
-            </mat-form-field>
-            <br>
-            <input type="file"
-                (change)="handleFileInput($event.target.files)">
-            <br><br>
-            <button mat-raised-button color="primary" (click)="upload()">Upload</button>
-        </mat-card>
-    </div>
+<div class="data-management-container">
+  <div class="selection-content">
+    <mat-card>
+      <h3>Manage datasets</h3>
+      <app-dataset-list></app-dataset-list>
+      <button mat-raised-button color="primary" (click)="deleteSelection()">Delete</button>
+    </mat-card>
+  </div>
+
+  <div class="upload-content">
+    <mat-card>
+      <h3>Upload data</h3>
+      <mat-form-field class="dataset-name">
+        <mat-label>Data source name</mat-label>
+        <input matInput type="text" [(ngModel)]="datasetName">
+      </mat-form-field>
+      <br>
+      <input type="file"
+        (change)="handleFileInput($event.target.files)">
+      <br><br>
+      <button mat-raised-button color="primary" (click)="upload()">Upload</button>
+    </mat-card>
+  </div>
+
+
 </div>

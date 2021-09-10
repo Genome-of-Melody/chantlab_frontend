@@ -1,0 +1,5 @@
+<div class="dataset-list">
+  <div *ngFor="let source of dataSources; let i = index">
+    <mat-checkbox [(ngModel)]="selectedDatasets[i]">{{ source[1] }}</mat-checkbox>
+  </div>
+</div>

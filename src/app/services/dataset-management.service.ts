@@ -7,7 +7,7 @@ import { DataSourceListService } from './data-source-list.service';
 @Injectable({
   providedIn: 'root'
 })
-export class DataUploadService {
+export class DatasetManagementService {
 
   constructor(
     private dataSourceListService: DataSourceListService,
@@ -24,4 +24,25 @@ export class DataUploadService {
         return true;
       }));
   }
+
+  deleteDataset(datasetName: string): Observable<boolean> {
+    const formData: FormData = new FormData();
+    formData.append('name', datasetName);
+    return this.chantService.deleteData(formData)
+      .pipe(map(() => {
+        this.dataSourceListService.refreshSources();
+        return true;
+      }));
+  }
+
+  deleteMultipleDatasets(datasetNames: string[]): Observable<boolean>[] {
+    const results = [];
+    for (const name of datasetNames) {
+      // .subscribe() important so that the request gets actually sent!
+      const result = this.deleteDataset(name).subscribe();
+      results.push(result);
+    }
+    return results;
+  }
+
 }

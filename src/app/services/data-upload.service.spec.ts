@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DataUploadService } from './data-upload.service';
+import { DatasetManagementService } from './dataset-management.service';
 
 describe('DataUploadService', () => {
-  let service: DataUploadService;
+  let service: DatasetManagementService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DataUploadService);
+    service = TestBed.inject(DatasetManagementService);
   });
 
   it('should be created', () => {

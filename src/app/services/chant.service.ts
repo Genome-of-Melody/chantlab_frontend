@@ -72,4 +72,8 @@ export class ChantService {
   uploadData(data: FormData): Observable<any> {
     return this.http.post(`${this._baseUrl}/upload/`, data);
   }
+
+  deleteData(data: FormData): Observable<any> {
+    return this.http.post(`${this._baseUrl}/delete-dataset/`, data);
+  }
 }

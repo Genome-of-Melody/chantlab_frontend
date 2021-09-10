@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DataUploadService } from 'src/app/services/data-upload.service';
+import { DatasetManagementService } from 'src/app/services/dataset-management.service';
 import { MissingDatasetNameDialogComponent } from '../dialogs/missing-dataset-name-dialog/missing-dataset-name-dialog.component';
 import { UploadSuccessfulDialogComponent } from '../dialogs/upload-successful-dialog/upload-successful-dialog.component';
+import {DatasetListComponent} from '../dataset-list/dataset-list.component';
+import {Data} from '@angular/router';
 
 @Component({
   selector: 'app-data-upload',
@@ -14,15 +16,17 @@ export class DataUploadComponent implements OnInit {
   fileToUpload: File = null;
   datasetName: string = null;
 
+  @ViewChild(DatasetListComponent, {static: false}) datasetList: DatasetListComponent;
+
   constructor(
-    private dataUploadService: DataUploadService,
+    private datasetManagementService: DatasetManagementService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
   }
 
-  handleFileInput(files: FileList) {
+  handleFileInput(files: FileList): void {
     this.fileToUpload = files.item(0);
   }
 
@@ -32,7 +36,7 @@ export class DataUploadComponent implements OnInit {
       return;
     }
 
-    this.dataUploadService
+    this.datasetManagementService
       .uploadDataset(this.fileToUpload, this.datasetName)
       .subscribe(
         _ => {
@@ -41,6 +45,11 @@ export class DataUploadComponent implements OnInit {
       );
   }
 
-  
+  deleteSelection(): void {
+    const selectedSourceNames = this.datasetList.selectedSourceNames;
+    this.datasetManagementService.deleteMultipleDatasets(selectedSourceNames);
+  }
+
+
 
 }
