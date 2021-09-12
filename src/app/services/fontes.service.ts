@@ -26,13 +26,8 @@ export class FontesService {
     formData.append('dataSources',
       dataSources ? JSON.stringify(dataSources) : '[]');
 
-    console.log('refreshFontes: asking for dataSources:');
-    console.log(dataSources);
-
     this.chantService.getFontes(formData).subscribe(
       data => {
-        console.log('chantService.getFontes() data.fontes:');
-        console.log(data.fontes);
         this._allFontes.next(data.fontes); }
     );
   }

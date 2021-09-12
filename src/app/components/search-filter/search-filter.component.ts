@@ -85,12 +85,9 @@ export class SearchFilterComponent implements OnInit {
             // as an array of lists of length 1, like [["D GSTA III 9"], ["CH E-611"]].
             // The [0] index is a working band-aid solution for now.
             this.fontesSigla.push(data[key][0]);
-            console.log('Pushing fontesSigla key: ' + data[key][0]);
           });
         }
       );
-    console.log('searchFilter.initFontes(): result');
-    console.log(this.fontesSigla);
   }
 
   getFilterSettings(): object {
