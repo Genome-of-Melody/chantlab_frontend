@@ -4,12 +4,12 @@
     margin-top: 30px;
 }
 
-.genre-selector, .office-selector {
+.genre-selector, .office-selector, .fontes-selector {
     display: flex;
     flex-wrap: wrap;
 }
 
-.genre-checkbox, .office-checkbox {
+.genre-checkbox, .office-checkbox, .fontes-checkbox {
     margin-left: 10px;
 }
 

@@ -16,17 +16,17 @@ export class CreateDatasetService {
   ) { }
 
   createDataset(ids: number[], dataset_name: string): void {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append('idsToExport', JSON.stringify(ids));
     formData.append('name', dataset_name);
     this.chantService.createDataset(formData).subscribe(
       response => {
-        let name = response['name'];
-        let index = response['index'];
+        const name = response['name'];
+        const index = response['index'];
         this.dataSourceListService.refreshSources();
 
         const dialogRef = this.dialog.open(DatasetCreatedDialogComponent);
-        let instance = dialogRef.componentInstance;
+        const instance = dialogRef.componentInstance;
         instance.name = name;
       }
     )

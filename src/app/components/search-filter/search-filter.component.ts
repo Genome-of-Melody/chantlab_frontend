@@ -5,6 +5,7 @@ import { CsvTranslateService } from 'src/app/services/csv-translate.service';
 import { SearchFilterService } from 'src/app/services/search-filter.service';
 import { SavedFilterDialogComponent } from '../dialogs/saved-filter-dialog/saved-filter-dialog.component';
 import {IChant} from '../../interfaces/chant.interface';
+import {FontesService} from '../../services/fontes.service';
 
 @Component({
   selector: 'app-search-filter',
@@ -14,15 +15,20 @@ import {IChant} from '../../interfaces/chant.interface';
 export class SearchFilterComponent implements OnInit {
 
   allGenres: object;
-  allOffices: object;
-
   genreIds: string[] = [];
-  officeIds: string[] = [];
-
   checkedGenres: boolean[] = [];
-  checkedOffices: boolean[] = [];
   checkedAllGenres = true;
+
+  allOffices: object;
+  officeIds: string[] = [];
+  checkedOffices: boolean[] = [];
   checkedAllOffices = true;
+
+  allFontes: object;
+  fontesSigla: string[] = [];
+  checkedFontes: boolean[] = [];
+  checkedAllFontes = true;
+
   hideIncompleteChants = true;
 
   visible = false;
@@ -30,12 +36,14 @@ export class SearchFilterComponent implements OnInit {
   constructor(
     private csvTranslateService: CsvTranslateService,
     private searchFilterService: SearchFilterService,
+    private fontesService: FontesService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.initGenresAndOffices();
-
+    this.fontesService.refreshFontes();
+    this.initFontes();
   }
 
   initGenresAndOffices(): void {
@@ -64,6 +72,27 @@ export class SearchFilterComponent implements OnInit {
       );
   }
 
+  initFontes(): void {
+    const fontes = this.fontesService.getAllFontes()
+      .pipe(take(1))
+      .subscribe(
+        data => {
+          this.checkedFontes = [];
+          this.allFontes = data;
+          Object.keys(this.allFontes).forEach(key => {
+            this.checkedFontes.push(this.checkedAllFontes);
+            // I haven't been able to track down why the fontes are retrieved
+            // as an array of lists of length 1, like [["D GSTA III 9"], ["CH E-611"]].
+            // The [0] index is a working band-aid solution for now.
+            this.fontesSigla.push(data[key][0]);
+            console.log('Pushing fontesSigla key: ' + data[key][0]);
+          });
+        }
+      );
+    console.log('searchFilter.initFontes(): result');
+    console.log(this.fontesSigla);
+  }
+
   getFilterSettings(): object {
     const genres = [];
     for (let g = 0; g < this.checkedGenres.length; g++) {
@@ -79,11 +108,19 @@ export class SearchFilterComponent implements OnInit {
       }
     }
 
+    const fontes = [];
+    for (let f = 0; f < this.checkedFontes.length; f++) {
+      if (this.checkedFontes[f]) {
+        fontes.push(this.fontesSigla[f]);
+      }
+    }
+
     const hideIncomplete = this.hideIncompleteChants;
 
     return {
       genres: genres,
       offices: offices,
+      fontes: fontes,
       hideIncomplete: hideIncomplete
     };
   }
@@ -105,6 +142,12 @@ export class SearchFilterComponent implements OnInit {
   checkAllOffices(): void {
     for (let i = 0; i < this.checkedOffices.length; i++) {
       this.checkedOffices[i] = this.checkedAllOffices;
+    }
+  }
+
+  checkAllFontes(): void {
+    for (let i = 0; i < this.checkedFontes.length; i++) {
+      this.checkedFontes[i] = this.checkedAllFontes;
     }
   }
 }

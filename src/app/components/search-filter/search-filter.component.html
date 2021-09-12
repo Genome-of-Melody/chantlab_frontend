@@ -50,6 +50,24 @@
           </div>
           <br>
 
+          <h3>Fontes</h3>
+          <mat-checkbox
+            class="all-fontes-checkbox"
+            (change)="checkAllFontes()"
+            [(ngModel)]="checkedAllFontes">
+            All
+          </mat-checkbox>
+          <div *ngIf="allFontes" class="fontes-selector">
+            <div *ngFor="let item of allFontes; let i = index">
+              <mat-checkbox
+                class="fontes-checkbox"
+                [(ngModel)]="checkedFontes[i]">
+                {{ item }}
+              </mat-checkbox>
+            </div>
+          </div>
+          <br>
+
           <button mat-stroked-button (click)="saveFilter()">Save</button>
         </div>
     </div>

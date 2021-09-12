@@ -11,7 +11,7 @@ export class DataSourceListService {
   constructor(
     private chantService: ChantService
   ) { }
-  
+
   private _allSources: Subject<[number, string][]> = new Subject<[number, string][]>();
 
   getAllSources(): Subject<[number, string][]> {
@@ -20,7 +20,7 @@ export class DataSourceListService {
 
   refreshSources(): void {
     this.chantService.getDataSources().subscribe(
-      data => this._allSources.next(data.sources)
+      data => this._allSources.next(data.dataSources)
     );
   }
 }

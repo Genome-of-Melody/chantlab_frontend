@@ -8,6 +8,7 @@ import { IChant } from '../interfaces/chant.interface';
 import { DataSourceService } from './data-source.service';
 import { IncipitService } from './incipit.service';
 import { SearchFilterService } from './search-filter.service';
+import {FontesService} from './fontes.service';
 
 
 @Injectable({
@@ -19,7 +20,7 @@ export class ChantService {
     private http: HttpClient,
     private dataSourceService: DataSourceService,
     private searchFilterService: SearchFilterService,
-    private incipitService: IncipitService
+    private incipitService: IncipitService,
   ) { }
 
   private readonly _chantList = new BehaviorSubject<IChant[]>(null);
@@ -30,10 +31,12 @@ export class ChantService {
   }
 
   loadData(): Observable<IChant[]> {
+    console.log('chantService.loadData(): filter settings');
+    console.log(this.searchFilterService.getFilterSettings());
     return combineLatest([
       this.dataSourceService.getSourceList(),
       this.searchFilterService.getFilterSettings(),
-      this.incipitService.getIncipit()
+      this.incipitService.getIncipit(),
     ]).pipe(
       switchMap(
         ([dataSources, filterSettings, incipit]) => {
@@ -42,6 +45,7 @@ export class ChantService {
           formData.append('incipit', incipit ? incipit : '');
           formData.append('genres', filterSettings ? JSON.stringify(filterSettings['genres']) : "[]");
           formData.append('offices', filterSettings ? JSON.stringify(filterSettings['offices']) : "[]");
+          formData.append('fontes', filterSettings ? JSON.stringify(filterSettings['fontes']) : "[]");
           return this.http.post(this._baseUrl + '/', formData);
         }
       ),
@@ -58,7 +62,11 @@ export class ChantService {
   }
 
   getDataSources(): Observable<any> {
-    return this.http.get(`${this._baseUrl}/sources`);
+    return this.http.get(`${this._baseUrl}/data-sources`);
+  }
+
+  getFontes(data: FormData): Observable<any> {
+    return this.http.post(`${this._baseUrl}/fontes`, data);
   }
 
   exportChants(data: FormData): Observable<any> {
