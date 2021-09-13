@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { take } from 'rxjs/operators';
 import { CsvTranslateService } from 'src/app/services/csv-translate.service';
@@ -6,13 +6,17 @@ import { SearchFilterService } from 'src/app/services/search-filter.service';
 import { SavedFilterDialogComponent } from '../dialogs/saved-filter-dialog/saved-filter-dialog.component';
 import {IChant} from '../../interfaces/chant.interface';
 import {FontesService} from '../../services/fontes.service';
+import {SelectedDataSourcesService} from '../../services/selected-data-sources.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-search-filter',
   templateUrl: './search-filter.component.html',
   styleUrls: ['./search-filter.component.css']
 })
-export class SearchFilterComponent implements OnInit {
+export class SearchFilterComponent implements OnInit, OnDestroy {
+
+  private _subscriptions = new Subscription();
 
   allGenres: object;
   genreIds: string[] = [];
@@ -37,13 +41,26 @@ export class SearchFilterComponent implements OnInit {
     private csvTranslateService: CsvTranslateService,
     private searchFilterService: SearchFilterService,
     private fontesService: FontesService,
+    private selectedDataSourcesService: SelectedDataSourcesService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.initGenresAndOffices();
+
     this.fontesService.refreshFontes();
     this.initFontes();
+
+    this._subscriptions.add(this.selectedDataSourcesService.selectedDataSourcesChange.subscribe(() => this.refresh()));
+  }
+
+  ngOnDestroy(): void {
+    this._subscriptions.unsubscribe();
+  }
+
+  refresh(): void {
+    this.initGenresAndOffices();
+    this.updateFontes();
   }
 
   initGenresAndOffices(): void {
@@ -88,6 +105,11 @@ export class SearchFilterComponent implements OnInit {
           });
         }
       );
+  }
+
+  updateFontes(): void {
+    this.fontesService.refreshFontes();
+    this.initFontes();
   }
 
   getFilterSettings(): object {

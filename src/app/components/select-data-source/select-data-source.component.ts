@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DataSourceListService } from 'src/app/services/data-source-list.service';
-import { DataSourceService } from 'src/app/services/data-source.service';
+import { SelectedDataSourcesService } from 'src/app/services/selected-data-sources.service';
 import { SourceSelectionSavedDialogComponent } from '../dialogs/source-selection-saved-dialog/source-selection-saved-dialog.component';
 
 @Component({
@@ -17,7 +17,7 @@ export class SelectDataSourceComponent implements OnInit {
 
   constructor(
     private dataSourceListService: DataSourceListService,
-    private dataSourceService: DataSourceService,
+    private dataSourceService: SelectedDataSourcesService,
     public dialog: MatDialog
   ) { }
 

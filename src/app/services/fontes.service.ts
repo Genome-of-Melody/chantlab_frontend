@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ChantService} from './chant.service';
 import {Subject} from 'rxjs';
-import {DataSourceService} from './data-source.service';
+import {SelectedDataSourcesService} from './selected-data-sources.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ export class FontesService {
 
   constructor(
     private chantService: ChantService,
-    private dataSourceService: DataSourceService
+    private selectedDataSourcesService: SelectedDataSourcesService
   ) { }
 
   private _allFontes: Subject<string[]> = new Subject<string[]>();
@@ -21,7 +21,7 @@ export class FontesService {
 
   refreshFontes(): void {
     const formData = new FormData();
-    const dataSources = this.dataSourceService.getStoredSourceList();
+    const dataSources = this.selectedDataSourcesService.getStoredSourceList();
 
     formData.append('dataSources',
       dataSources ? JSON.stringify(dataSources) : '[]');

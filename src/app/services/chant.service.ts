@@ -5,7 +5,7 @@ import { switchMap, tap } from 'rxjs/operators';
 import CONFIG from '../config.json';
 import { IChantPrecomputed } from '../interfaces/chant-precomputed.interface';
 import { IChant } from '../interfaces/chant.interface';
-import { DataSourceService } from './data-source.service';
+import { SelectedDataSourcesService } from './selected-data-sources.service';
 import { IncipitService } from './incipit.service';
 import { SearchFilterService } from './search-filter.service';
 import {FontesService} from './fontes.service';
@@ -18,7 +18,7 @@ export class ChantService {
 
   constructor(
     private http: HttpClient,
-    private dataSourceService: DataSourceService,
+    private dataSourceService: SelectedDataSourcesService,
     private searchFilterService: SearchFilterService,
     private incipitService: IncipitService,
   ) { }
