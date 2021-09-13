@@ -8,16 +8,19 @@ import { map, take } from 'rxjs/operators';
 })
 export class CsvTranslateService {
   genres: object;
-  feasts: object;
+  feasts: object; // feasts are unused so far.
   offices: object;
 
   constructor(
     private http: HttpClient
-  ) { }
+  ) {
+    this.loadCSV('genres').pipe(take(1)).subscribe(data => this.genres = data);
+    this.loadCSV('offices').pipe(take(1)).subscribe(data => this.offices = data);
+  }
 
   getGenre(genre_id: string): string {
     if (!this.genres) {
-      this.loadCSV("genres")
+      this.loadCSV('genres')
         .pipe(take(1))
         .subscribe(
           data => {
@@ -25,20 +28,17 @@ export class CsvTranslateService {
             return this.genres[genre_id].description;
           }
         );
-    }
-    
-    else {
+    } else {
       return this.genres[genre_id].description;
     }
   }
 
   getOffice(office_id: string): string {
     if (null === office_id) {
-      return "Unknown";
+      return 'Unknown';
     }
-
     if (!this.offices) {
-      this.loadCSV("offices")
+      this.loadCSV('offices')
         .pipe(take(1))
         .subscribe(
           data => {
@@ -46,14 +46,12 @@ export class CsvTranslateService {
             return this.offices[office_id].description;
           }
         );
-    }
-    
-    else {
+    } else {
       return this.offices[office_id].description;
     }
   }
-  
-  getAllValues(type: string) {
+
+  getAllValues(type: string): Observable<object> {
     return this.loadCSV(type);
   }
 
@@ -61,20 +59,20 @@ export class CsvTranslateService {
   loadCSV(json: string): Observable<object> {
     let path: string;
     switch (json) {
-      case "genres": {
-        path = "assets/json/genre.json";
+      case 'genres': {
+        path = 'assets/json/genre.json';
         break;
       }
-      case "feasts": {
-        path = "assets/json/feast.json";
+      case 'feasts': {
+        path = 'assets/json/feast.json';
         break;
       }
-      case "offices": {
-        path = "assets/json/office.json";
+      case 'offices': {
+        path = 'assets/json/office.json';
         break;
       }
       default: {
-        throw new Error("Unknown json option");
+        throw new Error('Unknown json option');
       }
     }
 
