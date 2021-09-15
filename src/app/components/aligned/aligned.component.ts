@@ -7,6 +7,7 @@ import { AlignmentErrorDialogComponent } from '../dialogs/alignment-error-dialog
 import { ConservationProfileService } from 'src/app/services/conservation-profile.service';
 import { DownloadService } from 'src/app/services/download.service';
 import {DistanceService} from '../../services/distance.service';
+import {Alignment, AlignmentResponse} from '../../models/alignment';
 
 @Component({
   selector: 'app-aligned',
@@ -19,6 +20,9 @@ export class AlignedComponent implements OnInit {
   alignmentMode: string;
 
   aligned: any;
+  alignedResponse: AlignmentResponse;
+  alignment: Alignment;
+  alignedChants: any;
   blob: Blob;
   visibleDetails: {[id: number]: boolean} = {};
   alignmentPresent: boolean[] = [];
@@ -56,16 +60,26 @@ export class AlignedComponent implements OnInit {
 
     this.chantService.getAlignment(formData).subscribe(
       response => {
+        // Leaving this in to retain function during refactor, but will be removed
         this.aligned = response;
-        this.aligned.chants.forEach(_ => {
+
+        this.alignedResponse = new AlignmentResponse(
+          response.chants,
+          response.errors,
+          Alignment.fromResponse(response)
+        );
+        this.alignment = this.alignedResponse.alignment;
+        
+        this.alignedChants = this.alignedResponse.chants;
+        this.alignedChants.forEach(_ => {
           this.alignmentPresent.push(true);
           this.alignmentUncollapsed.push(true);
         });
 
-        if (this.aligned.errors.length > 0) {
+        if (this.alignedResponse.errorShortNames.length > 0) {
           const dialogRef = this.dialog.open(AlignmentErrorDialogComponent);
           const instance = dialogRef.componentInstance;
-          instance.sources = this.aligned.errors;
+          instance.sources = this.alignedResponse.errorShortNames;
         }
       }
     );
@@ -78,14 +92,14 @@ export class AlignedComponent implements OnInit {
   deleteAlignment(i: number): void {
     this.alignmentPresent[i] = false;
     this.alignmentUncollapsed[i] = false;
-    this.visibleDetails[this.aligned.success.ids[i]] = false;
+    this.visibleDetails[this.alignment.ids[i]] = false;
 
     this.conservationChanged = true;
   }
 
   collapseAlignment(i: number): void {
     this.alignmentUncollapsed[i] = false;
-    this.visibleDetails[this.aligned.success.ids[i]] = false;
+    this.visibleDetails[this.alignment.ids[i]] = false;
   }
 
   uncollapseAlignment(i: number): void {
@@ -93,11 +107,11 @@ export class AlignedComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>): void {
-    moveItemInArray(this.aligned.chants, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.aligned.success.ids, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.aligned.success.sources, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.aligned.success.volpianos, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.aligned.success.urls, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.alignedChants, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.alignment.ids, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.alignment.sources, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.alignment.alpianos, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.alignment.urls, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignmentPresent, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignmentUncollapsed, event.previousIndex, event.currentIndex);
 
@@ -106,10 +120,10 @@ export class AlignedComponent implements OnInit {
 
   createBlob(): Blob {
     let blobText = '';
-    for (let i = 0; i < this.aligned.success.urls.length; i++) {
+    for (let i = 0; i < this.alignment.urls.length; i++) {
       if (this.alignmentPresent[i]) {
-        blobText += '> ' + this.aligned.success.urls[i] + '\n';
-        blobText += this.aligned.success.volpianos[i] + '\n';
+        blobText += '> ' + this.alignment.urls[i] + '\n';
+        blobText += this.alignment.alpianos[i] + '\n';
       }
     }
 
@@ -129,9 +143,9 @@ export class AlignedComponent implements OnInit {
     if (this.conservationChanged) {
       const conservation =
         this.conservationProfileService.calculateConservationProfile(
-          this.aligned.success.volpianos);
-      this.conservationProfile = conservation["conservationProfile"];
-      this.conservationOfSet = conservation["conservationOfSet"];
+          this.alignment.alpianos);
+      this.conservationProfile = conservation.conservationProfile;
+      this.conservationOfSet = conservation.conservationOfSet;
       this.conservationChanged = false;
     }
 
@@ -210,7 +224,7 @@ export class AlignedComponent implements OnInit {
                        wordIdx: number,
                        sylIdx: number): number {
     // if element is any other type than syllable, return -1
-    if (this.aligned.chants[volpianoIdx][wordIdx][sylIdx].type !== 'syllable') {
+    if (this.alignedChants[volpianoIdx][wordIdx][sylIdx].type !== 'syllable') {
       return -1;
     }
 
@@ -218,7 +232,7 @@ export class AlignedComponent implements OnInit {
     // the desired one
     let idx = 0;
     for (let i = 0; i < sylIdx; i++) {
-      if (this.aligned.chants[volpianoIdx][wordIdx][i].type === 'syllable') {
+      if (this.alignedChants[volpianoIdx][wordIdx][i].type === 'syllable') {
         idx++;
       }
     }
@@ -231,8 +245,8 @@ export class AlignedComponent implements OnInit {
       return undefined;
     }
     const distanceMap = this.distanceService.alignedAllDistances(
-      this.aligned.success.volpianos,
-      this.aligned.success.urls,
+      this.alignment.alpianos,
+      this.alignment.urls,
       false,
       this.distanceService.alignedPairwiseRelativePositionsDifferent,
       {

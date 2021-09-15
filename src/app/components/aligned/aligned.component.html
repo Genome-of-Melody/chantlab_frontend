@@ -44,9 +44,9 @@
 
   </div>
 
-  <div cdkDropList class="scrollable" *ngIf="aligned; else progressSpinner" (cdkDropListDropped)="drop($event)">
+  <div cdkDropList class="scrollable" *ngIf="alignedResponse; else progressSpinner" (cdkDropListDropped)="drop($event)">
 
-      <div *ngFor="let chant of aligned.chants; let volpianoIdx = index" class="card" cdkDrag>
+      <div *ngFor="let chant of alignedChants; let volpianoIdx = index" class="card" cdkDrag>
         <div *ngIf="alignmentPresent[volpianoIdx]">
           <div *ngIf="alignmentUncollapsed[volpianoIdx]; else collapsed">
             <div class="chant">
@@ -60,8 +60,8 @@
                   </button>
                 </div>
                 <button mat-button class="title-button"
-                (click)="showDetail(aligned.success.ids[volpianoIdx])">
-                    {{ aligned.success.sources[volpianoIdx] }}
+                (click)="showDetail(alignment.ids[volpianoIdx])">
+                    {{ alignment.sources[volpianoIdx] }}
                 </button>
             </div>
             <br>
@@ -94,8 +94,8 @@
                   </button>
                 </div>
                 <button mat-button class="title-button"
-                (click)="showDetail(aligned.success.ids[volpianoIdx])">
-                  {{ aligned.success.sources[volpianoIdx] }}
+                (click)="showDetail(alignment.ids[volpianoIdx])">
+                  {{ alignment.sources[volpianoIdx] }}
                 </button>
               </div>
             </div>
