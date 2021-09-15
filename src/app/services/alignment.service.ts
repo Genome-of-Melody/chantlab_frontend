@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import {IChant} from '../interfaces/chant.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,16 @@ export class AlignmentService {
 
   set idsToAlign(ids: number[]) {
     this.storage.setItem('idsToAlign', JSON.stringify(ids));
+  }
+
+  get chantsToAlign(): IChant[] {
+    const storedChants = this.storage.getItem('chantsToAlign');
+    if (storedChants === null) { return []; }
+    return JSON.parse(storedChants);
+  }
+
+  set chantsToAlign(chants: IChant[]) {
+    this.storage.setItem('chantsToAlign', JSON.stringify(chants));
   }
 
   getMode(): string {

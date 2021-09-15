@@ -101,8 +101,8 @@
             </div>
           </ng-template>
         </div>
-        <div class="detail" *ngIf="visibleDetails[aligned.success.ids[volpianoIdx]]">
-            <app-chant-details [id]="aligned.success.ids[volpianoIdx]"></app-chant-details>
+        <div class="detail" *ngIf="visibleDetails[alignment.ids[volpianoIdx]]">
+            <app-chant-details [id]="alignment.ids[volpianoIdx]"></app-chant-details>
         </div>
       </div>
 
@@ -119,7 +119,7 @@
        (keyup)="onKeyUp($event)">
     <app-distance-matrix
       [allDistances]="computeDistances()"
-      [names]="aligned.success.urls"
+      [names]="distanceMatrixChantNames"
     ></app-distance-matrix>
   </div>
 

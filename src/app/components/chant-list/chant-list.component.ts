@@ -118,13 +118,24 @@ export class ChantListComponent implements OnInit, OnDestroy {
         checkboxChecked.push(this.allChants[i].id);
       }
     }
-
     return checkboxChecked;
+  }
+
+  getSelectedChants(): IChant[] {
+    const selectedChants: IChant[] = [];
+    for (let i = 0; i < this.selected.length; i++) {
+      if (this.selected[i]) {
+        selectedChants.push(this.allChants[i]);
+      }
+    }
+    return selectedChants;
   }
 
   align(mode: string): void {
     // get list of selected chants
-    const selected = this.getSelected();
+    const selectedChants = this.getSelectedChants();
+    const selected = selectedChants.map(ch => ch.id);
+
     if (selected.length < 2) {
       const dialogRef = this.dialog.open(
         NotEnoughToAlingDialogComponent
@@ -139,6 +150,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
     }
 
     this.alignmentService.idsToAlign = selected;
+    this.alignmentService.chantsToAlign = selectedChants;
     this.router.navigate(['/align']);
   }
 

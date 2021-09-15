@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterContentChecked, Component, Input, OnInit} from '@angular/core';
 import {DistanceService} from '../../services/distance.service';
 import {AlignmentService} from '../../services/alignment.service';
 
@@ -7,10 +7,21 @@ import {AlignmentService} from '../../services/alignment.service';
   templateUrl: './distance-matrix.component.html',
   styleUrls: ['./distance-matrix.component.css']
 })
-export class DistanceMatrixComponent implements OnInit {
+export class DistanceMatrixComponent implements OnInit, AfterContentChecked {
 
   @Input() allDistances: Map<string, Map<string, number>> = undefined;
   @Input() names: string[];
+
+  get shortNames(): string[] {
+    return this.names.map(n => n.split(' ').slice(0, 2).join(' '));
+  }
+
+  /**
+   * Handles displaying overlays with cell names to help orient the user in a large matrix.
+   */
+  public _showCellNames: Map<string, Map<string, boolean>>;
+  get showCellNames(): Map<string, Map<string, boolean>> { return this._showCellNames; }
+  get showCellNamesList(): string[] { return Array.from(this._showCellNames.keys()); }
 
   private _distanceMatrix: number[][] = undefined;
   get distanceMatrix(): number[][] {
@@ -25,6 +36,19 @@ export class DistanceMatrixComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // Initialize showing cell names.
+    this._showCellNames = new Map<string, Map<string, boolean>>();
+    for (const name1 of this.names) {
+      this._showCellNames.set(name1, new Map<string, boolean>());
+      for (const name2 of this.names) {
+        this._showCellNames.get(name1).set(name2, false);
+      }
+    }
+    console.log('Show cell names array:');
+    console.log(this._showCellNames);
+  }
+
+  ngAfterContentChecked(): void {
   }
 
   backgroundColorRGB(distance: number): string {
@@ -37,5 +61,12 @@ export class DistanceMatrixComponent implements OnInit {
     return '' + redval + ',' + greenval + ',' + brightnessConstant;
   }
 
-  showCell(name1: string, name2: string): void {}
+  selectCell(name1: string, name2: string): void {}
+
+  showCellName(name1: string, name2: string): void {
+    this._showCellNames.get(name1).set(name2, true);
+  }
+  hideCellName(name1: string, name2: string): void {
+    this._showCellNames.get(name1).set(name2, false);
+  }
 }

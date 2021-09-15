@@ -8,6 +8,8 @@ import { ConservationProfileService } from 'src/app/services/conservation-profil
 import { DownloadService } from 'src/app/services/download.service';
 import {DistanceService} from '../../services/distance.service';
 import {Alignment, AlignmentResponse} from '../../models/alignment';
+import {SettingsService} from '../../services/settings.service';
+import {IChant} from '../../interfaces/chant.interface';
 
 @Component({
   selector: 'app-aligned',
@@ -17,12 +19,14 @@ import {Alignment, AlignmentResponse} from '../../models/alignment';
 export class AlignedComponent implements OnInit {
 
   idsToAlign: number[];
+  chantsToAlign: IChant[];
   alignmentMode: string;
 
   aligned: any;
   alignedResponse: AlignmentResponse;
   alignment: Alignment;
   alignedChants: any;
+  alignedIChants: IChant[];
   blob: Blob;
   visibleDetails: {[id: number]: boolean} = {};
   alignmentPresent: boolean[] = [];
@@ -47,12 +51,14 @@ export class AlignedComponent implements OnInit {
     private alignmentService: AlignmentService,
     private conservationProfileService: ConservationProfileService,
     private distanceService: DistanceService,
+    private settingsService: SettingsService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.idsToAlign = this.alignmentService.idsToAlign;
     this.alignmentMode = this.alignmentService.getMode();
+    this.chantsToAlign = this.alignmentService.chantsToAlign;
 
     const formData: FormData = new FormData();
     formData.append('idsToAlign', JSON.stringify(this.idsToAlign));
@@ -69,11 +75,18 @@ export class AlignedComponent implements OnInit {
           Alignment.fromResponse(response)
         );
         this.alignment = this.alignedResponse.alignment;
-        
+
         this.alignedChants = this.alignedResponse.chants;
         this.alignedChants.forEach(_ => {
           this.alignmentPresent.push(true);
           this.alignmentUncollapsed.push(true);
+        });
+
+        // Select the IChant data objects that contain incipits, cantus IDs, texts, etc.
+        this.alignedIChants = [];
+        this.alignment.ids.forEach(alignedID => {
+          const iChant = this.chantsToAlign.find(ch => ch.id === alignedID);
+          this.alignedIChants.push(iChant);
         });
 
         if (this.alignedResponse.errorShortNames.length > 0) {
@@ -244,15 +257,22 @@ export class AlignedComponent implements OnInit {
     if (!this.alignmentPresent) {
       return undefined;
     }
+    let pairwiseDistanceFunction = this.distanceService.alignedPairwiseRelativePositionsDifferent;
+    let pairwiseDistanceOptions = {
+      useEffectiveAlignedLength: true,
+      onlyCountNotes: false,
+    };
+    if (this.settingsService.alignmentSettingsService.distanceMatrixUseAbsoluteDistances){
+      pairwiseDistanceFunction = this.distanceService.alignedPairwiseNPositionsDifferent;
+    }
+
     const distanceMap = this.distanceService.alignedAllDistances(
       this.alignment.alpianos,
-      this.alignment.urls,
+      this.distanceMatrixChantNames,
       false,
-      this.distanceService.alignedPairwiseRelativePositionsDifferent,
-      {
-        useEffectiveAlignedLength: true,
-        onlyCountNotes: false,
-      });
+      pairwiseDistanceFunction,
+      pairwiseDistanceOptions
+      );
     return distanceMap;
   }
 
@@ -267,6 +287,9 @@ export class AlignedComponent implements OnInit {
   get showDistanceMatrixColor(): string {
     if (this.showDistanceMatrix) { return 'accent'; }
     return 'primary';
+  }
+  get distanceMatrixChantNames(): string[] {
+    return this.alignedIChants.map(ch => ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id);
   }
 
   @HostListener('document:keyup', ['$event'])

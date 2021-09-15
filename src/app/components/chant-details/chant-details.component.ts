@@ -42,7 +42,7 @@ export class ChantDetailsComponent implements OnInit, OnDestroy {
 
           this.office = this.csvTranslateService.getOffice(this.chant.db_source.office_id);
         }
-      )
+      );
   }
 
   ngOnDestroy(): void {

@@ -14,7 +14,7 @@ export class Alignment {
   constructor(
     public chants: Array<Array<{text: string, type: string, volpiano: Array<string>}>>,
     public alpianos: Array<string>,
-    public ids: Array<string>,
+    public ids: Array<number>,
     public urls: Array<string>,
     public sources: Array<string>
   ) {}

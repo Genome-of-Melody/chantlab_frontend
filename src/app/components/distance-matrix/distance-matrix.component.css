@@ -2,14 +2,41 @@
 .distance-matrix-card {
   width: fit-content;
   background-color: white;
+  overflow: visible;
 }
 
 table.distance-matrix {
   border: 0px solid black;
   background-color: white;
+  overflow: visible;
 }
 
 td.distance-matrix {
   border: 1px solid black;
+  cursor: pointer;
 }
 
+td.distance-matrix-cell {
+  overflow: visible;
+  width: auto;
+}
+
+td.distance-matrix-header-cell {
+  text-orientation: mixed;
+  writing-mode: sideways-lr;
+}
+
+td.distance-matrix-header-column {
+  text-align: right;
+}
+
+.distance-matrix-cell-name {
+  /*display: flex;*/
+  position: absolute;
+  min-width: 200px;
+  /*right: 0px;*/
+  /*width: fit-content;*/
+  /*min-width: fit-content;*/
+  background-color: antiquewhite;
+  overflow: visible;
+}

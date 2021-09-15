@@ -15,4 +15,5 @@ mat-card-content.settings-group {
 
 .settings-item-active-element {
   margin-left: 20px;
+  display: block;
 }

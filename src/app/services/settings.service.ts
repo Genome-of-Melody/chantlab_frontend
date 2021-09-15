@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
+
+  @Output() settingsChangedEvent = new EventEmitter();
 
   constructor(
     public alignmentSettingsService: AlignmentSettingsService,
@@ -20,6 +22,7 @@ export class AlignmentSettingsService {
   constructor() { }
 
   useTextSeparators = true;
+  distanceMatrixUseAbsoluteDistances = false;
 }
 
 
