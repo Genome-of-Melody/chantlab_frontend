@@ -26,7 +26,6 @@ export class AlignedComponent implements OnInit {
   alignedResponse: AlignmentResponse;
   alignment: Alignment;
   alignedChants: any;
-  alignedIChants: IChant[];
   blob: Blob;
   visibleDetails: {[id: number]: boolean} = {};
   alignmentPresent: boolean[] = [];
@@ -69,6 +68,19 @@ export class AlignedComponent implements OnInit {
         // Leaving this in to retain function during refactor, but will be removed
         this.aligned = response;
 
+        // Select the IChant data objects that contain incipits, cantus IDs, texts, etc.
+        // The Alignment object should get the IChnats, so it needs to be prepared
+        // before the constructor is called.
+        const alignedIChants = [];
+        response.success.ids.forEach(alignedID => {
+          const iChant = this.chantsToAlign.find(ch => ch.id === alignedID);
+          alignedIChants.push(iChant);
+        });
+        // Because I think in the (near) future the IChants will ride with the request
+        // and response, I think I can afford to do this. But of course it is
+        // not good software design to modify your response objects!
+        response.iChants = alignedIChants;
+
         this.alignedResponse = new AlignmentResponse(
           response.chants,
           response.errors,
@@ -82,12 +94,6 @@ export class AlignedComponent implements OnInit {
           this.alignmentUncollapsed.push(true);
         });
 
-        // Select the IChant data objects that contain incipits, cantus IDs, texts, etc.
-        this.alignedIChants = [];
-        this.alignment.ids.forEach(alignedID => {
-          const iChant = this.chantsToAlign.find(ch => ch.id === alignedID);
-          this.alignedIChants.push(iChant);
-        });
 
         if (this.alignedResponse.errorShortNames.length > 0) {
           const dialogRef = this.dialog.open(AlignmentErrorDialogComponent);
@@ -121,6 +127,8 @@ export class AlignedComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>): void {
     moveItemInArray(this.alignedChants, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.alignment.parsedChants, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.alignment.iChants, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignment.ids, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignment.sources, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignment.alpianos, event.previousIndex, event.currentIndex);
@@ -289,7 +297,7 @@ export class AlignedComponent implements OnInit {
     return 'primary';
   }
   get distanceMatrixChantNames(): string[] {
-    return this.alignedIChants.map(ch => ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id);
+    return this.alignment.iChants.map(ch => ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id);
   }
 
   @HostListener('document:keyup', ['$event'])

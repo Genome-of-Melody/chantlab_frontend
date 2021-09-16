@@ -3,6 +3,8 @@
  * Currently a Plain Old Data class, but will be gradually extended with
  * methods.
  */
+import {IChant} from '../interfaces/chant.interface';
+
 export class Alignment {
 
   // chants: Array<Array<{text: string, type: string, volpiano: Array<string>}>> = [];
@@ -12,7 +14,8 @@ export class Alignment {
   // alpianos: Array<string> = [];
 
   constructor(
-    public chants: Array<Array<{text: string, type: string, volpiano: Array<string>}>>,
+    public parsedChants: Array<Array<{text: string, type: string, volpiano: Array<string>}>>,
+    public iChants: Array<IChant>,
     public alpianos: Array<string>,
     public ids: Array<number>,
     public urls: Array<string>,
@@ -22,6 +25,7 @@ export class Alignment {
   static fromResponse(response: any): Alignment {
     return new Alignment(
       response.chants,
+      response.iChants,
       response.success.volpianos,
       response.success.ids,
       response.success.urls,
