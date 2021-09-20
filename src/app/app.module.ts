@@ -48,6 +48,7 @@ import { DistanceMatrixComponent } from './components/distance-matrix/distance-m
 import { SettingsComponent } from './components/settings/settings.component';
 import {RouterModule} from '@angular/router';
 import { DatasetListComponent } from './components/dataset-list/dataset-list.component';
+import { AlignedPageComponent } from './components/aligned-page/aligned-page.component';
 
 
 @NgModule({
@@ -77,7 +78,8 @@ import { DatasetListComponent } from './components/dataset-list/dataset-list.com
     DatasetCreatedDialogComponent,
     DistanceMatrixComponent,
     SettingsComponent,
-    DatasetListComponent
+    DatasetListComponent,
+    AlignedPageComponent
   ],
   imports: [
     BrowserModule,

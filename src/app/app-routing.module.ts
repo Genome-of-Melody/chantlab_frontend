@@ -6,13 +6,15 @@ import { DashboardComponent } from './components/visualization/dashboard/dashboa
 import { ChantListWrapperComponent } from './components/chant-list-wrapper/chant-list-wrapper.component';
 import { DataUploadComponent } from './components/data-upload/data-upload.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import {AlignedPageComponent} from './components/aligned-page/aligned-page.component';
 
 
 const routes: Routes = [
   { path: '', redirectTo: 'chants', pathMatch: 'full' },
   { path: 'chants', component: ChantListWrapperComponent },
   { path: 'chants/:id', component: ChantFetchComponent },
-  { path: 'align', component: AlignedComponent },
+  // { path: 'align', component: AlignedComponent },
+  { path: 'align', component: AlignedPageComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'upload', component: DataUploadComponent },
   { path: 'settings', component: SettingsComponent }

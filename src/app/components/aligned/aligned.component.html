@@ -44,10 +44,14 @@
 
   </div>
 
-  <div cdkDropList class="scrollable" *ngIf="alignedResponse; else progressSpinner" (cdkDropListDropped)="drop($event)">
+  <div cdkDropList
+       class="scrollable"
+       *ngIf="alignment; else progressSpinner"
+       (cdkDropListDropped)="drop($event)">
 
-      <div *ngFor="let chant of alignedChants; let volpianoIdx = index" class="card" cdkDrag>
+      <div *ngFor="let chant of alignment.parsedChants; let volpianoIdx = index" class="card" cdkDrag>
         <div *ngIf="alignmentPresent[volpianoIdx]">
+
           <div *ngIf="alignmentUncollapsed[volpianoIdx]; else collapsed">
             <div class="chant">
               <div class="title-group" *ngIf="showHeaders">
@@ -63,25 +67,26 @@
                 (click)="showDetail(alignment.ids[volpianoIdx])">
                     {{ alignment.sources[volpianoIdx] }}
                 </button>
-            </div>
-            <br>
-            <div *ngFor="let word of chant; let wordIdx = index" class="word">
-              <div *ngFor="let syllable of word; let lastSyllable = last; let sylIdx = index" [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
-                <div [attr.class]="displayMode">
-                  <span class="neumes" *ngFor="let neume of syllable.volpiano; let neumeIdx = index">
-                    <span *ngIf="showColors" [ngStyle]="getColor(neume)">{{ neume }}</span>
-                    <span *ngIf="showConservation"
-                          [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ neume }}</span>
-                    <span *ngIf="!showColors && !showConservation">{{ neume }}</span>
-                  </span>
-                </div>
-                <div *ngIf="showText" class="text">
-                  <span class="lyric">{{ syllable.text }}</span>
-                </div>
               </div>
+              <br>
+              <div *ngFor="let word of chant; let wordIdx = index" class="word">
+                <div *ngFor="let syllable of word; let lastSyllable = last; let sylIdx = index" [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
+                  <div [attr.class]="displayMode">
+                    <span class="neumes" *ngFor="let neume of syllable.volpiano; let neumeIdx = index">
+                      <span *ngIf="showColors" [ngStyle]="getColor(neume)">{{ neume }}</span>
+                      <span *ngIf="showConservation"
+                            [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ neume }}</span>
+                      <span *ngIf="!showColors && !showConservation">{{ neume }}</span>
+                    </span>
+                  </div>
+                  <div *ngIf="showText" class="text">
+                    <span class="lyric">{{ syllable.text }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
           <ng-template #collapsed>
             <div class="collapsed-chant">
               <div class="title-group" *ngIf="showHeaders">
@@ -100,6 +105,7 @@
               </div>
             </div>
           </ng-template>
+
         </div>
         <div class="detail" *ngIf="visibleDetails[alignment.ids[volpianoIdx]]">
             <app-chant-details [id]="alignment.ids[volpianoIdx]"></app-chant-details>

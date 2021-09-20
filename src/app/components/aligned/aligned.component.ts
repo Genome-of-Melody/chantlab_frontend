@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, Input, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AlignmentService } from 'src/app/services/alignment.service';
@@ -22,10 +22,11 @@ export class AlignedComponent implements OnInit {
   chantsToAlign: IChant[];
   alignmentMode: string;
 
-  aligned: any;
   alignedResponse: AlignmentResponse;
-  alignment: Alignment;
-  alignedChants: any;
+
+  @Input() alignment: Alignment;
+
+  alignedChants: IChant[];
   blob: Blob;
   visibleDetails: {[id: number]: boolean} = {};
   alignmentPresent: boolean[] = [];
@@ -55,53 +56,53 @@ export class AlignedComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log('AlignedComponent.onInit() started');
+
     this.idsToAlign = this.alignmentService.idsToAlign;
     this.alignmentMode = this.alignmentService.getMode();
     this.chantsToAlign = this.alignmentService.chantsToAlign;
 
-    const formData: FormData = new FormData();
-    formData.append('idsToAlign', JSON.stringify(this.idsToAlign));
-    formData.append('mode', this.alignmentMode);
+    // const formData: FormData = new FormData();
+    // formData.append('idsToAlign', JSON.stringify(this.idsToAlign));
+    // formData.append('mode', this.alignmentMode);
+    //
+    // this.chantService.getAlignment(formData).subscribe(
+    //   response => {
+    //
+    //     // Select the IChant data objects that contain incipits, cantus IDs, texts, etc.
+    //     // The Alignment object should get the IChnats, so it needs to be prepared
+    //     // before the constructor is called.
+    //     const alignedIChants = [];
+    //     response.success.ids.forEach(alignedID => {
+    //       const iChant = this.chantsToAlign.find(ch => ch.id === alignedID);
+    //       alignedIChants.push(iChant);
+    //     });
+    //     // Because I think in the (near) future the IChants will ride with the request
+    //     // and response, I think I can afford to do this. But of course it is
+    //     // not good software design to modify your response objects!
+    //     response.iChants = alignedIChants;
+    //
+    //     this.alignedResponse = new AlignmentResponse(
+    //       response.chants,
+    //       response.errors,
+    //       Alignment.fromResponse(response)
+    //     );
+    //     this.alignment = this.alignedResponse.alignment;
+    //   }
+    // );
 
-    this.chantService.getAlignment(formData).subscribe(
-      response => {
-        // Leaving this in to retain function during refactor, but will be removed
-        this.aligned = response;
+    console.log('AlignedComponent.alignment:');
+    console.log(this.alignment);
 
-        // Select the IChant data objects that contain incipits, cantus IDs, texts, etc.
-        // The Alignment object should get the IChnats, so it needs to be prepared
-        // before the constructor is called.
-        const alignedIChants = [];
-        response.success.ids.forEach(alignedID => {
-          const iChant = this.chantsToAlign.find(ch => ch.id === alignedID);
-          alignedIChants.push(iChant);
-        });
-        // Because I think in the (near) future the IChants will ride with the request
-        // and response, I think I can afford to do this. But of course it is
-        // not good software design to modify your response objects!
-        response.iChants = alignedIChants;
+    this.alignedChants = this.alignment.iChants;
+    this.alignedChants.forEach(_ => {
+      this.alignmentPresent.push(true);
+      this.alignmentUncollapsed.push(true);
+    });
 
-        this.alignedResponse = new AlignmentResponse(
-          response.chants,
-          response.errors,
-          Alignment.fromResponse(response)
-        );
-        this.alignment = this.alignedResponse.alignment;
-
-        this.alignedChants = this.alignedResponse.chants;
-        this.alignedChants.forEach(_ => {
-          this.alignmentPresent.push(true);
-          this.alignmentUncollapsed.push(true);
-        });
-
-
-        if (this.alignedResponse.errorShortNames.length > 0) {
-          const dialogRef = this.dialog.open(AlignmentErrorDialogComponent);
-          const instance = dialogRef.componentInstance;
-          instance.sources = this.alignedResponse.errorShortNames;
-        }
-      }
-    );
+    console.log('AlignedComponent.onInit() done.');
+    console.log('AlignedChants:');
+    console.log(this.alignedChants);
   }
 
   showDetail(id): void {
@@ -127,12 +128,14 @@ export class AlignedComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>): void {
     moveItemInArray(this.alignedChants, event.previousIndex, event.currentIndex);
+
     moveItemInArray(this.alignment.parsedChants, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignment.iChants, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignment.ids, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignment.sources, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignment.alpianos, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignment.urls, event.previousIndex, event.currentIndex);
+
     moveItemInArray(this.alignmentPresent, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignmentUncollapsed, event.previousIndex, event.currentIndex);
 
@@ -285,7 +288,7 @@ export class AlignedComponent implements OnInit {
   }
 
   doShowDistanceMatrix(): void {
-    if (this.aligned) {
+    if (this.alignment) {
       this.showDistanceMatrix = !this.showDistanceMatrix;
     }
   }
