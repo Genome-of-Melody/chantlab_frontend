@@ -1,0 +1,5 @@
+<div class="alignment-list">
+  <div *ngFor="let alignment of availableAlignments; let i = index">
+    <mat-checkbox [(ngModel)]="selectedAlignments[i]">{{ alignment }}</mat-checkbox>
+  </div>
+</div>

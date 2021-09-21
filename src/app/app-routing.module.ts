@@ -7,6 +7,7 @@ import { ChantListWrapperComponent } from './components/chant-list-wrapper/chant
 import { DataUploadComponent } from './components/data-upload/data-upload.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import {AlignedPageComponent} from './components/aligned-page/aligned-page.component';
+import {AlignmentManagerComponent} from './components/alignment-manager/alignment-manager.component';
 
 
 const routes: Routes = [
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'align', component: AlignedPageComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'upload', component: DataUploadComponent },
-  { path: 'settings', component: SettingsComponent }
+  { path: 'settings', component: SettingsComponent },
+  { path: 'alignment-manager', component: AlignmentManagerComponent }
 ];
 
 @NgModule({

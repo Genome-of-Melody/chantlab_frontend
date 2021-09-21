@@ -1,0 +1,13 @@
+<div class="alignment-management-container">
+  <div class="selection-content">
+    <mat-card>
+      <h3>Manage alignments</h3>
+      <app-alignment-list></app-alignment-list>
+      <span *ngIf="zeroAlignmentsAvailable"><i>No stored alignments available.</i></span>
+      <br><br>
+      <button mat-raised-button color="primary" (click)="deleteSelection()">Delete</button>
+    </mat-card>
+  </div>
+
+</div>
+

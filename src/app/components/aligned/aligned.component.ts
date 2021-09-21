@@ -1,4 +1,4 @@
-import {Component, HostListener, Input, OnInit} from '@angular/core';
+import {Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AlignmentService } from 'src/app/services/alignment.service';
@@ -10,13 +10,17 @@ import {DistanceService} from '../../services/distance.service';
 import {Alignment, AlignmentResponse} from '../../models/alignment';
 import {SettingsService} from '../../services/settings.service';
 import {IChant} from '../../interfaces/chant.interface';
+import {AlignmentManagementService} from '../../services/alignment-management.service';
+import {NameOnCreateAlignmentComponent} from '../dialogs/name-on-create-alignment/name-on-create-alignment.component';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-aligned',
   templateUrl: './aligned.component.html',
   styleUrls: ['./aligned.component.css']
 })
-export class AlignedComponent implements OnInit {
+export class AlignedComponent implements OnInit, OnDestroy {
 
   idsToAlign: number[];
   chantsToAlign: IChant[];
@@ -45,10 +49,13 @@ export class AlignedComponent implements OnInit {
 
   displayMode = 'volpiano';
 
+  private readonly componentDestroyed$ = new Subject();
+
   constructor(
     private chantService: ChantService,
     private downloadService: DownloadService,
     private alignmentService: AlignmentService,
+    private alignmentManagementService: AlignmentManagementService,
     private conservationProfileService: ConservationProfileService,
     private distanceService: DistanceService,
     private settingsService: SettingsService,
@@ -105,6 +112,11 @@ export class AlignedComponent implements OnInit {
     console.log(this.alignedChants);
   }
 
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.complete();
+  }
+
   showDetail(id): void {
     this.visibleDetails[id] = !this.visibleDetails[id];
   }
@@ -158,6 +170,23 @@ export class AlignedComponent implements OnInit {
   downloadAligned(): void {
     const blob = this.createBlob();
     this.downloadService.download(blob, 'aligned.txt');
+  }
+
+  saveAlignment(): void {
+
+    let alignmentName: string;
+    const dialogRef = this.dialog.open(
+      NameOnCreateAlignmentComponent,
+      { data: { name: alignmentName }}
+    );
+
+    dialogRef.afterClosed().pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(
+        result => {
+          alignmentName = result;
+          this.alignmentManagementService.storeAlignment(alignmentName, this.alignment);
+        }
+      );
   }
 
   getConservationValue(volpianoIdx: number,
@@ -248,7 +277,7 @@ export class AlignedComponent implements OnInit {
                        wordIdx: number,
                        sylIdx: number): number {
     // if element is any other type than syllable, return -1
-    if (this.alignedChants[volpianoIdx][wordIdx][sylIdx].type !== 'syllable') {
+    if (this.alignment.parsedChants[volpianoIdx][wordIdx][sylIdx].type !== 'syllable') {
       return -1;
     }
 
@@ -256,7 +285,7 @@ export class AlignedComponent implements OnInit {
     // the desired one
     let idx = 0;
     for (let i = 0; i < sylIdx; i++) {
-      if (this.alignedChants[volpianoIdx][wordIdx][i].type === 'syllable') {
+      if (this.alignment.parsedChants[volpianoIdx][wordIdx][i].type === 'syllable') {
         idx++;
       }
     }

@@ -49,6 +49,9 @@ import { SettingsComponent } from './components/settings/settings.component';
 import {RouterModule} from '@angular/router';
 import { DatasetListComponent } from './components/dataset-list/dataset-list.component';
 import { AlignedPageComponent } from './components/aligned-page/aligned-page.component';
+import { AlignmentManagerComponent } from './components/alignment-manager/alignment-manager.component';
+import { AlignmentListComponent } from './components/alignment-manager/alignment-list/alignment-list.component';
+import { NameOnCreateAlignmentComponent } from './components/dialogs/name-on-create-alignment/name-on-create-alignment.component';
 
 
 @NgModule({
@@ -79,7 +82,10 @@ import { AlignedPageComponent } from './components/aligned-page/aligned-page.com
     DistanceMatrixComponent,
     SettingsComponent,
     DatasetListComponent,
-    AlignedPageComponent
+    AlignedPageComponent,
+    AlignmentManagerComponent,
+    AlignmentListComponent,
+    NameOnCreateAlignmentComponent,
   ],
   imports: [
     BrowserModule,
