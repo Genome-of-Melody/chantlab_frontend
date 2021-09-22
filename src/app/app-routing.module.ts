@@ -8,6 +8,7 @@ import { DataUploadComponent } from './components/data-upload/data-upload.compon
 import { SettingsComponent } from './components/settings/settings.component';
 import {AlignedPageComponent} from './components/aligned-page/aligned-page.component';
 import {AlignmentManagerComponent} from './components/alignment-manager/alignment-manager.component';
+import { HelpPageComponent } from './components/help-page/help-page.component';
 
 
 const routes: Routes = [
@@ -19,7 +20,8 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'upload', component: DataUploadComponent },
   { path: 'settings', component: SettingsComponent },
-  { path: 'alignment-manager', component: AlignmentManagerComponent }
+  { path: 'alignment-manager', component: AlignmentManagerComponent },
+  { path: 'help', component: HelpPageComponent },
 ];
 
 @NgModule({

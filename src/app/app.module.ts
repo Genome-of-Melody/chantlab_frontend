@@ -52,6 +52,7 @@ import { AlignedPageComponent } from './components/aligned-page/aligned-page.com
 import { AlignmentManagerComponent } from './components/alignment-manager/alignment-manager.component';
 import { AlignmentListComponent } from './components/alignment-manager/alignment-list/alignment-list.component';
 import { NameOnCreateAlignmentComponent } from './components/dialogs/name-on-create-alignment/name-on-create-alignment.component';
+import { HelpPageComponent } from './components/help-page/help-page.component';
 
 
 @NgModule({
@@ -86,6 +87,7 @@ import { NameOnCreateAlignmentComponent } from './components/dialogs/name-on-cre
     AlignmentManagerComponent,
     AlignmentListComponent,
     NameOnCreateAlignmentComponent,
+    HelpPageComponent,
   ],
   imports: [
     BrowserModule,
