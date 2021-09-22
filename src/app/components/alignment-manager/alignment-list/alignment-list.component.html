@@ -1,5 +1,9 @@
 <div class="alignment-list">
   <div *ngFor="let alignment of availableAlignments; let i = index">
-    <mat-checkbox [(ngModel)]="selectedAlignments[i]">{{ alignment }}</mat-checkbox>
+    <mat-checkbox class="alignment-checkbox" [(ngModel)]="selectedAlignments[i]">{{ alignment }}</mat-checkbox>
+    <button mat-flat-button color="secondary" (click)="requestShowAlignment(alignment)"
+            class="alignment-action-button">
+      <mat-icon>search</mat-icon>
+    </button>
   </div>
 </div>

@@ -8,12 +8,25 @@ export class AlignmentManagementService {
   private storage = window.localStorage;
   private alignmentStorageKey = '__alignment_storage__';
 
-  public availableAlignments: Set<string>;
-
   private overwriteOnNameCollision = false;
 
   constructor() {
-    this.availableAlignments = new Set<string>();
+    console.log('AlignmentManagementService: Constructor called.');
+    // this.availableAlignments = new Set<string>();
+  }
+
+  get alignmentsInStorage(): Set<string> {
+    const alignmentsInStorage: string[] = [];
+    Object.keys(this.storage).forEach(key => {
+      if (key.startsWith(this.alignmentStorageKey)) {
+        alignmentsInStorage.push(key.substr(this.alignmentStorageKey.length));
+      }
+    });
+    return new Set<string>(alignmentsInStorage);
+  }
+
+  get availableAlignments(): Set<string> {
+    return this.alignmentsInStorage;
   }
 
   /**
@@ -42,7 +55,6 @@ export class AlignmentManagementService {
 
     const internalAlignmentName = this.createInternalName(name);
     this.storage.setItem(internalAlignmentName, JSON.stringify(alignment));
-    this.availableAlignments.add(name);
   }
 
   /**
@@ -57,7 +69,7 @@ export class AlignmentManagementService {
     }
 
     const internalAlignmentName = this.createInternalName(name);
-    const alignmentJson = this.storage.get(internalAlignmentName);
+    const alignmentJson = this.storage.getItem(internalAlignmentName);
     const alignment = JSON.parse(alignmentJson);
     return alignment;
   }

@@ -18,3 +18,8 @@
   margin: 20px;
   display: block;
 }
+
+.alignment-manager-action-button {
+  margin-left: 4px;
+  margin-right: 4px;
+}

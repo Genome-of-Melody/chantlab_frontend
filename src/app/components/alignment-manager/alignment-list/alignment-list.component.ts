@@ -35,4 +35,12 @@ export class AlignmentListComponent implements OnInit {
     return selectedAlignmentNames;
   }
 
+  unselectAll(): void {
+    this.selectedAlignments.forEach((x, i) => this.selectedAlignments[i] = false);
+  }
+
+  requestShowAlignment(name: string): void {
+    console.log('Requesting show alignment: ' + name);
+  }
+
 }

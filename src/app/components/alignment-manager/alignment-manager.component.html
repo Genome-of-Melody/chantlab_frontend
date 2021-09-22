@@ -5,7 +5,8 @@
       <app-alignment-list></app-alignment-list>
       <span *ngIf="zeroAlignmentsAvailable"><i>No stored alignments available.</i></span>
       <br><br>
-      <button mat-raised-button color="primary" (click)="deleteSelection()">Delete</button>
+      <button class="alignment-manager-action-button" mat-raised-button color="primary" (click)="showSelection()">Show</button>
+      <button class="alignment-manager-action-button" mat-raised-button color="primary" (click)="deleteSelection()">Delete</button>
     </mat-card>
   </div>
 

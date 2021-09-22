@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ChantService} from '../../services/chant.service';
 import {AlignmentService} from '../../services/alignment.service';
 import {Alignment, AlignmentResponse} from '../../models/alignment';
 import {AlignmentErrorDialogComponent} from '../dialogs/alignment-error-dialog/alignment-error-dialog.component';
 import {IChant} from '../../interfaces/chant.interface';
 import {MatDialog} from '@angular/material/dialog';
+import {AlignmentManagementService} from '../../services/alignment-management.service';
+import {ActivatedRoute} from '@angular/router';
+import RuntimeError = WebAssembly.RuntimeError;
 
 /**
  * The AlignedPageComponent is a level of indirection between the app's
@@ -29,13 +32,44 @@ export class AlignedPageComponent implements OnInit {
 
   alignedResponse: AlignmentResponse;
 
+  inputAlignment: Alignment = undefined;
+  requestedAlignmentName: string = undefined;
+
   constructor(
     private chantService: ChantService,
     private alignmentService: AlignmentService,
+    private alignmentManagementService: AlignmentManagementService,
+    private route: ActivatedRoute,
     public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
+    this.requestedAlignmentName = this.route.snapshot.params.name;
+    if (this.requestedAlignmentName === undefined) {
+      this.initFromServer();
+    } else {
+      if (!this.alignmentManagementService.hasAlignment(this.requestedAlignmentName)) {
+        console.log('Available alignments:');
+        console.log(this.alignmentManagementService.availableAlignments);
+        console.error('Requested non-existent alignment: ' + this.requestedAlignmentName);
+        throw new RuntimeError();
+      }
+      this.inputAlignment = this.alignmentManagementService.retrieveAlignment(this.requestedAlignmentName)
+      this.initFromAlignment();
+    }
+  }
+
+  initFromAlignment(): void {
+    this.idsToAlign = this.inputAlignment.ids;
+    this.chantsToAlign = this.inputAlignment.iChants;
+    this.alignedResponse = new AlignmentResponse(
+      this.inputAlignment.parsedChants,
+      [],
+      this.inputAlignment
+    );
+  }
+
+  initFromServer(): void {
     this.idsToAlign = this.alignmentService.idsToAlign;
     this.chantsToAlign = this.alignmentService.chantsToAlign;
 

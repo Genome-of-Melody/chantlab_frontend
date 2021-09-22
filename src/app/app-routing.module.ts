@@ -15,6 +15,7 @@ const routes: Routes = [
   { path: 'chants', component: ChantListWrapperComponent },
   { path: 'chants/:id', component: ChantFetchComponent },
   // { path: 'align', component: AlignedComponent },
+  { path: 'align/:name', component: AlignedPageComponent },
   { path: 'align', component: AlignedPageComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'upload', component: DataUploadComponent },
