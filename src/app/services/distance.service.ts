@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {AssertionError} from 'assert';
 import {isEffectiveChar, isNoteChar} from '../models/alpiano';
+import {AlignmentSettingsService} from './settings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class DistanceService {
     // This, however, will be resolved in another method. This method only
     // computes the absolute distance between two aligned volpianos.
     if (alpiano1.length !== alpiano2.length) {
-      throw new AssertionError({message: `Pairwise distance: Aligned volpiano lengths do not match!  ${alpiano1.length} vs. ${alpiano2.length}`});
+      throw new Error(`Pairwise distance: Aligned volpiano lengths do not match!  ${alpiano1.length} vs. ${alpiano2.length}`);
     }
 
     if ((alpiano1.length === 0) || (alpiano2.length === 0)) {
@@ -53,7 +53,7 @@ export class DistanceService {
     // the number of positions in which at least one of the sequences has an effective
     // (that is, non-gap) character.
     if (alpiano1.length !== alpiano2.length) {
-      throw new AssertionError({message: `Pairwise distance: Aligned volpiano lengths do not match!  ${alpiano1.length} vs. ${alpiano2.length}`});
+      throw new Error(`Pairwise distance: Aligned volpiano lengths do not match!  ${alpiano1.length} vs. ${alpiano2.length}`);
     }
 
     if ((alpiano1.length === 0) || (alpiano2.length === 0)) {
@@ -95,7 +95,7 @@ export class DistanceService {
     // Pass a callback to compute the pairwise distances.
     // By default, uses the alignedPairwiseNPositionsDifferent function as the distance.
     if (alpianos.length !== names.length) {
-      throw new AssertionError({message: 'All distances: must get same number of alpianos and their names.'});
+      throw new Error('All distances: must get same number of alpianos and their names.');
     }
 
     if (alpianos.length === 0) {
@@ -149,7 +149,7 @@ export class DistanceService {
   distancesToMatrix(allDistances: Map<string, Map<string, number>>, names: string[]): number[][] {
     // In the end, we might not be using this number[][] representation much.
     if (allDistances.size !== names.length) {
-      throw AssertionError({message: 'Distances map must have same dimensionality as the number of names!'});
+      throw Error('Distances map must have same dimensionality as the number of names!');
     }
     const distanceMatrix = [];
     for (const name1 of names) {
@@ -160,6 +160,36 @@ export class DistanceService {
       distanceMatrix.push(distanceVector);
     }
     return distanceMatrix;
+  }
+
+  /**
+   * Selects the right pairwise alignment function based on the AlignmentSettingsService.
+   * This centralizes how the settings are interpreted at the point where they need
+   * to be interpreted for various consumers of the service, instead of implementing this
+   * in each of the consumers (e.g., AlignedComponent, ContrafactService).
+   */
+  alignedAllDistancesFromSettings(alpianos: string[],
+                                  names: string[],
+                                  settings: AlignmentSettingsService): Map<string, Map<string, number>> {
+
+    let pairwiseDistanceFunction = this.alignedPairwiseRelativePositionsDifferent;
+    const pairwiseDistanceOptions = {
+      useEffectiveAlignedLength: true,
+      onlyCountNotes: false,
+    };
+    if (settings.distanceMatrixUseAbsoluteDistances) {
+      pairwiseDistanceFunction = this.alignedPairwiseNPositionsDifferent;
+    }
+
+    const distanceMap = this.alignedAllDistances(
+      alpianos,
+      names,
+      false,
+      pairwiseDistanceFunction,
+      pairwiseDistanceOptions
+    );
+
+    return distanceMap;
   }
 
 

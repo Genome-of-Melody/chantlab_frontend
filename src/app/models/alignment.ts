@@ -32,6 +32,40 @@ export class Alignment {
       response.success.sources);
   }
 
+  static fromJson(json: any): Alignment {
+    return new Alignment(
+      json.parsedChants,
+      json.iChants,
+      json.alpianos,
+      json.ids,
+      json.urls,
+      json.sources
+    );
+  }
+
+  get length(): number {
+    return this.ids.length;
+  }
+
+  selectSubset(idxs: number[]): Alignment {
+    const parsedChants: Array<Array<{text: string, type: string, volpiano: Array<string>}>> = [];
+    const iChants: Array<IChant> = [];
+    const alpianos: Array<string> = [];
+    const ids: Array<number> = [];
+    const urls: Array<string> = [];
+    const sources: Array<string> = [];
+
+    for (const idx of idxs) {
+      parsedChants.push(this.parsedChants[idx]);
+      iChants.push(this.iChants[idx]);
+      alpianos.push(this.alpianos[idx]);
+      ids.push(this.ids[idx]);
+      urls.push(this.urls[idx]);
+      sources.push(this.sources[idx]);
+    }
+
+    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources);
+  }
 }
 
 /**

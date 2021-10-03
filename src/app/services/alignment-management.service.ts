@@ -70,7 +70,9 @@ export class AlignmentManagementService {
 
     const internalAlignmentName = this.createInternalName(name);
     const alignmentJson = this.storage.getItem(internalAlignmentName);
-    const alignment = JSON.parse(alignmentJson);
+    const alignment = Alignment.fromJson(JSON.parse(alignmentJson));
+    // console.log('AlignmentManagementService.retrieveAlignment: ');
+    // console.log(alignment);
     return alignment;
   }
 

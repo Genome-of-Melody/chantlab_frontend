@@ -36,10 +36,11 @@
 
     <div class="widget-control">
       <ul class="widget-control">
-        <li><button mat-raised-button (click)="downloadAligned()" color="primary" class="widget-control-button">Download</button></li>
+        <li><button mat-raised-button (click)="saveAlignment()" color="primary" class="widget-control-button">Save</button>
+            <button mat-raised-button (click)="downloadAligned()" color="primary" class="widget-control-button">Download</button></li>
         <li><button mat-raised-button (click)="doShowDistanceMatrix()" color="{{ showDistanceMatrixColor }}"
                     class="widget-control-button">Distance Matrix</button></li>
-        <li><button mat-raised-button (click)="saveAlignment()" color="primary" class="widget-control-button">Save</button></li>
+        <li><button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button></li>
       </ul>
     </div>
 

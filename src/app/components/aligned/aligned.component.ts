@@ -14,6 +14,7 @@ import {AlignmentManagementService} from '../../services/alignment-management.se
 import {NameOnCreateAlignmentComponent} from '../dialogs/name-on-create-alignment/name-on-create-alignment.component';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import {ContrafactService} from '../../services/contrafact.service';
 
 @Component({
   selector: 'app-aligned',
@@ -59,6 +60,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     private conservationProfileService: ConservationProfileService,
     private distanceService: DistanceService,
     private settingsService: SettingsService,
+    private contrafactService: ContrafactService,
     public dialog: MatDialog
   ) { }
 
@@ -294,11 +296,11 @@ export class AlignedComponent implements OnInit, OnDestroy {
   }
 
   computeDistances(): Map<string, Map<string, number>> {
-    if (!this.alignmentPresent) {
+    if (!this.alignment) {
       return undefined;
     }
     let pairwiseDistanceFunction = this.distanceService.alignedPairwiseRelativePositionsDifferent;
-    let pairwiseDistanceOptions = {
+    const pairwiseDistanceOptions = {
       useEffectiveAlignedLength: true,
       onlyCountNotes: false,
     };
@@ -330,6 +332,28 @@ export class AlignedComponent implements OnInit, OnDestroy {
   }
   get distanceMatrixChantNames(): string[] {
     return this.alignment.iChants.map(ch => ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id);
+  }
+
+  restrictToContrafacts(): void {
+    if (!this.alignment) { return; }
+    const distanceMap: Map<string, Map<string, number>> = this.contrafactService.computeDistanceMap(this.alignment);
+    const contrafacts = this.contrafactService.discover(this.alignment, distanceMap);
+
+    // Find which alignment members are not contrafacts and remove them
+    const nonContrafactIdxs: number[] = [];
+    const contrafactIds = new Set(contrafacts.alignment.ids);
+    for (let i = 0; i < this.alignment.length; i++) {
+      if (!contrafactIds.has(this.alignment.ids[i])) {
+        nonContrafactIdxs.push(i);
+      }
+    }
+    for (const idx of nonContrafactIdxs.sort()) {
+      // The members of the Alignment object are not removed
+      // upon deleteAlignment(idx), so we do *not* need to subtract
+      // the number of already deleted items from the pre-computed idxs.
+      console.log('Removing alignment idx ' + idx);
+      this.deleteAlignment(idx);
+    }
   }
 
   @HostListener('document:keyup', ['$event'])

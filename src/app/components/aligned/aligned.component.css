@@ -88,6 +88,8 @@ div.distance-matrix-wrapper {
 
 div.widget-control {
   display: inline-block;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 ul.widget-control {
@@ -96,8 +98,8 @@ ul.widget-control {
 
 .widget-control-button {
   width: fit-content;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 2px;
+  margin-right: 2px;
   margin-top: 2px;
   margin-bottom: 2px;
 }
