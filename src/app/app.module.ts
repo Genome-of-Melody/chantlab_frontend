@@ -53,6 +53,7 @@ import { AlignmentManagerComponent } from './components/alignment-manager/alignm
 import { AlignmentListComponent } from './components/alignment-manager/alignment-list/alignment-list.component';
 import { NameOnCreateAlignmentComponent } from './components/dialogs/name-on-create-alignment/name-on-create-alignment.component';
 import { HelpPageComponent } from './components/help-page/help-page.component';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 
 @NgModule({
@@ -89,27 +90,28 @@ import { HelpPageComponent } from './components/help-page/help-page.component';
     NameOnCreateAlignmentComponent,
     HelpPageComponent,
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatPaginatorModule,
-    MatCardModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatProgressSpinnerModule,
-    DragDropModule,
-    MatButtonToggleModule,
-    RouterModule,
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        FormsModule,
+        HttpClientModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatCardModule,
+        MatDialogModule,
+        MatDividerModule,
+        MatProgressSpinnerModule,
+        DragDropModule,
+        MatButtonToggleModule,
+        RouterModule,
+        ScrollingModule,
+    ],
   entryComponents: [
     ChantDetailDialogComponent
   ],

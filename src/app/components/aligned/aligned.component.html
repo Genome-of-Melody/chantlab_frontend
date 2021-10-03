@@ -46,12 +46,15 @@
 
   </div>
 
-  <div cdkDropList
-       class="scrollable"
-       *ngIf="alignment; else progressSpinner"
-       (cdkDropListDropped)="drop($event)">
 
-      <div *ngFor="let chant of alignment.parsedChants; let volpianoIdx = index" class="card" cdkDrag>
+  <cdk-virtual-scroll-viewport appendOnly itemSize="30" class="alignment-scroll-viewport">
+    <div cdkDropList
+         class="scrollable"
+         *ngIf="alignment; else progressSpinner"
+         (cdkDropListDropped)="drop($event)">
+
+      <div *cdkVirtualFor="let chant of alignment.parsedChants; let volpianoIdx = index"
+           class="card" cdkDrag>
         <div *ngIf="alignmentPresent[volpianoIdx]">
 
           <div *ngIf="alignmentUncollapsed[volpianoIdx]; else collapsed">
@@ -114,12 +117,14 @@
         </div>
       </div>
 
-    </div>
-    <ng-template #progressSpinner>
-        <div class="spinner">
-            <mat-spinner></mat-spinner>
-        </div>
-    </ng-template>
+    </div> <!-- of cdkDropList -->
+  </cdk-virtual-scroll-viewport>
+
+  <ng-template #progressSpinner>
+      <div class="spinner">
+          <mat-spinner></mat-spinner>
+      </div>
+  </ng-template>
 
   <!-- Display tools -->
   <div *ngIf="showDistanceMatrix"
