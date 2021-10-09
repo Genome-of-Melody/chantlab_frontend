@@ -53,6 +53,7 @@ import { AlignmentManagerComponent } from './components/alignment-manager/alignm
 import { AlignmentListComponent } from './components/alignment-manager/alignment-list/alignment-list.component';
 import { NameOnCreateAlignmentComponent } from './components/dialogs/name-on-create-alignment/name-on-create-alignment.component';
 import { HelpPageComponent } from './components/help-page/help-page.component';
+import { NetworkGraphComponent } from './components/visualization/network-graph/network-graph.component';
 
 
 @NgModule({
@@ -88,6 +89,7 @@ import { HelpPageComponent } from './components/help-page/help-page.component';
     AlignmentListComponent,
     NameOnCreateAlignmentComponent,
     HelpPageComponent,
+    NetworkGraphComponent,
   ],
   imports: [
     BrowserModule,
