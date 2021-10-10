@@ -1,11 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import * as d3 from 'd3';
-import { SimulationLinkDatum, SimulationNodeDatum } from 'd3';
+
+interface Node {
+  "id": string,
+  "group": string
+}
+
+interface Link {
+  "source": string,
+  "target": string,
+  "value": number
+}
 
 interface NetworkGraphData {
-  "nodes": object[],
-  "links": SimulationLinkDatum<SimulationNodeDatum>[]
+  "nodes": Node[],
+  "links": Link[]
 }
 
 @Component({
@@ -17,6 +27,8 @@ export class NetworkGraphComponent implements OnInit {
 
   @Input() distanceMatrix: Map<string, Map<string, number>>;
   @Input() distanceThreshold: number = 0.7;
+
+  displayGraph: boolean = true;
 
   constructor() { }
 
@@ -34,39 +46,36 @@ export class NetworkGraphComponent implements OnInit {
       return networkGraphData;
     }
 
-    // Define ID of each chant name
-    let nameIdCorrespondence = new Map<string, number>();
-    let i = 0;
-    distanceMatrix.forEach((_, key: string) => {
-      nameIdCorrespondence.set(key, i);
-      i++;
-    });
-
     // Retrieve the list of links
-    let links: SimulationLinkDatum<SimulationNodeDatum>[] = [];
+    let links: Link[] = [];
     let usedLinks = new Set<string>();
+
+    // Create set of nodes
+    let nodeSet = new Set<string>();
 
     distanceMatrix.forEach((distanceMap: Map<string, number>, name1: string) => {
       distanceMap.forEach((distance: number, name2: string) => {
+        // Create a node with its full name as its ID and
+        // its signature as its group
+        nodeSet.add(name1);
         // Only consider links with a low enough distance
         if (distance <= this.distanceThreshold) {
-          const id1 = nameIdCorrespondence.get(name1);
-          const id2 = nameIdCorrespondence.get(name2);
           // Only add link if the two chants are different
           // Check whether the reverse link is already in the set
-          if (id1 !== id2 &&
-              !usedLinks.has(id2.toString() + "|" + id1.toString())) {
-            links.push({"source": id1, "target": id2})
-            usedLinks.add(id1.toString() + "|" + id2.toString());
+          if (name1 !== name2 &&
+              !usedLinks.has(name2 + "|" + name1)) {
+            links.push({"source": name1, "target": name2, "value": 1 - distance})
+            usedLinks.add(name1 + "|" + name2);
           }
         }
       });
     });
 
     // Set the correct return values
-    nameIdCorrespondence.forEach((value: number, key: string) => {
-      networkGraphData.nodes.push({"id": value, "name": key});
-    });
+    networkGraphData.nodes = Array.from(nodeSet).map(name => ({
+      "id": name,
+      "group": name.split(" / ")[1]
+    }));
     networkGraphData.links = links;
 
     console.log(networkGraphData);
@@ -74,10 +83,14 @@ export class NetworkGraphComponent implements OnInit {
   }
 
   drawGraph(): void {
+    let data: NetworkGraphData = this.createDataFromDistanceMatrix(this.distanceMatrix);
+    let color: Map<string, string> = this.createColorScheme(data.nodes);
+    console.log(color);
+
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 30, left: 40},
-    width = 2000 - margin.left - margin.right,
-    height = 1000 - margin.top - margin.bottom;
+    width = 600 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3.select(".network-graph")
@@ -88,9 +101,6 @@ export class NetworkGraphComponent implements OnInit {
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-
-    let data: NetworkGraphData = this.createDataFromDistanceMatrix(this.distanceMatrix);
-
     // Initialize the links
     var link = svg
       .selectAll("line")
@@ -98,27 +108,29 @@ export class NetworkGraphComponent implements OnInit {
       .enter()
       .append("line")
         .style("stroke", "#aaa")
+        .attr("stroke-width", d => d.value * 10)
 
     // Initialize the nodes
+    // TODO show tooltip with the name of the node on hover
     var node = svg
       .selectAll("circle")
       .data(data.nodes)
       .enter()
       .append("circle")
         .attr("r", 10)
-        .style("fill", "#69b3a2")
+        .style("fill", d => color[d.group])
 
-    // Let's list the force we wanna apply on the network
-    var simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
-        .force("link", d3.forceLink()                               // This force provides links between nodes
-              .id(function(d: any) { return d.id; })                     // This provide  the id of a node
-              .links(data.links)                                    // and this the list of links
+    // Apply force
+    var simulation = d3.forceSimulation(data.nodes as any)                 
+        .force("link", d3.forceLink()                               // pushes linked nodes together, according to a link distance
+              .id(function(d: any) { return d.id; })                    
+              .links(data.links)                                    
         )
-        .force("charge", d3.forceManyBody().strength(-400))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-        .force("center", d3.forceCenter(width / 2, height / 2))     // This force attracts nodes to the center of the svg area
+        .force("charge", d3.forceManyBody())                        // apply general attraction or repulsion between nodes
+        .force("center", d3.forceCenter(width / 2, height / 2))     // attracts every node to a specific position
         .on("end", ticked);
 
-    // This function is run at each iteration of the force algorithm, updating the nodes position.
+    // Function updating the nodes' position
     function ticked() {
       link
           .attr("x1", function(d: any) { return d.source.x; })
@@ -130,6 +142,26 @@ export class NetworkGraphComponent implements OnInit {
           .attr("cx", function (d: any) { return d.x+6; })
           .attr("cy", function(d: any) { return d.y-6; });
     }
+  }
+
+  createColorScheme(nodes: Node[]): Map<string, string> {
+    let groupSet = new Set<string>();
+
+    nodes.forEach(node => {
+      groupSet.add(node.group);
+    });
+
+    let colorScheme = new Map<string, string>();
+    let rgbValue = () => (Math.floor(Math.random() * 255));
+    groupSet.forEach(group => {
+      const r = rgbValue();
+      const g = rgbValue();
+      const b = rgbValue();
+      colorScheme[group] = "rgb(" + r.toString() + "," +
+          g.toString() + "," + b.toString() + ")";
+    });
+
+    return colorScheme;
   }
 
 }
