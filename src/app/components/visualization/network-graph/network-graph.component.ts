@@ -4,7 +4,8 @@ import * as d3 from 'd3';
 
 interface Node {
   "id": string,
-  "group": string
+  "group"?: string,
+  "count"?: number
 }
 
 interface Link {
@@ -34,6 +35,7 @@ export class NetworkGraphComponent implements OnInit {
 
   ngOnInit(): void {
     this.drawGraph();
+    this.createAggregatedData(this.distanceMatrix);
   }
 
   createDataFromDistanceMatrix(distanceMatrix: Map<string, Map<string, number>>): NetworkGraphData {
@@ -80,6 +82,93 @@ export class NetworkGraphComponent implements OnInit {
 
     console.log(networkGraphData);
     return networkGraphData;
+  }
+
+  createAggregatedData(distanceMatrix: Map<string, Map<string, number>>): NetworkGraphData {
+    let networkGraphData: NetworkGraphData = {
+      "nodes": [],
+      "links": []
+    }
+
+    if (!distanceMatrix) {
+      return networkGraphData;
+    }
+
+    let distanceMatrixSources = this.transformDistanceMatrix(distanceMatrix);
+    console.log(distanceMatrixSources);
+    let sourceCounts = new Map<string, number>();
+    distanceMatrix.forEach((_, key: string) => {
+      const source = key.split(" / ")[1];
+      sourceCounts.set(source, sourceCounts.has(source) ? sourceCounts.get(source) + 1 : 1);
+    })
+
+    // Retrieve the list of links
+    let links: Link[] = [];
+    let usedLinks = new Set<string>();
+
+    // Create set of nodes
+    let nodeSet = new Set<string>();
+
+    distanceMatrixSources.forEach((distanceMap: Map<string, number>, name1: string) => {
+      distanceMap.forEach((distance: number, name2: string) => {
+        // Create a node with its full name as its ID and
+        // its signature as its group
+        nodeSet.add(name1);
+        // Only consider links with a low enough distance
+        if (distance <= this.distanceThreshold) {
+          // Only add link if the two chants are different
+          // Check whether the reverse link is already in the set
+          if (name1 !== name2 &&
+              !usedLinks.has(name2 + "|" + name1)) {
+            links.push({"source": name1, "target": name2, "value": 1 - distance})
+            usedLinks.add(name1 + "|" + name2);
+          }
+        }
+      });
+    });
+
+    // Set the correct return values
+    networkGraphData.nodes = Array.from(nodeSet).map(name => ({
+      "id": name,
+      "count": sourceCounts[name]
+    }));
+    networkGraphData.links = links;
+
+    console.log("Aggregated links", networkGraphData);
+    return networkGraphData;
+  }
+
+  transformDistanceMatrix(distanceMatrix: Map<string, Map<string, number>>): Map<string, Map<string, number>> {
+    let distanceMatrixAggregated = new Map<string, Map<string, number[]>>();
+
+    distanceMatrix.forEach((distanceMap: Map<string, number>, name1: string) => {
+      distanceMap.forEach((distance: number, name2: string) => {
+        const source1 = name1.split(" / ")[1];
+        const source2 = name2.split(" / ")[1];
+        if (distanceMatrixAggregated.has(source1) && distanceMatrixAggregated.get(source1).has(source2)) {
+          distanceMatrixAggregated.get(source1).get(source2).push(distance);
+        }
+        else {
+          if (!distanceMatrixAggregated.has(source1)) {
+            distanceMatrixAggregated.set(source1, new Map<string, number[]>());
+          }
+          distanceMatrixAggregated.get(source1).set(source2, [distance]);
+        }
+      });
+    });
+
+    // Take the mean of the distances as the distance between the nodes
+    let distanceMatrixSources = new Map<string, Map<string, number>>();
+    distanceMatrixAggregated.forEach((distanceMap: Map<string, number[]>, source1: string) => {
+      distanceMap.forEach((distances: number[], source2: string) => {
+        if (!distanceMatrixSources.has(source1)) {
+          distanceMatrixSources.set(source1, new Map<string, number>());
+        }
+        distanceMatrixSources.get(source1).set(source2, distances.reduce((a, b) => a + b, 0) / distances.length);
+      });
+    });
+
+    return distanceMatrixSources;
   }
 
   drawGraph(): void {
