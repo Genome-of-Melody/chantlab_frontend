@@ -1,6 +1,6 @@
 <div class="alignment">
 
-  <app-network-graph [distanceMatrix]="computeDistances()"></app-network-graph>
+  <app-network-graph [distanceMatrix]="distanceMatrix"></app-network-graph>
 
   <div class="controls-wrapper">
     <!-- Display controls and download -->
@@ -140,7 +140,7 @@
        class="distance-matrix-wrapper"
        (keyup)="onKeyUp($event)">
     <app-distance-matrix
-      [allDistances]="computeDistances()"
+      [allDistances]="distanceMatrix"
       [names]="distanceMatrixChantNames"
     ></app-distance-matrix>
   </div>

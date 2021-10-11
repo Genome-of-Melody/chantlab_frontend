@@ -1,11 +1,10 @@
-import {Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { AlignmentService } from 'src/app/services/alignment.service';
-import { ChantService } from 'src/app/services/chant.service';
-import { AlignmentErrorDialogComponent } from '../dialogs/alignment-error-dialog/alignment-error-dialog.component';
-import { ConservationProfileService } from 'src/app/services/conservation-profile.service';
-import { DownloadService } from 'src/app/services/download.service';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {AlignmentService} from 'src/app/services/alignment.service';
+import {ChantService} from 'src/app/services/chant.service';
+import {ConservationProfileService} from 'src/app/services/conservation-profile.service';
+import {DownloadService} from 'src/app/services/download.service';
 import {DistanceService} from '../../services/distance.service';
 import {Alignment, AlignmentResponse} from '../../models/alignment';
 import {SettingsService} from '../../services/settings.service';
@@ -19,7 +18,8 @@ import {ContrafactService} from '../../services/contrafact.service';
 @Component({
   selector: 'app-aligned',
   templateUrl: './aligned.component.html',
-  styleUrls: ['./aligned.component.css']
+  styleUrls: ['./aligned.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlignedComponent implements OnInit, OnDestroy {
 
@@ -49,6 +49,14 @@ export class AlignedComponent implements OnInit, OnDestroy {
   conservationChanged = true;
 
   displayMode = 'volpiano';
+
+  private _distanceMatrix: Map<string, Map<string, number>> = undefined;
+  get distanceMatrix(): Map<string, Map<string, number>> {
+    if (!this._distanceMatrix) {
+      this._distanceMatrix = this.computeDistances();
+    }
+    return this._distanceMatrix;
+  }
 
   private readonly componentDestroyed$ = new Subject();
 
@@ -123,12 +131,19 @@ export class AlignedComponent implements OnInit, OnDestroy {
     this.visibleDetails[id] = !this.visibleDetails[id];
   }
 
+  /**
+   * Invalidate caches upon an alignment change. */
+  alignmentChanged() {
+    this._distanceMatrix = undefined;
+  }
+
   deleteAlignment(i: number): void {
     this.alignmentPresent[i] = false;
     this.alignmentUncollapsed[i] = false;
     this.visibleDetails[this.alignment.ids[i]] = false;
 
     this.conservationChanged = true;
+    this.alignmentChanged();
   }
 
   collapseAlignment(i: number): void {
@@ -295,7 +310,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return idx;
   }
 
-  computeDistances(): Map<string, Map<string, number>> {
+  computeDistances(useCache= false): Map<string, Map<string, number>> {
     if (!this.alignment) {
       return undefined;
     }
@@ -316,6 +331,10 @@ export class AlignedComponent implements OnInit, OnDestroy {
       pairwiseDistanceOptions
       );
     return distanceMap;
+  }
+
+  computeAndCacheDistances(): void {
+    this._distanceMatrix = this.computeDistances(false);
   }
 
   doShowDistanceMatrix(): void {
@@ -359,6 +378,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
       console.log('Removing alignment idx ' + idx);
       this.deleteAlignment(idx);
     }
+    this.computeAndCacheDistances();
   }
 
   @HostListener('document:keyup', ['$event'])
