@@ -28,6 +28,8 @@ td.distance-matrix-header-cell {
 
 td.distance-matrix-header-column {
   text-align: right;
+  min-width: 100px;
+  width: fit-content;
 }
 
 .distance-matrix-cell-name {

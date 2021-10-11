@@ -47,14 +47,21 @@
   </div>
 
 
-  <cdk-virtual-scroll-viewport appendOnly itemSize="30" class="alignment-scroll-viewport">
-    <div cdkDropList
+  <cdk-virtual-scroll-viewport
+    appendOnly
+    itemSize="120"
+    minBufferPx="240"
+    maxBufferPx="1200"
+    class="alignment-scroll-viewport"
+    *ngIf="alignment; else progressSpinner">
+    <!--<div cdkDropList
          class="scrollable"
-         *ngIf="alignment; else progressSpinner"
-         (cdkDropListDropped)="drop($event)">
+         (cdkDropListDropped)="drop($event)"> -->
 
       <div *cdkVirtualFor="let chant of alignment.parsedChants; let volpianoIdx = index"
-           class="card" cdkDrag>
+           class="card">
+<!--           cdkVirtualForTemplateCacheSize=50-->
+<!--           cdkDrag-->
         <div *ngIf="alignmentPresent[volpianoIdx]">
 
           <div *ngIf="alignmentUncollapsed[volpianoIdx]; else collapsed">
@@ -70,7 +77,7 @@
                 </div>
                 <button mat-button class="title-button"
                 (click)="showDetail(alignment.ids[volpianoIdx])">
-                    {{ alignment.sources[volpianoIdx] }}
+                    {{ volpianoIdx + ': ' + alignment.sources[volpianoIdx] }}
                 </button>
               </div>
               <br>
@@ -117,7 +124,7 @@
         </div>
       </div>
 
-    </div> <!-- of cdkDropList -->
+    <!--</div>--> <!-- of cdkDropList -->
   </cdk-virtual-scroll-viewport>
 
   <ng-template #progressSpinner>

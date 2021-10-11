@@ -339,6 +339,11 @@ export class AlignedComponent implements OnInit, OnDestroy {
     const distanceMap: Map<string, Map<string, number>> = this.contrafactService.computeDistanceMap(this.alignment);
     const contrafacts = this.contrafactService.discover(this.alignment, distanceMap);
 
+    if (contrafacts.alignment.length < 1) {
+      console.log('No contrafacts found.');
+      return;
+    }
+
     // Find which alignment members are not contrafacts and remove them
     const nonContrafactIdxs: number[] = [];
     const contrafactIds = new Set(contrafacts.alignment.ids);
