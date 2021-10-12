@@ -28,14 +28,14 @@ export class NetworkGraphComponent implements OnInit {
 
   @Input() distanceMatrix: Map<string, Map<string, number>>;
   @Input() distanceThreshold = 0.7;
+  @Input() networkType: string;
 
   displayGraph = true;
 
   constructor() { }
 
   ngOnInit(): void {
-    this.drawGraph();
-    this.createAggregatedData(this.distanceMatrix);
+    this.drawGraph(this.networkType);
   }
 
   createDataFromDistanceMatrix(distanceMatrix: Map<string, Map<string, number>>): NetworkGraphData {
@@ -171,8 +171,18 @@ export class NetworkGraphComponent implements OnInit {
     return distanceMatrixSources;
   }
 
-  drawGraph(): void {
-    const data: NetworkGraphData = this.createDataFromDistanceMatrix(this.distanceMatrix);
+  drawGraph(type: string): void {
+    if (type !== "chants" && type !== "manuscripts") {
+      return;
+    }
+
+    let data: NetworkGraphData;
+    if (type === "chants") {
+      data = this.createDataFromDistanceMatrix(this.distanceMatrix);
+    }
+    else {
+      data = this.createAggregatedData(this.distanceMatrix);
+    }
     const color: Map<string, string> = this.createColorScheme(data.nodes);
     console.log(color);
 
@@ -207,7 +217,7 @@ export class NetworkGraphComponent implements OnInit {
       .enter()
       .append('circle')
         .attr('r', 10)
-        .style('fill', d => color[d.group]);
+        .style('fill', d => color.get(d.group));
 
     // Apply force
     const simulation = d3.forceSimulation(data.nodes as any)
@@ -246,8 +256,8 @@ export class NetworkGraphComponent implements OnInit {
       const r = rgbValue();
       const g = rgbValue();
       const b = rgbValue();
-      colorScheme[group] = 'rgb(' + r.toString() + ',' +
-          g.toString() + ',' + b.toString() + ')';
+      colorScheme.set(group,
+         'rgb(' + r.toString() + ',' + g.toString() + ',' + b.toString() + ')');
     });
 
     return colorScheme;

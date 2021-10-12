@@ -1,6 +1,32 @@
 <div class="alignment">
 
-  <app-network-graph [distanceMatrix]="distanceMatrix"></app-network-graph>
+  <!-- TODO the network doesn't disappear when the button is clicked again ?-->
+  <div class="network-wrapper">
+    <div class="network chant-network">
+      <div *ngIf="showChantNetwork">
+        <app-network-graph
+          [distanceMatrix]="distanceMatrix"
+          [networkType]="'chants'">
+        </app-network-graph>
+      </div>
+      <button
+        mat-raised-button
+        (click)="showChantNetwork = !showChantNetwork"
+        color="primary">Chant network</button>
+    </div>
+    <div class="network manuscript-network">
+      <div *ngIf="showManuscriptNetwork">
+        <app-network-graph
+          [distanceMatrix]="distanceMatrix"
+          [networkType]="'manuscripts'">
+        </app-network-graph>
+      </div>
+      <button
+        mat-raised-button
+        (click)="showManuscriptNetwork = !showManuscriptNetwork"
+        color="primary">Manuscript network</button>
+    </div>
+  </div>
 
   <div class="controls-wrapper">
     <!-- Display controls and download -->

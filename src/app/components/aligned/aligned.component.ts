@@ -44,6 +44,9 @@ export class AlignedComponent implements OnInit, OnDestroy {
 
   showDistanceMatrix = false;
 
+  showChantNetwork = false;
+  showManuscriptNetwork = false;
+
   conservationProfile: number[][][][];
   conservationOfSet: number;
   conservationChanged = true;
