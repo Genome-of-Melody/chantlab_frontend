@@ -1,9 +1,9 @@
 <div class="alignment">
 
-  <!-- TODO the network doesn't disappear when the button is clicked again ?-->
   <div class="network-wrapper">
     <div class="network chant-network">
       <div *ngIf="showChantNetwork">
+        <div class="network-graph-chants"></div>
         <app-network-graph
           [distanceMatrix]="distanceMatrix"
           [networkType]="'chants'">
@@ -16,6 +16,7 @@
     </div>
     <div class="network manuscript-network">
       <div *ngIf="showManuscriptNetwork">
+        <div class="network-graph-manuscripts"></div>
         <app-network-graph
           [distanceMatrix]="distanceMatrix"
           [networkType]="'manuscripts'">

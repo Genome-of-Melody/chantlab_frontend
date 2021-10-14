@@ -192,7 +192,7 @@ export class NetworkGraphComponent implements OnInit {
     height = 600 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
-    const svg = d3.select('.network-graph')
+    const svg = d3.select('.network-graph-' + type)
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
