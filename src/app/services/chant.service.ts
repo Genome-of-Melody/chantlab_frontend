@@ -43,9 +43,12 @@ export class ChantService {
           const formData = new FormData();
           formData.append('dataSources', dataSources ? JSON.stringify(dataSources) : "[]");
           formData.append('incipit', incipit ? incipit : '');
-          formData.append('genres', filterSettings ? JSON.stringify(filterSettings['genres']) : "[]");
-          formData.append('offices', filterSettings ? JSON.stringify(filterSettings['offices']) : "[]");
-          formData.append('fontes', filterSettings ? JSON.stringify(filterSettings['fontes']) : "[]");
+          // Using null means that the back-end will *not* filter results based on this field,
+          // while if the filterSettings do contain an empty list, the back-end *will* filter
+          // (and thus the query result will be empty).
+          formData.append('genres', filterSettings ? JSON.stringify(filterSettings['genres']) : "null");
+          formData.append('offices', filterSettings ? JSON.stringify(filterSettings['offices']) : "null");
+          formData.append('fontes', filterSettings ? JSON.stringify(filterSettings['fontes']) : "null");
           return this.http.post(this._baseUrl + '/', formData);
         }
       ),

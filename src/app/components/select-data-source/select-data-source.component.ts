@@ -17,7 +17,7 @@ export class SelectDataSourceComponent implements OnInit {
 
   constructor(
     private dataSourceListService: DataSourceListService,
-    private dataSourceService: SelectedDataSourcesService,
+    private selectedDataSourceService: SelectedDataSourcesService,
     public dialog: MatDialog
   ) { }
 
@@ -31,7 +31,7 @@ export class SelectDataSourceComponent implements OnInit {
     for (let i = 0; i < this.selectedDatasets.length; i++) {
       if (this.selectedDatasets[i]) selected.push(this.dataSources[i][0]);
     }
-    this.dataSourceService.setSourceList(selected);
+    this.selectedDataSourceService.setSourceList(selected);
 
     if (showDialog) {
       this.dialog.open(SourceSelectionSavedDialogComponent);
@@ -44,7 +44,7 @@ export class SelectDataSourceComponent implements OnInit {
         this.selectedDatasets = [];
         this.dataSources = data;
 
-        const storedSelection = this.dataSourceService.getStoredSourceList();
+        const storedSelection = this.selectedDataSourceService.getStoredSourceList();
         let allUnselected = true;
 
         this.dataSources.forEach(element => {
