@@ -52,9 +52,14 @@ export class AlignedComponent implements OnInit, OnDestroy {
 
   private _distanceMatrix: Map<string, Map<string, number>> = undefined;
   get distanceMatrix(): Map<string, Map<string, number>> {
+    console.log('Asked for DistanceMatrix...');
     if (!this._distanceMatrix) {
-      this._distanceMatrix = this.computeDistances();
+      console.log('...nothing cached, recomputing distances');
+      this._distanceMatrix = this.computeDistances(true);
+    } else {
+      console.log('...using cached distances');
     }
+    console.log('...total distances: ' + this._distanceMatrix.size);
     return this._distanceMatrix;
   }
 
@@ -78,36 +83,6 @@ export class AlignedComponent implements OnInit, OnDestroy {
     this.idsToAlign = this.alignmentService.idsToAlign;
     this.alignmentMode = this.alignmentService.getMode();
     this.chantsToAlign = this.alignmentService.chantsToAlign;
-
-    // const formData: FormData = new FormData();
-    // formData.append('idsToAlign', JSON.stringify(this.idsToAlign));
-    // formData.append('mode', this.alignmentMode);
-    //
-    // this.chantService.getAlignment(formData).subscribe(
-    //   response => {
-    //
-    //     // Select the IChant data objects that contain incipits, cantus IDs, texts, etc.
-    //     // The Alignment object should get the IChnats, so it needs to be prepared
-    //     // before the constructor is called.
-    //     const alignedIChants = [];
-    //     response.success.ids.forEach(alignedID => {
-    //       const iChant = this.chantsToAlign.find(ch => ch.id === alignedID);
-    //       alignedIChants.push(iChant);
-    //     });
-    //     // Because I think in the (near) future the IChants will ride with the request
-    //     // and response, I think I can afford to do this. But of course it is
-    //     // not good software design to modify your response objects!
-    //     response.iChants = alignedIChants;
-    //
-    //     this.alignedResponse = new AlignmentResponse(
-    //       response.chants,
-    //       response.errors,
-    //       Alignment.fromResponse(response)
-    //     );
-    //     this.alignment = this.alignedResponse.alignment;
-    //   }
-    // );
-
     console.log('AlignedComponent.alignment:');
     console.log(this.alignment);
 
@@ -127,14 +102,31 @@ export class AlignedComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.complete();
   }
 
+  get visibleAlignmentSubset(): Alignment {
+    const idxs = [];
+    for (let i = 0; i < this.alignment.length; i++) {
+      if (this.alignmentPresent[i]) {
+        idxs.push(i);
+      }
+    }
+    const subAlignment = this.alignment.selectSubset(idxs);
+    console.log('Visible sub-alignment: length ' + subAlignment.length);
+    return subAlignment;
+  }
+
   showDetail(id): void {
     this.visibleDetails[id] = !this.visibleDetails[id];
   }
 
   /**
-   * Invalidate caches upon an alignment change. */
-  alignmentChanged() {
+   * Invalidate caches upon an alignment change.
+   */
+  alignmentChanged(): void {
     this._distanceMatrix = undefined;
+  }
+
+  get nAlignmentsShown(): number {
+    return this.alignmentPresent.filter(a => a).length;
   }
 
   deleteAlignment(i: number): void {
@@ -310,7 +302,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return idx;
   }
 
-  computeDistances(useCache= false): Map<string, Map<string, number>> {
+  computeDistances(visibleOnly: boolean): Map<string, Map<string, number>> {
     if (!this.alignment) {
       return undefined;
     }
@@ -323,9 +315,22 @@ export class AlignedComponent implements OnInit, OnDestroy {
       pairwiseDistanceFunction = this.distanceService.alignedPairwiseNPositionsDifferent;
     }
 
+    // It is not entirely obvious which subset of sequences needs to have distances
+    // computed. For now, we assume that the distances are always computed only for
+    // the visible alignment. This should be refactored into functions for computing
+    // the distances of visible alignments, which is the variable that goes e.g. into
+    // the DistanceMatrix upon each alignment modification, and for computing the distances
+    // between all pairs of aligned sequences, regardless of how they are shown.
+    let alignmentForDistanceComputation = this.alignment;
+    let chantNamesForDistanceComputation = this.distanceMatrixChantNames;
+    if (visibleOnly) {
+      alignmentForDistanceComputation = this.visibleAlignmentSubset;
+      chantNamesForDistanceComputation = this.visibleSequencesDistanceMatrixChantNames;
+    }
+
     const distanceMap = this.distanceService.alignedAllDistances(
-      this.alignment.alpianos,
-      this.distanceMatrixChantNames,
+      alignmentForDistanceComputation.alpianos,
+      chantNamesForDistanceComputation,
       false,
       pairwiseDistanceFunction,
       pairwiseDistanceOptions
@@ -334,7 +339,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
   }
 
   computeAndCacheDistances(): void {
-    this._distanceMatrix = this.computeDistances(false);
+    this._distanceMatrix = this.computeDistances(true);
   }
 
   doShowDistanceMatrix(): void {
@@ -352,10 +357,13 @@ export class AlignedComponent implements OnInit, OnDestroy {
   get distanceMatrixChantNames(): string[] {
     return this.alignment.iChants.map(ch => ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id);
   }
+  get visibleSequencesDistanceMatrixChantNames(): string[] {
+    return this.visibleAlignmentSubset.iChants.map(ch => ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id);
+  }
 
   restrictToContrafacts(): void {
     if (!this.alignment) { return; }
-    const distanceMap: Map<string, Map<string, number>> = this.contrafactService.computeDistanceMap(this.alignment);
+    const distanceMap: Map<string, Map<string, number>> = this.contrafactService.computeDistanceMap(this.visibleAlignmentSubset);
     const contrafacts = this.contrafactService.discover(this.alignment, distanceMap);
 
     if (contrafacts.alignment.length < 1) {
