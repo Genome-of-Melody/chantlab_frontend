@@ -1,6 +1,33 @@
 <div class="alignment">
 
-<app-network-graph [distanceMatrix]="distanceMatrix"></app-network-graph>
+  <div class="network-wrapper">
+    <div class="network chant-network">
+      <div *ngIf="showChantNetwork">
+        <div class="network-graph-chants"></div>
+        <app-network-graph
+          [distanceMatrix]="distanceMatrix"
+          [networkType]="'chants'">
+        </app-network-graph>
+      </div>
+      <button
+        mat-raised-button
+        (click)="showChantNetwork = !showChantNetwork"
+        color="primary">Chant network</button>
+    </div>
+    <div class="network manuscript-network">
+      <div *ngIf="showManuscriptNetwork">
+        <div class="network-graph-manuscripts"></div>
+        <app-network-graph
+          [distanceMatrix]="distanceMatrix"
+          [networkType]="'manuscripts'">
+        </app-network-graph>
+      </div>
+      <button
+        mat-raised-button
+        (click)="showManuscriptNetwork = !showManuscriptNetwork"
+        color="primary">Manuscript network</button>
+    </div>
+  </div>
 
   <div class="controls-wrapper">
     <!-- Display controls and download -->

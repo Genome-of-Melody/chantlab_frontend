@@ -109,3 +109,12 @@ ul.widget-control {
   height: 600px;
   border: 1px solid blue;
 }
+
+.network-wrapper {
+  display: flex;
+}
+
+.network {
+  justify-content: start;
+  margin: 20px;
+}
