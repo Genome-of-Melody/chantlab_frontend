@@ -27,9 +27,9 @@ export class SelectDataSourceComponent implements OnInit {
   }
 
   changeSelection(showDialog: boolean = true): void {
-    let selected: number[] = [];
+    const selected: number[] = [];
     for (let i = 0; i < this.selectedDatasets.length; i++) {
-      if (this.selectedDatasets[i]) selected.push(this.dataSources[i][0]);
+      if (this.selectedDatasets[i]) { selected.push(this.dataSources[i][0]); }
     }
     this.selectedDataSourceService.setSourceList(selected);
 

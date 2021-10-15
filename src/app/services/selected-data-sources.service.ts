@@ -32,4 +32,12 @@ export class SelectedDataSourcesService {
     this._sourceList.next(list);
     this.selectedDataSourcesChange.emit();
   }
+
+  ensureDatasetNotSelected(datasetIdx: number): void {
+    const names = this.getStoredSourceList();
+    if (names.find(n => n === datasetIdx)) {
+      const filteredIdxs = names.filter(n => n !== datasetIdx);
+      this.setSourceList(filteredIdxs); // maybe this emits unnecessarily?
+    }
+  }
 }
