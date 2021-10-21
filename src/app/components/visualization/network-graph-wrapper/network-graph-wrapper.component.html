@@ -1,7 +1,7 @@
 <div class="network-wrapper">
     <div class="network chant-network">
         <div *ngIf="showChantNetwork">
-        <div class="network-graph-chants"></div>
+        <div class="network-graph-chants" style="position: relative;"></div>
         <app-network-graph
             [distanceMatrix]="distanceMatrix"
             [colorScheme]="colorScheme"
@@ -15,7 +15,7 @@
     </div>
     <div class="network manuscript-network">
         <div *ngIf="showManuscriptNetwork">
-        <div class="network-graph-manuscripts"></div>
+        <div class="network-graph-manuscripts" style="position: relative;"></div>
         <app-network-graph
             [distanceMatrix]="distanceMatrix"
             [colorScheme]="colorScheme"

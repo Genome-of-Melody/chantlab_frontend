@@ -191,6 +191,14 @@ export class NetworkGraphComponent implements OnInit {
     width = 600 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
+    // Define the div for the tooltip
+    var div = d3.select(".network-graph-" + type).append("div")
+        .attr("class", "tooltip")				
+        .style("opacity", 0)
+        .style("top", "0px")
+        .style("left", "0px")
+        .style("position", "absolute")
+
     // append the svg object to the body of the page
     const svg = d3.select('.network-graph-' + type)
     .append('svg')
@@ -217,7 +225,20 @@ export class NetworkGraphComponent implements OnInit {
       .enter()
       .append('circle')
         .attr('r', 10)
-        .style('fill', d => this.colorScheme.get(d.group));
+        .style('fill', d => this.colorScheme.get(d.group))
+        .on("mouseover", function(event, d) {		
+          div.transition()		
+              .duration(200)		
+              .style("opacity", .9);		
+          div	.html(d.id)	
+              .style("left", (event.pageX) + "px")		
+              .style("top", (event.pageY - 80) + "px");	
+          })					
+      .on("mouseout", function(d) {		
+          div.transition()		
+              .duration(500)		
+              .style("opacity", 0);	
+      });
 
     // Apply force
     const simulation = d3.forceSimulation(data.nodes as any)
