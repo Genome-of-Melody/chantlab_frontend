@@ -1,6 +1,9 @@
 <div class="alignment">
 
-  <div class="network-wrapper">
+  <app-network-graph-wrapper
+    [distanceMatrix]="distanceMatrix">
+  </app-network-graph-wrapper>
+  <!-- <div class="network-wrapper">
     <div class="network chant-network">
       <div *ngIf="showChantNetwork">
         <div class="network-graph-chants"></div>
@@ -27,7 +30,7 @@
         (click)="showManuscriptNetwork = !showManuscriptNetwork"
         color="primary">Manuscript network</button>
     </div>
-  </div>
+  </div> -->
 
   <div class="controls-wrapper">
     <!-- Display controls and download -->

@@ -1,0 +1,8 @@
+.network-wrapper {
+    display: flex;
+}
+  
+.network {
+    justify-content: start;
+    margin: 20px;
+}

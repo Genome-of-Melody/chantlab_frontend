@@ -29,6 +29,7 @@ export class NetworkGraphComponent implements OnInit {
   @Input() distanceMatrix: Map<string, Map<string, number>>;
   @Input() distanceThreshold = 0.7;
   @Input() networkType: string;
+  @Input() colorScheme: Map<string, string>;
 
   displayGraph = true;
 
@@ -130,6 +131,7 @@ export class NetworkGraphComponent implements OnInit {
     // Set the correct return values
     networkGraphData.nodes = Array.from(nodeSet).map(name => ({
       "id": name,
+      "group": name,
       "count": sourceCounts[name]
     }));
     networkGraphData.links = links;
@@ -183,8 +185,6 @@ export class NetworkGraphComponent implements OnInit {
     else {
       data = this.createAggregatedData(this.distanceMatrix);
     }
-    const color: Map<string, string> = this.createColorScheme(data.nodes);
-    console.log(color);
 
     // set the dimensions and margins of the graph
     const margin = {top: 10, right: 30, bottom: 30, left: 40},
@@ -217,7 +217,7 @@ export class NetworkGraphComponent implements OnInit {
       .enter()
       .append('circle')
         .attr('r', 10)
-        .style('fill', d => color.get(d.group));
+        .style('fill', d => this.colorScheme.get(d.group));
 
     // Apply force
     const simulation = d3.forceSimulation(data.nodes as any)
@@ -242,25 +242,4 @@ export class NetworkGraphComponent implements OnInit {
           .attr('cy', function(d: any) { return d.y - 6; });
     }
   }
-
-  createColorScheme(nodes: Node[]): Map<string, string> {
-    const groupSet = new Set<string>();
-
-    nodes.forEach(node => {
-      groupSet.add(node.group);
-    });
-
-    const colorScheme = new Map<string, string>();
-    const rgbValue = () => (Math.floor(Math.random() * 255));
-    groupSet.forEach(group => {
-      const r = rgbValue();
-      const g = rgbValue();
-      const b = rgbValue();
-      colorScheme.set(group,
-         'rgb(' + r.toString() + ',' + g.toString() + ',' + b.toString() + ')');
-    });
-
-    return colorScheme;
-  }
-
 }

@@ -55,6 +55,7 @@ import { NameOnCreateAlignmentComponent } from './components/dialogs/name-on-cre
 import { HelpPageComponent } from './components/help-page/help-page.component';
 import { NetworkGraphComponent } from './components/visualization/network-graph/network-graph.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import { NetworkGraphWrapperComponent } from './components/visualization/network-graph-wrapper/network-graph-wrapper.component';
 
 
 @NgModule({
@@ -91,6 +92,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     NameOnCreateAlignmentComponent,
     HelpPageComponent,
     NetworkGraphComponent,
+    NetworkGraphWrapperComponent,
   ],
     imports: [
         BrowserModule,
