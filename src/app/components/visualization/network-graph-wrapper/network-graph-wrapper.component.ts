@@ -10,6 +10,8 @@ export class NetworkGraphWrapperComponent implements OnInit {
   @Input() distanceMatrix: Map<string, Map<string, number>>;
 
   colorScheme: Map<string, string>;
+  showChantNetwork = false;
+  showManuscriptNetwork = false;
 
   constructor() { }
 

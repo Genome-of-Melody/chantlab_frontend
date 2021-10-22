@@ -192,7 +192,7 @@ export class NetworkGraphComponent implements OnInit {
     height = 600 - margin.top - margin.bottom;
 
     // Define the div for the tooltip
-    var div = d3.select(".network-graph-" + type).append("div")
+    var div = d3.select("body").append("div")
         .attr("class", "tooltip")				
         .style("opacity", 0)
         .style("top", "0px")
@@ -232,7 +232,7 @@ export class NetworkGraphComponent implements OnInit {
               .style("opacity", .9);		
           div	.html(d.id)	
               .style("left", (event.pageX) + "px")		
-              .style("top", (event.pageY - 80) + "px");	
+              .style("top", (event.pageY) + "px");	
           })					
       .on("mouseout", function(d) {		
           div.transition()		
