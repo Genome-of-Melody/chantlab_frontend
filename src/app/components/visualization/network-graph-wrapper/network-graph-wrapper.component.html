@@ -1,12 +1,12 @@
 <div class="network-wrapper">
     <div class="network chant-network">
         <div *ngIf="showChantNetwork">
-        <div class="network-graph-chants" style="position: relative;"></div>
-        <app-network-graph
-            [distanceMatrix]="distanceMatrix"
-            [colorScheme]="colorScheme"
-            [networkType]="'chants'">
-        </app-network-graph>
+            <div class="network-graph-chants" style="position: relative;"></div>
+            <app-network-graph
+                [distanceMatrix]="distanceMatrix"
+                [colorScheme]="colorScheme"
+                [networkType]="'chants'">
+            </app-network-graph>
         </div>
         <button
         mat-raised-button

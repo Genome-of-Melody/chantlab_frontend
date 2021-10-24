@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
 import * as d3 from 'd3';
 
@@ -24,19 +24,25 @@ interface NetworkGraphData {
   templateUrl: './network-graph.component.html',
   styleUrls: ['./network-graph.component.css']
 })
-export class NetworkGraphComponent implements OnInit {
+export class NetworkGraphComponent implements OnInit, OnDestroy {
 
   @Input() distanceMatrix: Map<string, Map<string, number>>;
   @Input() distanceThreshold = 0.7;
   @Input() networkType: string;
   @Input() colorScheme: Map<string, string>;
 
-  displayGraph = true;
+  nodeLabel: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
+  edgeLabel: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 
   constructor() { }
 
   ngOnInit(): void {
     this.drawGraph(this.networkType);
+  }
+
+  ngOnDestroy(): void {
+    this.nodeLabel.remove();
+    this.edgeLabel.remove();
   }
 
   createDataFromDistanceMatrix(distanceMatrix: Map<string, Map<string, number>>): NetworkGraphData {
@@ -191,13 +197,30 @@ export class NetworkGraphComponent implements OnInit {
     width = 600 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
-    // Define the div for the tooltip
-    var div = d3.select("body").append("div")
-        .attr("class", "tooltip")				
+    // define the label for nodes
+    this.nodeLabel = d3.select("body").append("div")
+        .attr("class", ".label-" + this.networkType)				
         .style("opacity", 0)
         .style("top", "0px")
         .style("left", "0px")
         .style("position", "absolute")
+        .style("cursor", "default")
+        .style("background", "lightsteelblue")
+        .style("border-radius", "8px")
+        .style("padding", "5px")
+        .style("pointer-events", "none")
+
+    this.edgeLabel = d3.select("body").append("div")
+        .attr("class", ".label-" + this.networkType)				
+        .style("opacity", 0)
+        .style("top", "0px")
+        .style("left", "0px")
+        .style("position", "absolute")
+        .style("cursor", "default")
+        .style("background", "lightsteelblue")
+        .style("border-radius", "8px")
+        .style("padding", "5px")
+        .style("pointer-events", "none")
 
     // append the svg object to the body of the page
     const svg = d3.select('.network-graph-' + type)
@@ -215,7 +238,23 @@ export class NetworkGraphComponent implements OnInit {
       .enter()
       .append('line')
         .style('stroke', '#aaa')
-        .attr('stroke-width', d => d.value * 10);
+        .attr('stroke-width', d => d.value * 10)
+        .on("mouseover", (event, d) => {		
+          this.edgeLabel
+              .transition()		
+              .duration(200)		
+              .style("opacity", .9);		
+          this.edgeLabel
+              .html(d.value.toString())	
+              .style("left", (event.pageX + 10) + "px")		
+              .style("top", (event.pageY + 10) + "px");	
+          })					
+        .on("mouseout", (d) => {		
+          this.edgeLabel
+              .transition()		
+              .duration(500)		
+              .style("opacity", 0);
+      });
 
     // Initialize the nodes
     // TODO show tooltip with the name of the node on hover
@@ -226,16 +265,19 @@ export class NetworkGraphComponent implements OnInit {
       .append('circle')
         .attr('r', 10)
         .style('fill', d => this.colorScheme.get(d.group))
-        .on("mouseover", function(event, d) {		
-          div.transition()		
+        .on("mouseover", (event, d) => {		
+          this.nodeLabel
+              .transition()		
               .duration(200)		
               .style("opacity", .9);		
-          div	.html(d.id)	
-              .style("left", (event.pageX) + "px")		
-              .style("top", (event.pageY) + "px");	
+          this.nodeLabel
+              .html(d.id)	
+              .style("left", (event.pageX + 10) + "px")		
+              .style("top", (event.pageY + 10) + "px");	
           })					
-      .on("mouseout", function(d) {		
-          div.transition()		
+        .on("mouseout", (d) => {		
+          this.nodeLabel
+              .transition()		
               .duration(500)		
               .style("opacity", 0);	
       });
