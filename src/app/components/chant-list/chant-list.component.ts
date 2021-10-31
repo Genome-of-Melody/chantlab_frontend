@@ -3,14 +3,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { IChant } from 'src/app/interfaces/chant.interface';
 import { AlignmentService } from 'src/app/services/alignment.service';
 import { ChantExportService } from 'src/app/services/chant-export.service';
 import { ChantService } from 'src/app/services/chant.service';
 import { CreateDatasetService } from 'src/app/services/create-dataset.service';
 import { CsvTranslateService } from 'src/app/services/csv-translate.service';
+import { DataSourceListService } from 'src/app/services/data-source-list.service';
+import { DatasetManagementService } from 'src/app/services/dataset-management.service';
 import { DownloadService } from 'src/app/services/download.service';
+import { IdxOnAddToDatasetComponent } from '../dialogs/idx-on-add-to-dataset/idx-on-add-to-dataset.component';
 import { NameOnCreateDatasetComponent } from '../dialogs/name-on-create-dataset/name-on-create-dataset.component';
 import { NotEnoughToAlingDialogComponent } from '../dialogs/not-enough-to-aling-dialog/not-enough-to-aling-dialog.component';
 import {SearchFilterComponent} from '../search-filter/search-filter.component';
@@ -50,6 +53,8 @@ export class ChantListComponent implements OnInit, OnDestroy {
     private alignmentService: AlignmentService,
     private csvTranslateService: CsvTranslateService,
     private downloadService: DownloadService,
+    private dataSourceListService: DataSourceListService,
+    private datasetManagementService: DatasetManagementService,
     public dialog: MatDialog
   ) { }
 
@@ -200,6 +205,41 @@ export class ChantListComponent implements OnInit, OnDestroy {
         result => {
           datasetName = result;
           this.createDatasetService.createDataset(selected, datasetName);
+        }
+      );
+  }
+
+  addToDataset(): void {
+    const selectedChants = this.getSelected();
+
+    let dataSources: [number, string][];
+    this.dataSourceListService.refreshSources();
+    this.dataSourceListService.getAllSources()
+      .pipe(take(1))
+      .subscribe(
+        data => {
+          dataSources = data;
+
+          const dialogRef = this.dialog.open(
+            IdxOnAddToDatasetComponent,
+            { data: dataSources}
+          );
+      
+          let selectedDatasetIdx: number;
+      
+          dialogRef.afterClosed()
+            .pipe(takeUntil(this.componentDestroyed$))
+            .subscribe(
+              result => {
+                selectedDatasetIdx = result;
+                console.log(selectedDatasetIdx);
+                console.log(selectedChants);
+
+                if (selectedDatasetIdx) {
+                  this.datasetManagementService.addToDataset(selectedChants, selectedDatasetIdx);
+                }
+              }
+            );
         }
       );
   }

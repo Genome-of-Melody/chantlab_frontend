@@ -17,6 +17,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatRadioGroup, MatRadioModule } from '@angular/material/radio';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -56,6 +57,8 @@ import { HelpPageComponent } from './components/help-page/help-page.component';
 import { NetworkGraphComponent } from './components/visualization/network-graph/network-graph.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import { NetworkGraphWrapperComponent } from './components/visualization/network-graph-wrapper/network-graph-wrapper.component';
+import { AddedToDatasetDialogComponent } from './components/dialogs/added-to-dataset-dialog/added-to-dataset-dialog.component';
+import { IdxOnAddToDatasetComponent } from './components/dialogs/idx-on-add-to-dataset/idx-on-add-to-dataset.component';
 
 
 @NgModule({
@@ -93,6 +96,8 @@ import { NetworkGraphWrapperComponent } from './components/visualization/network
     HelpPageComponent,
     NetworkGraphComponent,
     NetworkGraphWrapperComponent,
+    AddedToDatasetDialogComponent,
+    IdxOnAddToDatasetComponent,
   ],
     imports: [
         BrowserModule,
@@ -111,6 +116,7 @@ import { NetworkGraphWrapperComponent } from './components/visualization/network
         MatDialogModule,
         MatDividerModule,
         MatProgressSpinnerModule,
+        MatRadioModule,
         DragDropModule,
         MatButtonToggleModule,
         RouterModule,

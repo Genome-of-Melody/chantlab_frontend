@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AddedToDatasetDialogComponent } from '../components/dialogs/added-to-dataset-dialog/added-to-dataset-dialog.component';
 import { ChantService } from './chant.service';
 import { DataSourceListService } from './data-source-list.service';
 import {SelectedDataSourcesService} from './selected-data-sources.service';
@@ -13,7 +15,8 @@ export class DatasetManagementService {
   constructor(
     private dataSourceListService: DataSourceListService,
     private selectedDataSourcesService: SelectedDataSourcesService,
-    private chantService: ChantService
+    private chantService: ChantService,
+    private dialog: MatDialog
   ) { }
 
   uploadDataset(fileToUpload: File, datasetName: string): Observable<boolean> {
@@ -25,6 +28,23 @@ export class DatasetManagementService {
         this.dataSourceListService.refreshSources();
         return true;
       }));
+  }
+
+  addToDataset(ids: number[], dataset_idx: number): void {
+    const formData = new FormData();
+    formData.append('idsToExport', JSON.stringify(ids));
+    formData.append('idx', dataset_idx.toString());
+    this.chantService.addToDatset(formData).subscribe(
+      response => {
+        const name = response['name'];
+        const index = response['index'];
+        this.dataSourceListService.refreshSources();
+
+        const dialogRef = this.dialog.open(AddedToDatasetDialogComponent);
+        const instance = dialogRef.componentInstance;
+        instance.name = name;
+      }
+    )
   }
 
   deleteDataset(datasetName: string): Observable<boolean> {

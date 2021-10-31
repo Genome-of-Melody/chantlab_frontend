@@ -80,6 +80,10 @@ export class ChantService {
     return this.http.post(`${this._baseUrl}/create-dataset/`, data);
   }
 
+  addToDatset(data: FormData): Observable<any> {
+    return this.http.post(`${this._baseUrl}/add-to-dataset/`, data);
+  }
+
   uploadData(data: FormData): Observable<any> {
     return this.http.post(`${this._baseUrl}/upload/`, data);
   }
