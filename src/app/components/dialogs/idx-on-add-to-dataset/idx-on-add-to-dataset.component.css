@@ -1,0 +1,9 @@
+.selection-container {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+}
+
+.dataset {
+    margin-top: 10px;
+}

@@ -1,12 +1,11 @@
 <h1 mat-dialog-title>Select dataset to add to</h1>
 <div mat-dialog-content>
     <div class="dataset-selection">
-        <mat-radio-group [(ngModel)]="selectedDataset">
+        <mat-radio-group [(ngModel)]="selectedDataset" class="selection-container">
             <mat-radio-button *ngFor="let dataset of data" class="dataset" value="{{ dataset[0] }}">{{ dataset[1] }}</mat-radio-button>
         </mat-radio-group>
     </div>
 </div>
-<div>Selected: {{ selectedDataset }}</div>
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="selectedDataset" cdkFocusInitial>Confirm</button>
 </div>
