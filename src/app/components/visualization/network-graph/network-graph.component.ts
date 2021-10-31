@@ -239,7 +239,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
       .append('line')
         .style('stroke', '#aaa')
         .attr('stroke-width', d => d.value * 10)
-        .on("mouseover", (event, d) => {		
+        .on("mousedown", (event, d) => {		
           this.edgeLabel
               .transition()		
               .duration(200)		
@@ -249,7 +249,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
               .style("left", (event.pageX + 10) + "px")		
               .style("top", (event.pageY + 10) + "px");	
           })					
-        .on("mouseout", (d) => {		
+        .on("mouseup", (d) => {		
           this.edgeLabel
               .transition()		
               .duration(500)		
@@ -265,7 +265,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
       .append('circle')
         .attr('r', 10)
         .style('fill', d => this.colorScheme.get(d.group))
-        .on("mouseover", (event, d) => {		
+        .on("mousedown", (event, d) => {		
           this.nodeLabel
               .transition()		
               .duration(200)		
@@ -275,7 +275,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
               .style("left", (event.pageX + 10) + "px")		
               .style("top", (event.pageY + 10) + "px");	
           })					
-        .on("mouseout", (d) => {		
+        .on("mouseup", (d) => {		
           this.nodeLabel
               .transition()		
               .duration(500)		
