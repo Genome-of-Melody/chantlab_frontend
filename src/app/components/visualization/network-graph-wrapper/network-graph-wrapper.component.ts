@@ -28,13 +28,12 @@ export class NetworkGraphWrapperComponent implements OnInit {
     });
 
     const colorScheme = new Map<string, string>();
-    const rgbValue = () => (Math.floor(Math.random() * 255));
+    const interval = Math.floor(360 / groupSet.size);
+    let i = 0;
     groupSet.forEach(group => {
-      const r = rgbValue();
-      const g = rgbValue();
-      const b = rgbValue();
+      const hue = interval * i++;
       colorScheme.set(group,
-         'rgb(' + r.toString() + ',' + g.toString() + ',' + b.toString() + ')');
+        'hsl(' + hue.toString() + ', 100%, 50%');
     });
 
     return colorScheme;
