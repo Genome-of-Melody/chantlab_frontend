@@ -59,6 +59,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import { NetworkGraphWrapperComponent } from './components/visualization/network-graph-wrapper/network-graph-wrapper.component';
 import { AddedToDatasetDialogComponent } from './components/dialogs/added-to-dataset-dialog/added-to-dataset-dialog.component';
 import { IdxOnAddToDatasetComponent } from './components/dialogs/idx-on-add-to-dataset/idx-on-add-to-dataset.component';
+import { ZoomableCanvasComponent } from './components/visualization/zoomable-canvas/zoomable-canvas.component';
 
 
 @NgModule({
@@ -98,6 +99,7 @@ import { IdxOnAddToDatasetComponent } from './components/dialogs/idx-on-add-to-d
     NetworkGraphWrapperComponent,
     AddedToDatasetDialogComponent,
     IdxOnAddToDatasetComponent,
+    ZoomableCanvasComponent,
   ],
     imports: [
         BrowserModule,
