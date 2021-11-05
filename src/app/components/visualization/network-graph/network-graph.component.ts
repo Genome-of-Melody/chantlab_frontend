@@ -3,9 +3,9 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import * as d3 from 'd3';
 
 interface Node {
-  "id": string,
-  "group"?: string,
-  "count"?: number
+  'id': string;
+  'group'?: string;
+  'count'?: number;
 }
 
 interface Link {
@@ -33,6 +33,9 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
 
   nodeLabel: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
   edgeLabel: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
+
+  public readonly baseWidth = 1200;
+  public readonly baseHeight = 1200;
 
   constructor() { }
 
@@ -92,29 +95,29 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
   }
 
   createAggregatedData(distanceMatrix: Map<string, Map<string, number>>): NetworkGraphData {
-    let networkGraphData: NetworkGraphData = {
-      "nodes": [],
-      "links": []
-    }
+    const networkGraphData: NetworkGraphData = {
+      nodes: [],
+      links: []
+    };
 
     if (!distanceMatrix) {
       return networkGraphData;
     }
 
-    let distanceMatrixSources = this.transformDistanceMatrix(distanceMatrix);
+    const distanceMatrixSources = this.transformDistanceMatrix(distanceMatrix);
     console.log(distanceMatrixSources);
-    let sourceCounts = new Map<string, number>();
+    const sourceCounts = new Map<string, number>();
     distanceMatrix.forEach((_, key: string) => {
-      const source = key.split(" / ")[1];
+      const source = key.split(' / ')[1];
       sourceCounts.set(source, sourceCounts.has(source) ? sourceCounts.get(source) + 1 : 1);
-    })
+    });
 
     // Retrieve the list of links
-    let links: Link[] = [];
-    let usedLinks = new Set<string>();
+    const links: Link[] = [];
+    const usedLinks = new Set<string>();
 
     // Create set of nodes
-    let nodeSet = new Set<string>();
+    const nodeSet = new Set<string>();
 
     distanceMatrixSources.forEach((distanceMap: Map<string, number>, name1: string) => {
       distanceMap.forEach((distance: number, name2: string) => {
@@ -126,9 +129,9 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
           // Only add link if the two chants are different
           // Check whether the reverse link is already in the set
           if (name1 !== name2 &&
-              !usedLinks.has(name2 + "|" + name1)) {
-            links.push({"source": name1, "target": name2, "value": 1 - distance})
-            usedLinks.add(name1 + "|" + name2);
+              !usedLinks.has(name2 + '|' + name1)) {
+            links.push({source: name1, target: name2, value: 1 - distance});
+            usedLinks.add(name1 + '|' + name2);
           }
         }
       });
@@ -136,23 +139,23 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
 
     // Set the correct return values
     networkGraphData.nodes = Array.from(nodeSet).map(name => ({
-      "id": name,
-      "group": name,
-      "count": sourceCounts[name]
+      id: name,
+      group: name,
+      count: sourceCounts[name]
     }));
     networkGraphData.links = links;
 
-    console.log("Aggregated links", networkGraphData);
+    console.log('Aggregated links', networkGraphData);
     return networkGraphData;
   }
 
   transformDistanceMatrix(distanceMatrix: Map<string, Map<string, number>>): Map<string, Map<string, number>> {
-    let distanceMatrixAggregated = new Map<string, Map<string, number[]>>();
+    const distanceMatrixAggregated = new Map<string, Map<string, number[]>>();
 
     distanceMatrix.forEach((distanceMap: Map<string, number>, name1: string) => {
       distanceMap.forEach((distance: number, name2: string) => {
-        const source1 = name1.split(" / ")[1];
-        const source2 = name2.split(" / ")[1];
+        const source1 = name1.split(' / ')[1];
+        const source2 = name2.split(' / ')[1];
         if (distanceMatrixAggregated.has(source1) && distanceMatrixAggregated.get(source1).has(source2)) {
           distanceMatrixAggregated.get(source1).get(source2).push(distance);
         }
@@ -166,7 +169,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
     });
 
     // Take the mean of the distances as the distance between the nodes
-    let distanceMatrixSources = new Map<string, Map<string, number>>();
+    const distanceMatrixSources = new Map<string, Map<string, number>>();
     distanceMatrixAggregated.forEach((distanceMap: Map<string, number[]>, source1: string) => {
       distanceMap.forEach((distances: number[], source2: string) => {
         if (!distanceMatrixSources.has(source1)) {
@@ -180,12 +183,12 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
   }
 
   drawGraph(type: string): void {
-    if (type !== "chants" && type !== "manuscripts") {
+    if (type !== 'chants' && type !== 'manuscripts') {
       return;
     }
 
     let data: NetworkGraphData;
-    if (type === "chants") {
+    if (type === 'chants') {
       data = this.createDataFromDistanceMatrix(this.distanceMatrix);
     }
     else {
@@ -193,34 +196,34 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
     }
 
     // set the dimensions and margins of the graph
-    const margin = {top: 10, right: 30, bottom: 30, left: 40},
-    width = 600 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    const margin = {top: 10, right: 30, bottom: 30, left: 40};
+    const width = this.baseWidth - margin.left - margin.right;
+    const height = this.baseHeight - margin.top - margin.bottom;
 
     // define the label for nodes
-    this.nodeLabel = d3.select("body").append("div")
-        .attr("class", ".label-" + this.networkType)				
-        .style("opacity", 0)
-        .style("top", "0px")
-        .style("left", "0px")
-        .style("position", "absolute")
-        .style("cursor", "default")
-        .style("background", "lightsteelblue")
-        .style("border-radius", "8px")
-        .style("padding", "5px")
-        .style("pointer-events", "none")
+    this.nodeLabel = d3.select('body').append('div')
+        .attr('class', '.label-' + this.networkType)
+        .style('opacity', 0)
+        .style('top', '0px')
+        .style('left', '0px')
+        .style('position', 'absolute')
+        .style('cursor', 'default')
+        .style('background', 'lightsteelblue')
+        .style('border-radius', '8px')
+        .style('padding', '5px')
+        .style('pointer-events', 'none');
 
-    this.edgeLabel = d3.select("body").append("div")
-        .attr("class", ".label-" + this.networkType)				
-        .style("opacity", 0)
-        .style("top", "0px")
-        .style("left", "0px")
-        .style("position", "absolute")
-        .style("cursor", "default")
-        .style("background", "lightsteelblue")
-        .style("border-radius", "8px")
-        .style("padding", "5px")
-        .style("pointer-events", "none")
+    this.edgeLabel = d3.select('body').append('div')
+        .attr('class', '.label-' + this.networkType)
+        .style('opacity', 0)
+        .style('top', '0px')
+        .style('left', '0px')
+        .style('position', 'absolute')
+        .style('cursor', 'default')
+        .style('background', 'lightsteelblue')
+        .style('border-radius', '8px')
+        .style('padding', '5px')
+        .style('pointer-events', 'none');
 
     // append the svg object to the body of the page
     const svg = d3.select('.network-graph-' + type)
@@ -239,21 +242,21 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
       .append('line')
         .style('stroke', '#aaa')
         .attr('stroke-width', d => d.value * 10)
-        .on("mousedown", (event, d) => {		
+        .on('mousedown', (event, d) => {
           this.edgeLabel
-              .transition()		
-              .duration(200)		
-              .style("opacity", .9);		
+              .transition()
+              .duration(200)
+              .style('opacity', .9);
           this.edgeLabel
-              .html(d.value.toString())	
-              .style("left", (event.pageX + 10) + "px")		
-              .style("top", (event.pageY + 10) + "px");	
-          })					
-        .on("mouseup", (d) => {		
+              .html(d.value.toString())
+              .style('left', (event.pageX + 10) + 'px')
+              .style('top', (event.pageY + 10) + 'px');
+          })
+        .on('mouseup', (d) => {
           this.edgeLabel
-              .transition()		
-              .duration(500)		
-              .style("opacity", 0);
+              .transition()
+              .duration(500)
+              .style('opacity', 0);
       });
 
     // Initialize the nodes
@@ -265,21 +268,21 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
       .append('circle')
         .attr('r', 10)
         .style('fill', d => this.colorScheme.get(d.group))
-        .on("mousedown", (event, d) => {		
+        .on('mousedown', (event, d) => {
           this.nodeLabel
-              .transition()		
-              .duration(200)		
-              .style("opacity", .9);		
+              .transition()
+              .duration(200)
+              .style('opacity', .9);
           this.nodeLabel
-              .html(d.id)	
-              .style("left", (event.pageX + 10) + "px")		
-              .style("top", (event.pageY + 10) + "px");	
-          })					
-        .on("mouseup", (d) => {		
+              .html(d.id)
+              .style('left', (event.pageX + 10) + 'px')
+              .style('top', (event.pageY + 10) + 'px');
+          })
+        .on('mouseup', (d) => {
           this.nodeLabel
-              .transition()		
-              .duration(500)		
-              .style("opacity", 0);	
+              .transition()
+              .duration(500)
+              .style('opacity', 0);
       });
 
     // Apply force
@@ -293,7 +296,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
         .on('end', ticked);
 
     // Function updating the nodes' position
-    function ticked() {
+    function ticked(): void {
       link
           .attr('x1', function(d: any) { return d.source.x; })
           .attr('y1', function(d: any) { return d.source.y; })
@@ -304,5 +307,6 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
           .attr('cx', function(d: any) { return d.x + 6; })
           .attr('cy', function(d: any) { return d.y - 6; });
     }
+
   }
 }

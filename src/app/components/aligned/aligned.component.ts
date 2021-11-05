@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {AlignmentService} from 'src/app/services/alignment.service';
@@ -14,6 +14,8 @@ import {NameOnCreateAlignmentComponent} from '../dialogs/name-on-create-alignmen
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {ContrafactService} from '../../services/contrafact.service';
+import {MatPaginator} from '@angular/material/paginator';
+import {NetworkGraphWrapperComponent} from '../visualization/network-graph-wrapper/network-graph-wrapper.component';
 
 @Component({
   selector: 'app-aligned',
@@ -30,6 +32,8 @@ export class AlignedComponent implements OnInit, OnDestroy {
   alignedResponse: AlignmentResponse;
 
   @Input() alignment: Alignment;
+
+  @ViewChild(NetworkGraphWrapperComponent, {static: true}) networkGraphWrapper: NetworkGraphWrapperComponent;
 
   alignedChants: IChant[];
   blob: Blob;
@@ -364,6 +368,37 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return this.visibleAlignmentSubset.iChants.map(ch => ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id);
   }
 
+  doShowChantNetwork(): void {
+    if (this.alignment) {
+      this.showChantNetwork = !this.showChantNetwork;
+      this.networkGraphWrapper.showChantNetwork = this.showChantNetwork;
+    }
+  }
+  get showChantNetworkColor(): string {
+    if (this.showChantNetwork) { return 'accent'; }
+    return 'primary';
+  }
+  ensureChantNetworkClosed(): void {
+    if (this.showChantNetwork) { this.doShowChantNetwork(); }
+  }
+
+
+  doShowManuscriptNetwork(): void {
+    if (this.alignment) {
+      this.showManuscriptNetwork = !this.showManuscriptNetwork;
+      this.networkGraphWrapper.showManuscriptNetwork = this.showManuscriptNetwork;
+    }
+  }
+  get showManuscriptNetworkColor(): string {
+    if (this.showManuscriptNetwork) { return 'accent'; }
+    return 'primary';
+  }
+  ensureManuscriptNetworkClosed(): void {
+    if (this.showManuscriptNetwork) { this.doShowManuscriptNetwork(); }
+  }
+
+
+
   restrictToContrafacts(): void {
     if (!this.alignment) { return; }
     const distanceMap: Map<string, Map<string, number>> = this.contrafactService.computeDistanceMap(this.visibleAlignmentSubset);
@@ -389,6 +424,8 @@ export class AlignedComponent implements OnInit, OnDestroy {
       console.log('Removing alignment idx ' + idx);
       this.deleteAlignment(idx);
     }
+
+    // this.alignment.reduceGaps(); -- TODO: uncomment
     this.computeAndCacheDistances();
   }
 
@@ -397,6 +434,8 @@ export class AlignedComponent implements OnInit, OnDestroy {
     console.log('AlignedComponent onKeyUp(' + event.key + ')');
     if (event.key === 'Escape') {
       this.ensureDistanceMatrixClosed();
+      this.ensureChantNetworkClosed();
+      this.ensureManuscriptNetworkClosed();
     }
     // event.preventDefault();
   }
