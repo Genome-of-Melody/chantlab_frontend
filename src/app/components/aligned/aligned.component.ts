@@ -89,9 +89,6 @@ export class AlignedComponent implements OnInit, OnDestroy {
     console.log('AlignedComponent.alignment:');
     console.log(this.alignment);
 
-    let testAlignment = Alignment.fromJson(JSON.parse(this.alignment.toJson()));
-    console.log(testAlignment);
-
     this.alignedChants = this.alignment.iChants;
     this.alignedChants.forEach(_ => {
       this.alignmentPresent.push(true);
