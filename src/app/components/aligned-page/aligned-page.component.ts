@@ -65,6 +65,7 @@ export class AlignedPageComponent implements OnInit {
     this.alignedResponse = new AlignmentResponse(
       this.inputAlignment.parsedChants,
       [],
+      [],
       this.inputAlignment
     );
   }
@@ -96,18 +97,23 @@ export class AlignedPageComponent implements OnInit {
         // not good software design to modify your response objects!
         response.iChants = alignedIChants;
 
+        console.log(response);
         this.alignedResponse = new AlignmentResponse(
           response.chants,
-          response.errors,
+          response.errors.sources,
+          response.errors.ids,
           Alignment.fromResponse(response)
         );
 
         // The errors are also handled here -- the AlignedComponent is meant
         // to display the alignment, not to deal with what was *not* aligned.
+        console.log("here");
+        console.log(this.alignedResponse);
         if (this.alignedResponse.errorShortNames.length > 0) {
           const dialogRef = this.dialog.open(AlignmentErrorDialogComponent);
           const instance = dialogRef.componentInstance;
           instance.sources = this.alignedResponse.errorShortNames;
+          instance.ids = this.alignedResponse.errorIds;
         }
 
         console.log('AlignedPage: finished subscribe()');

@@ -205,6 +205,7 @@ export class AlignmentResponse {
   constructor(
     public chants: Array<Array<{text: string, type: string, volpiano: Array<string>}>>,
     public errorShortNames: Array<string>,
+    public errorIds: Array<number>,
     public alignment: Alignment
   ) {}
 }

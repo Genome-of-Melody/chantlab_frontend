@@ -2,7 +2,11 @@
 <mat-dialog-content>
     <p>Couldn't process the following chants:</p>
     <ul>
-        <li *ngFor="let source of sources">{{ source }}</li>
+        <li *ngFor="let source of sources; index as i">
+            <a target="_blank" [routerLink]="['/chants', ids[i]]">
+                {{ source }}
+            </a>
+        </li>
     </ul>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
