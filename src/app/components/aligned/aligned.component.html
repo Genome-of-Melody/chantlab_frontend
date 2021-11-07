@@ -3,34 +3,6 @@
   <app-network-graph-wrapper
     [distanceMatrix]="distanceMatrix">
   </app-network-graph-wrapper>
-  <!-- <div class="network-wrapper">
-    <div class="network chant-network">
-      <div *ngIf="showChantNetwork">
-        <div class="network-graph-chants"></div>
-        <app-network-graph
-          [distanceMatrix]="distanceMatrix"
-          [networkType]="'chants'">
-        </app-network-graph>
-      </div>
-      <button
-        mat-raised-button
-        (click)="showChantNetwork = !showChantNetwork"
-        color="primary">Chant network</button>
-    </div>
-    <div class="network manuscript-network">
-      <div *ngIf="showManuscriptNetwork">
-        <div class="network-graph-manuscripts"></div>
-        <app-network-graph
-          [distanceMatrix]="distanceMatrix"
-          [networkType]="'manuscripts'">
-        </app-network-graph>
-      </div>
-      <button
-        mat-raised-button
-        (click)="showManuscriptNetwork = !showManuscriptNetwork"
-        color="primary">Manuscript network</button>
-    </div>
-  </div> -->
 
   <div class="controls-wrapper">
     <!-- Display controls and download -->
@@ -71,7 +43,8 @@
     <div class="widget-control">
       <ul class="widget-control">
         <li><button mat-raised-button (click)="saveAlignment()" color="primary" class="widget-control-button">Save</button>
-            <button mat-raised-button (click)="downloadAligned()" color="primary" class="widget-control-button">Download</button></li>
+            <button mat-raised-button (click)="downloadAlignedFasta()" color="primary" class="widget-control-button">Download FASTA</button>
+            <button mat-raised-button (click)="downloadAlignedJson()" color="primary" class="widget-control-button">Download JSON</button></li>
         <li><button mat-raised-button (click)="doShowDistanceMatrix()" color="{{ showDistanceMatrixColor }}"
                     class="widget-control-button">Distance Matrix</button></li>
         <li><button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button></li>

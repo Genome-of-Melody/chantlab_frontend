@@ -89,6 +89,9 @@ export class AlignedComponent implements OnInit, OnDestroy {
     console.log('AlignedComponent.alignment:');
     console.log(this.alignment);
 
+    let testAlignment = Alignment.fromJson(JSON.parse(this.alignment.toJson()));
+    console.log(testAlignment);
+
     this.alignedChants = this.alignment.iChants;
     this.alignedChants.forEach(_ => {
       this.alignmentPresent.push(true);
@@ -179,9 +182,14 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return blob;
   }
 
-  downloadAligned(): void {
+  downloadAlignedFasta(): void {
     const blob = this.createBlob();
     this.downloadService.download(blob, 'aligned.txt');
+  }
+
+  downloadAlignedJson(): void {
+    const blob = new Blob([this.alignment.toJson()], {type: 'text/json'});
+    this.downloadService.download(blob, 'aligned.json');
   }
 
   saveAlignment(): void {
