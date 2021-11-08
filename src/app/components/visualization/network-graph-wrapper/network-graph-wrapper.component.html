@@ -1,31 +1,38 @@
 <div class="network-wrapper">
     <div class="network chant-network">
-        <div *ngIf="showChantNetwork">
-            <div class="network-graph-chants" style="position: relative;"></div>
-            <app-network-graph
-                [distanceMatrix]="distanceMatrix"
-                [colorScheme]="colorScheme"
-                [networkType]="'chants'">
-            </app-network-graph>
-        </div>
-        <button
-        mat-raised-button
-        (click)="showChantNetwork = !showChantNetwork"
-        color="primary">Chant network</button>
+        <mat-card *ngIf="showChantNetwork"
+                  cdkDrag
+                  class="single-network-container-div">
+          <h3 align="center">Chant network</h3>
+          <div class="network-graph-chants"  style="position: relative;"></div>
+          <app-network-graph
+              [distanceMatrix]="distanceMatrix"
+              [colorScheme]="colorScheme"
+              [distanceThreshold]="0.8"
+              [networkType]="'chants'">
+          </app-network-graph>
+        </mat-card>
+<!--        <button-->
+<!--        mat-raised-button-->
+<!--        (click)="showChantNetwork = !showChantNetwork"-->
+<!--        color="primary">Chant network</button>-->
     </div>
     <div class="network manuscript-network">
-        <div *ngIf="showManuscriptNetwork">
-        <div class="network-graph-manuscripts" style="position: relative;"></div>
-        <app-network-graph
-            [distanceMatrix]="distanceMatrix"
-            [colorScheme]="colorScheme"
-            [distanceThreshold]="1.0"
-            [networkType]="'manuscripts'">
-        </app-network-graph>
-        </div>
-        <button
-        mat-raised-button
-        (click)="showManuscriptNetwork = !showManuscriptNetwork"
-        color="primary">Manuscript network</button>
+        <mat-card *ngIf="showManuscriptNetwork"
+                  cdkDrag
+                  class="single-network-container-div">
+          <h3 align="center">Manuscript network</h3>
+          <div class="network-graph-manuscripts" style="position: relative;"></div>
+          <app-network-graph
+              [distanceMatrix]="distanceMatrix"
+              [colorScheme]="colorScheme"
+              [distanceThreshold]="1.0"
+              [networkType]="'manuscripts'">
+          </app-network-graph>
+        </mat-card>
+<!--        <button-->
+<!--        mat-raised-button-->
+<!--        (click)="showManuscriptNetwork = !showManuscriptNetwork"-->
+<!--        color="primary">Manuscript network</button>-->
     </div>
 </div>

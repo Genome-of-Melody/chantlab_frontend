@@ -46,7 +46,12 @@
             <button mat-raised-button (click)="downloadAlignedFasta()" color="primary" class="widget-control-button">Download FASTA</button>
             <button mat-raised-button (click)="downloadAlignedJson()" color="primary" class="widget-control-button">Download JSON</button></li>
         <li><button mat-raised-button (click)="doShowDistanceMatrix()" color="{{ showDistanceMatrixColor }}"
-                    class="widget-control-button">Distance Matrix</button></li>
+                    class="widget-control-button">Distance Matrix</button>
+            <button mat-raised-button (click)="doShowChantNetwork()" color="{{ showChantNetworkColor }}"
+                    class="widget-control-button">Chant Network</button>
+            <button mat-raised-button (click)="doShowManuscriptNetwork()" color="{{ showManuscriptNetworkColor }}"
+                    class="widget-control-button">Manuscript Network</button>
+        </li>
         <li><button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button></li>
       </ul>
     </div>
@@ -149,5 +154,9 @@
       [names]="distanceMatrixChantNames"
     ></app-distance-matrix>
   </div>
+
+  <app-network-graph-wrapper
+    [distanceMatrix]="distanceMatrix">
+  </app-network-graph-wrapper>
 
 </div>
