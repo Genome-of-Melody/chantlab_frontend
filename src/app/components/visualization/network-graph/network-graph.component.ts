@@ -34,8 +34,11 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
   nodeLabel: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
   edgeLabel: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 
-  public readonly baseWidth = 1200;
-  public readonly baseHeight = 1200;
+  public baseWidth = 1200;
+  public baseHeight = 1200;
+
+  public nodeRadius = 5;
+  public linkBaseThickness = 5;
 
   constructor() { }
 
@@ -92,6 +95,15 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
 
     console.log(networkGraphData);
     return networkGraphData;
+  }
+
+  /**
+   * Based on the graph data, sets the visualization parameters
+   * such as basic node size, edge thickness, etc. Possibly also display
+   * parameters such as width and height...? but that should be estimated
+   * rather *after* rendering. */
+  setVisualizationParametersFromNetworkGraphData(networkGraphData): void {
+    // TODO
   }
 
   createAggregatedData(distanceMatrix: Map<string, Map<string, number>>): NetworkGraphData {
@@ -240,15 +252,15 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
       .data(data.links)
       .enter()
       .append('line')
-        .style('stroke', '#aaa')
-        .attr('stroke-width', d => d.value * 10)
+        .style('stroke', '#888')
+        .attr('stroke-width', d => d.value * this.linkBaseThickness)
         .on('mousedown', (event, d) => {
           this.edgeLabel
               .transition()
               .duration(200)
               .style('opacity', .9);
           this.edgeLabel
-              .html(d.value.toString())
+              .html((1 - d.value).toString())
               .style('left', (event.pageX + 10) + 'px')
               .style('top', (event.pageY + 10) + 'px');
           })
@@ -260,13 +272,12 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
       });
 
     // Initialize the nodes
-    // TODO show tooltip with the name of the node on hover
     const node = svg
       .selectAll('circle')
       .data(data.nodes)
       .enter()
       .append('circle')
-        .attr('r', 10)
+        .attr('r', this.nodeRadius)
         .style('fill', d => this.colorScheme.get(d.group))
         .on('mousedown', (event, d) => {
           this.nodeLabel
@@ -304,8 +315,8 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
           .attr('y2', function(d: any) { return d.target.y; });
 
       node
-          .attr('cx', function(d: any) { return d.x + 6; })
-          .attr('cy', function(d: any) { return d.y - 6; });
+          .attr('cx', function(d: any) { return d.x + 2; })
+          .attr('cy', function(d: any) { return d.y - 2; });
     }
 
   }
