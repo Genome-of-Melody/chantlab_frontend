@@ -8,5 +8,6 @@ import { Component } from '@angular/core';
 export class AlignmentErrorDialogComponent {
 
   sources: string[];
+  ids: number[];
 
 }

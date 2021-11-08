@@ -44,6 +44,17 @@ export class Alignment {
     );
   }
 
+  toJson(): string {
+    return JSON.stringify({
+      "parsedChants": this.parsedChants,
+      "iChants": this.iChants,
+      "alpianos": this.alpianos,
+      "ids": this.ids,
+      "urls": this.urls,
+      "sources": this.sources
+    })
+  }
+
   get length(): number {
     return this.ids.length;
   }
@@ -194,6 +205,7 @@ export class AlignmentResponse {
   constructor(
     public chants: Array<Array<{text: string, type: string, volpiano: Array<string>}>>,
     public errorShortNames: Array<string>,
+    public errorIds: Array<number>,
     public alignment: Alignment
   ) {}
 }

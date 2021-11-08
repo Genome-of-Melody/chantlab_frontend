@@ -8,6 +8,18 @@
       <button class="alignment-manager-action-button" mat-raised-button color="primary" (click)="showSelection()">Show</button>
       <button class="alignment-manager-action-button" mat-raised-button color="primary" (click)="deleteSelection()">Delete</button>
     </mat-card>
+    <mat-card>
+      <h3>Upload alignment</h3>
+      <mat-form-field class="alignment-name">
+        <mat-label>Alignment name</mat-label>
+        <input matInput type="text" [(ngModel)]="alignmentName">
+      </mat-form-field>
+      <br>
+      <input type="file"
+        (change)="handleFileInput($event.target.files)">
+      <br><br>
+      <button mat-raised-button color="primary" (click)="upload()">Upload</button>
+    </mat-card>
   </div>
 
 </div>
