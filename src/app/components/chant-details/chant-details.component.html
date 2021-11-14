@@ -50,7 +50,7 @@
         </ng-template>
       </mat-card-content>
       <mat-card-subtitle>Raw volpiano</mat-card-subtitle>
-      <mat-card-content>{{ chant.db_source.volpiano }}</mat-card-content>
+      <mat-card-content><input matInput [(ngModel)]="volpiano"></mat-card-content>
       <mat-card-subtitle>Full text</mat-card-subtitle>
       <mat-card-content>{{ chant.db_source.full_text }}</mat-card-content>
       <mat-card-subtitle>Genre</mat-card-subtitle>
@@ -65,6 +65,7 @@
       <mat-card-content>
         <a href="{{ chant.db_source.drupal_path }}">{{ chant.db_source.drupal_path }}</a>
       </mat-card-content>
+      <button mat-raised-button color="primary" (click)="updateVolpiano()">Update volpiano</button>
     </mat-card>
   </div>
 </div>

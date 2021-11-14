@@ -6,6 +6,7 @@ import { IChantPrecomputed } from 'src/app/interfaces/chant-precomputed.interfac
 import { ChantService } from 'src/app/services/chant.service';
 import { CsvTranslateService } from 'src/app/services/csv-translate.service';
 import { NoChantTextDialogComponent } from '../dialogs/no-chant-text-dialog/no-chant-text-dialog.component';
+import { VolpianoUpdatedDialogComponent } from '../dialogs/volpiano-updated-dialog/volpiano-updated-dialog.component';
 
 @Component({
   selector: 'app-chant-details',
@@ -19,6 +20,8 @@ export class ChantDetailsComponent implements OnInit, OnDestroy {
   chant: IChantPrecomputed;
   genre: string;
   office: string;
+
+  volpiano: string;
 
   private readonly componentDestroyed$ = new Subject();
 
@@ -41,7 +44,20 @@ export class ChantDetailsComponent implements OnInit, OnDestroy {
           this.genre = this.csvTranslateService.getGenre(this.chant.db_source.genre_id);
 
           this.office = this.csvTranslateService.getOffice(this.chant.db_source.office_id);
+
+          this.volpiano = this.chant.db_source.volpiano;
         }
+      );
+  }
+
+  updateVolpiano(): void {
+    const formData = new FormData();
+    formData.append('id', this.id.toString());
+    formData.append('volpiano', this.volpiano);
+    this.chantService.updateVolpiano(formData)
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(
+        _ => { this.dialog.open(VolpianoUpdatedDialogComponent); }
       );
   }
 
