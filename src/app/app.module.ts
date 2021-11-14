@@ -60,6 +60,7 @@ import { NetworkGraphWrapperComponent } from './components/visualization/network
 import { AddedToDatasetDialogComponent } from './components/dialogs/added-to-dataset-dialog/added-to-dataset-dialog.component';
 import { IdxOnAddToDatasetComponent } from './components/dialogs/idx-on-add-to-dataset/idx-on-add-to-dataset.component';
 import { VolpianoUpdatedDialogComponent } from './components/dialogs/volpiano-updated-dialog/volpiano-updated-dialog.component';
+import { ChantNotFoundDialogComponent } from './components/dialogs/chant-not-found-dialog/chant-not-found-dialog.component';
 
 
 @NgModule({
@@ -100,6 +101,7 @@ import { VolpianoUpdatedDialogComponent } from './components/dialogs/volpiano-up
     AddedToDatasetDialogComponent,
     IdxOnAddToDatasetComponent,
     VolpianoUpdatedDialogComponent,
+    ChantNotFoundDialogComponent,
   ],
     imports: [
         BrowserModule,
