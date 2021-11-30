@@ -40,14 +40,14 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
   public baseHeight = 1200;
 
   public nodeRadius = 5;
-  public nodeCollideRadius = 2;
+  public nodeCollideRadius = 1;
   public linkBaseThickness = 3;
 
   // Parameters for computing the graph
-  public linkStrengthCoefficient = 1;
+  public linkStrengthCoefficient = 0.1;
   public linkStrengthExponent = 10;
 
-  public forceChargeStrength = -10;
+  public forceChargeStrength = -100;
 
   constructor() { }
 
@@ -288,7 +288,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
       .enter()
       .append('line')
         .style('stroke', '#444')
-        .attr('stroke-width', d => d.value * this.linkBaseThickness)
+        .attr('stroke-width', d => d.value * (1 / this.linkStrengthCoefficient) * this.linkBaseThickness)
         .on('mousedown', (event, d) => {
           this.edgeLabel
               .transition()
@@ -340,7 +340,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
               .id(d => d.id)
               .links(data.links)
         )
-        .force('charge', d3.forceManyBody().strength(-5))           // apply general repulsion between nodes
+        .force('charge', d3.forceManyBody().strength(this.forceChargeStrength))  // apply general repulsion between nodes
         .force('center', d3.forceCenter(width / 2, height / 2))     // attracts every node to a specific position
         .force('collide', d3.forceCollide().radius(this.nodeCollideRadius).iterations(2))
         .on('end', ticked);

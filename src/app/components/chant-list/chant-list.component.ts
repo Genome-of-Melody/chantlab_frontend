@@ -106,6 +106,19 @@ export class ChantListComponent implements OnInit, OnDestroy {
     }
   }
 
+  selectAllVisible(): void {
+    for (let i = 0; i < this.selected.length; i++) {
+      this.selected[i] = this.selectedAll;
+
+      // If incomplete chants are hidden, do not select all.
+      if (this.searchFilterComponent.hideIncompleteChants) {
+        if (!this.isChantComplete(this.allChants[i])) {
+          this.selected[i] = false;
+        }
+      }
+    }
+  }
+
   selectNone(): void {
     for (let i = 0; i < this.selected.length; i++) {
       this.selected[i] = false;
@@ -224,9 +237,9 @@ export class ChantListComponent implements OnInit, OnDestroy {
             IdxOnAddToDatasetComponent,
             { data: dataSources}
           );
-      
+
           let selectedDatasetIdx: number;
-      
+
           dialogRef.afterClosed()
             .pipe(takeUntil(this.componentDestroyed$))
             .subscribe(
