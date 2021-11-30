@@ -60,6 +60,7 @@ import { NetworkGraphWrapperComponent } from './components/visualization/network
 import { AddedToDatasetDialogComponent } from './components/dialogs/added-to-dataset-dialog/added-to-dataset-dialog.component';
 import { IdxOnAddToDatasetComponent } from './components/dialogs/idx-on-add-to-dataset/idx-on-add-to-dataset.component';
 import { ZoomableCanvasComponent } from './components/visualization/zoomable-canvas/zoomable-canvas.component';
+import { ZoomableSvgViewComponent } from './components/visualization/zoomable-svg-view/zoomable-svg-view.component';
 
 
 @NgModule({
@@ -100,6 +101,7 @@ import { ZoomableCanvasComponent } from './components/visualization/zoomable-can
     AddedToDatasetDialogComponent,
     IdxOnAddToDatasetComponent,
     ZoomableCanvasComponent,
+    ZoomableSvgViewComponent,
   ],
     imports: [
         BrowserModule,

@@ -4,11 +4,11 @@
                   cdkDrag
                   class="single-network-container-div">
           <h3 align="center">Chant network</h3>
-          <div class="network-graph-chants"  style="position: relative;"></div>
+          <div class="network-graph-chants network-graph-svg-entry-point"></div>
           <app-network-graph
               [distanceMatrix]="distanceMatrix"
               [colorScheme]="colorScheme"
-              [distanceThreshold]="0.8"
+              [linkMaximumDistanceThreshold]="0.6"
               [networkType]="'chants'">
           </app-network-graph>
         </mat-card>
@@ -22,11 +22,11 @@
                   cdkDrag
                   class="single-network-container-div">
           <h3 align="center">Manuscript network</h3>
-          <div class="network-graph-manuscripts" style="position: relative;"></div>
+          <div class="network-graph-manuscripts network-graph-svg-entry-point"></div>
           <app-network-graph
               [distanceMatrix]="distanceMatrix"
               [colorScheme]="colorScheme"
-              [distanceThreshold]="1.0"
+              [linkMaximumDistanceThreshold]="0.8"
               [networkType]="'manuscripts'">
           </app-network-graph>
         </mat-card>

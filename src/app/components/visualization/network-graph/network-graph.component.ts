@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 
 interface Node {
   'id': string;
+  'dbid': string;
   'group'?: string;
   'count'?: number;
 }
@@ -27,18 +28,26 @@ interface NetworkGraphData {
 export class NetworkGraphComponent implements OnInit, OnDestroy {
 
   @Input() distanceMatrix: Map<string, Map<string, number>>;
-  @Input() distanceThreshold = 0.7;
+  @Input() linkMaximumDistanceThreshold = 0.02;
   @Input() networkType: string;
   @Input() colorScheme: Map<string, string>;
 
   nodeLabel: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
   edgeLabel: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 
+  // Parameters for drawing the graph
   public baseWidth = 1200;
   public baseHeight = 1200;
 
   public nodeRadius = 5;
-  public linkBaseThickness = 5;
+  public nodeCollideRadius = 2;
+  public linkBaseThickness = 3;
+
+  // Parameters for computing the graph
+  public linkStrengthCoefficient = 1;
+  public linkStrengthExponent = 10;
+
+  public forceChargeStrength = -10;
 
   constructor() { }
 
@@ -49,6 +58,10 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.nodeLabel.remove();
     this.edgeLabel.remove();
+  }
+
+  computeLinkStrength(distance: number): number {
+    return (distance ** this.linkStrengthExponent) * this.linkStrengthCoefficient;
   }
 
   createDataFromDistanceMatrix(distanceMatrix: Map<string, Map<string, number>>): NetworkGraphData {
@@ -74,12 +87,13 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
         // its signature as its group
         nodeSet.add(name1);
         // Only consider links with a low enough distance
-        if (distance <= this.distanceThreshold) {
+        if (distance <= this.linkMaximumDistanceThreshold) {
           // Only add link if the two chants are different
           // Check whether the reverse link is already in the set
           if (name1 !== name2 &&
               !usedLinks.has(name2 + '|' + name1)) {
-            links.push({source: name1, target: name2, value: 1 - distance});
+            const linkStrength = this.computeLinkStrength(1 - distance);
+            links.push({source: name1, target: name2, value: linkStrength});
             usedLinks.add(name1 + '|' + name2);
           }
         }
@@ -89,9 +103,12 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
     // Set the correct return values
     networkGraphData.nodes = Array.from(nodeSet).map(name => ({
       id: name,
+      dbid: name.split(' / ')[2],
       group: name.split(' / ')[1]
     }));
     networkGraphData.links = links;
+    console.log('Network graph data -- nodes:');
+    console.log(networkGraphData.nodes);
 
     console.log(networkGraphData);
     return networkGraphData;
@@ -101,7 +118,8 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
    * Based on the graph data, sets the visualization parameters
    * such as basic node size, edge thickness, etc. Possibly also display
    * parameters such as width and height...? but that should be estimated
-   * rather *after* rendering. */
+   * rather *after* rendering.
+   */
   setVisualizationParametersFromNetworkGraphData(networkGraphData): void {
     // TODO
   }
@@ -137,7 +155,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
         // its signature as its group
         nodeSet.add(name1);
         // Only consider links with a low enough distance
-        if (distance <= this.distanceThreshold) {
+        if (distance <= this.linkMaximumDistanceThreshold) {
           // Only add link if the two chants are different
           // Check whether the reverse link is already in the set
           if (name1 !== name2 &&
@@ -152,6 +170,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
     // Set the correct return values
     networkGraphData.nodes = Array.from(nodeSet).map(name => ({
       id: name,
+      dbid: name,
       group: name,
       count: sourceCounts[name]
     }));
@@ -166,6 +185,9 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
 
     distanceMatrix.forEach((distanceMap: Map<string, number>, name1: string) => {
       distanceMap.forEach((distance: number, name2: string) => {
+        // The need to parse sigla out of the distanceMatrix pseudo-object shows
+        // that the distance matrix should be refactored as a real object that carries
+        // the IChant data as well as the distances themselves.
         const source1 = name1.split(' / ')[1];
         const source2 = name2.split(' / ')[1];
         if (distanceMatrixAggregated.has(source1) && distanceMatrixAggregated.get(source1).has(source2)) {
@@ -191,9 +213,18 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
       });
     });
 
+    // Note: so far, this does *NOT* take into account how much sources
+    // overlap in repertory. If two sources share just one chant which is
+    // extremely similar, it looks more similar than two sources which share
+    // many chants but slightly different.
+
     return distanceMatrixSources;
   }
 
+  /**
+   * Renders the SVG of the NetworkGraph's data
+   * @param type: 'chants' or 'manuscripts'
+   */
   drawGraph(type: string): void {
     if (type !== 'chants' && type !== 'manuscripts') {
       return;
@@ -202,11 +233,13 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
     let data: NetworkGraphData;
     if (type === 'chants') {
       data = this.createDataFromDistanceMatrix(this.distanceMatrix);
-    }
-    else {
+    } else {
       data = this.createAggregatedData(this.distanceMatrix);
     }
+    this.drawGraphFromData(type, data);
+  }
 
+  drawGraphFromData(type: string, data: NetworkGraphData): void {
     // set the dimensions and margins of the graph
     const margin = {top: 10, right: 30, bottom: 30, left: 40};
     const width = this.baseWidth - margin.left - margin.right;
@@ -237,7 +270,9 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
         .style('padding', '5px')
         .style('pointer-events', 'none');
 
-    // append the svg object to the body of the page
+    // append the svg object to the body of the page.
+    // Note that this selects an element *outside* of the component's template.
+    // It should be refactored.
     const svg = d3.select('.network-graph-' + type)
     .append('svg')
     .attr('width', width + margin.left + margin.right)
@@ -252,7 +287,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
       .data(data.links)
       .enter()
       .append('line')
-        .style('stroke', '#888')
+        .style('stroke', '#444')
         .attr('stroke-width', d => d.value * this.linkBaseThickness)
         .on('mousedown', (event, d) => {
           this.edgeLabel
@@ -260,7 +295,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
               .duration(200)
               .style('opacity', .9);
           this.edgeLabel
-              .html((1 - d.value).toString())
+              .html(d.value.toString())
               .style('left', (event.pageX + 10) + 'px')
               .style('top', (event.pageY + 10) + 'px');
           })
@@ -294,29 +329,33 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
               .transition()
               .duration(500)
               .style('opacity', 0);
-      });
+          })
+        .on('dblclick', (event, d) => {
+          window.open('/chants/' + d.dbid);
+          });
 
     // Apply force
     const simulation = d3.forceSimulation(data.nodes as any)
         .force('link', d3.forceLink()                               // pushes linked nodes together, according to a link distance
-              .id(function(d: any) { return d.id; })
+              .id(d => d.id)
               .links(data.links)
         )
-        .force('charge', d3.forceManyBody())                        // apply general attraction or repulsion between nodes
+        .force('charge', d3.forceManyBody().strength(-5))           // apply general repulsion between nodes
         .force('center', d3.forceCenter(width / 2, height / 2))     // attracts every node to a specific position
+        .force('collide', d3.forceCollide().radius(this.nodeCollideRadius).iterations(2))
         .on('end', ticked);
 
     // Function updating the nodes' position
     function ticked(): void {
       link
-          .attr('x1', function(d: any) { return d.source.x; })
-          .attr('y1', function(d: any) { return d.source.y; })
-          .attr('x2', function(d: any) { return d.target.x; })
-          .attr('y2', function(d: any) { return d.target.y; });
+          .attr('x1', d => d.source.x)
+          .attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x)
+          .attr('y2', d => d.target.y);
 
       node
-          .attr('cx', function(d: any) { return d.x + 2; })
-          .attr('cy', function(d: any) { return d.y - 2; });
+          .attr('cx', d => d.x + 2)
+          .attr('cy', d => d.y - 2);
     }
 
   }

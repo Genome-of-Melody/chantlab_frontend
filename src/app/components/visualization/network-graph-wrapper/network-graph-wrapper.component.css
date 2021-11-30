@@ -22,3 +22,8 @@
   /*float: right;*/
   box-shadow: 0px 2px 2px black;
 }
+
+.network-graph-svg-entry-point {
+  position: relative;
+  border: 1px solid #3F51B5;
+}
