@@ -91,4 +91,8 @@ export class ChantService {
   deleteData(data: FormData): Observable<any> {
     return this.http.post(`${this._baseUrl}/delete-dataset/`, data);
   }
+
+  updateVolpiano(data: FormData): Observable<any> {
+    return this.http.post(`${this._baseUrl}/update-volpiano/`, data);
+  }
 }
