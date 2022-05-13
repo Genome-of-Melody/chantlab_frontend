@@ -9,6 +9,7 @@ import {SettingsService} from '../../services/settings.service';
 export class SettingsComponent implements OnInit {
 
   alignmentSettingsVisible = true;
+  networkGraphSettingsVisible = true;
   dashboardSettingsVisible = false;
 
   constructor(

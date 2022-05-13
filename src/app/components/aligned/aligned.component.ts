@@ -366,11 +366,22 @@ export class AlignedComponent implements OnInit, OnDestroy {
     if (this.showDistanceMatrix) { return 'accent'; }
     return 'primary';
   }
+
+  distanceMatrixChantNameFromChant(chant: IChant): string {
+    return (chant.incipit + ' / ' + chant.siglum + ' / ' + chant.id);
+  }
   get distanceMatrixChantNames(): string[] {
-    return this.alignment.iChants.map(ch => ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id);
+    return this.alignment.iChants.map(ch => this.distanceMatrixChantNameFromChant(ch));
   }
   get visibleSequencesDistanceMatrixChantNames(): string[] {
-    return this.visibleAlignmentSubset.iChants.map(ch => ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id);
+    return this.visibleAlignmentSubset.iChants.map(ch => this.distanceMatrixChantNameFromChant(ch));
+  }
+  get chantsMapForNetworkGraphs(): Map<string, IChant> {
+    const chantsForNetworkGraphs = new Map<string, IChant>();
+    this.visibleAlignmentSubset.iChants.forEach(ch => {
+      chantsForNetworkGraphs.set(this.distanceMatrixChantNameFromChant(ch), ch);
+    });
+    return chantsForNetworkGraphs;
   }
 
   doShowChantNetwork(): void {

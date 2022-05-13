@@ -16,6 +16,15 @@ td.distance-matrix {
   cursor: pointer;
 }
 
+td.distance-matrix-diagonal {
+  border: 1px solid gray;
+  cursor: pointer;
+}
+
+td.distance-matrix-zerodistance-nondiagonal {
+  border: 2px solid darkgreen;
+}
+
 td.distance-matrix-cell {
   overflow: visible;
   width: auto;

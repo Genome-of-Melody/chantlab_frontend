@@ -9,7 +9,8 @@ export class SettingsService {
 
   constructor(
     public alignmentSettingsService: AlignmentSettingsService,
-    public dashboardSettingsService: DashboardSettingsService
+    public dashboardSettingsService: DashboardSettingsService,
+    public networkGraphSettingsService: NetworkGraphSettingsService
   ) { }
 
 }
@@ -34,3 +35,15 @@ export class DashboardSettingsService {
 
   useGrayscale = false;
 }
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class NetworkGraphSettingsService {
+  constructor() { }
+
+  closestNeighborLinkOnly = false;
+  linkMaximumDistanceThreshold = 0.5;
+}
+

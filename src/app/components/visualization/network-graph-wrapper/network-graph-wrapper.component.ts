@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import * as d3 from 'd3';
+import {IChant} from '../../../interfaces/chant.interface';
+import {SettingsService} from '../../../services/settings.service';
 
 @Component({
   selector: 'app-network-graph-wrapper',
@@ -9,12 +11,15 @@ import * as d3 from 'd3';
 export class NetworkGraphWrapperComponent implements OnInit {
 
   @Input() distanceMatrix: Map<string, Map<string, number>>;
+  @Input() chants: Map<string, IChant>;
 
   colorScheme: Map<string, string>;
   showChantNetwork = false;
   showManuscriptNetwork = false;
 
-  constructor() { }
+  constructor(
+    public settingService: SettingsService
+  ) { }
 
   ngOnInit(): void {
     this.colorScheme = this.createColorScheme(this.distanceMatrix);

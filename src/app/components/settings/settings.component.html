@@ -1,3 +1,4 @@
+<!-- Alignment settings -->
 <mat-card class="settings-group">
   <mat-card-header class="settings-group">
     <button *ngIf="alignmentSettingsVisible" mat-button class="collapse-button"
@@ -23,6 +24,29 @@
   </mat-card-content>
 </mat-card>
 
+<!-- Network graph settings -->
+<mat-card class="settings-group">
+  <mat-card-header class="settings-group">
+    <button *ngIf="networkGraphSettingsVisible" mat-button class="collapse-button"
+            (click)="networkGraphSettingsVisible = !networkGraphSettingsVisible">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+    <button *ngIf="!networkGraphSettingsVisible" mat-button class="collapse-button"
+            (click)="networkGraphSettingsVisible = !networkGraphSettingsVisible">
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+    <span class="settings-group-name">Network graph settings</span>
+  </mat-card-header>
+
+  <mat-card-content *ngIf="networkGraphSettingsVisible" class="settings-group">
+    <mat-checkbox class="settings-item-active-element"
+                  [(ngModel)]="settingsService.networkGraphSettingsService.closestNeighborLinkOnly">
+      Only display edges to closest neighbor
+    </mat-checkbox>
+  </mat-card-content>
+</mat-card>
+
+<!-- Dashboard settings -->
 <mat-card class="settings-group">
   <mat-card-header class="settings-group">
     <button *ngIf="dashboardSettingsVisible" mat-button class="collapse-button"

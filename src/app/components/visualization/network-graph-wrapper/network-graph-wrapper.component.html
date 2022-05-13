@@ -7,8 +7,9 @@
           <div class="network-graph-chants network-graph-svg-entry-point"></div>
           <app-network-graph
               [distanceMatrix]="distanceMatrix"
+              [chants]="chants"
               [colorScheme]="colorScheme"
-              [linkMaximumDistanceThreshold]="0.6"
+              [linkMaximumDistanceThreshold]="settingService.networkGraphSettingsService.linkMaximumDistanceThreshold"
               [networkType]="'chants'">
           </app-network-graph>
         </mat-card>
@@ -25,8 +26,9 @@
           <div class="network-graph-manuscripts network-graph-svg-entry-point"></div>
           <app-network-graph
               [distanceMatrix]="distanceMatrix"
+              [chants]="chants"
               [colorScheme]="colorScheme"
-              [linkMaximumDistanceThreshold]="0.8"
+              [linkMaximumDistanceThreshold]="settingService.networkGraphSettingsService.linkMaximumDistanceThreshold"
               [networkType]="'manuscripts'">
           </app-network-graph>
         </mat-card>

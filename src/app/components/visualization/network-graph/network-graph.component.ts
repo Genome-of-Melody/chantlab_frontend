@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
 import * as d3 from 'd3';
+import {IChant} from '../../../interfaces/chant.interface';
 
 interface Node {
   'id': string;
@@ -28,6 +29,7 @@ interface NetworkGraphData {
 export class NetworkGraphComponent implements OnInit, OnDestroy {
 
   @Input() distanceMatrix: Map<string, Map<string, number>>;
+  @Input() chants: Map<string, IChant>;
   @Input() linkMaximumDistanceThreshold = 0.02;
   @Input() networkType: string;
   @Input() colorScheme: Map<string, string>;
@@ -47,7 +49,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
   public linkStrengthCoefficient = 0.1;
   public linkStrengthExponent = 10;
 
-  public forceChargeStrength = -100;
+  public forceChargeStrength = -10;
 
   constructor() { }
 
@@ -320,7 +322,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
               .duration(200)
               .style('opacity', .9);
           this.nodeLabel
-              .html(d.id)
+              .html(this.createNodeLabelFromNodeId(d.id))
               .style('left', (event.pageX + 10) + 'px')
               .style('top', (event.pageY + 10) + 'px');
           })
@@ -342,7 +344,7 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
         )
         .force('charge', d3.forceManyBody().strength(this.forceChargeStrength))  // apply general repulsion between nodes
         .force('center', d3.forceCenter(width / 2, height / 2))     // attracts every node to a specific position
-        .force('collide', d3.forceCollide().radius(this.nodeCollideRadius).iterations(2))
+        .force('collide', d3.forceCollide().radius(this.nodeCollideRadius).iterations(1))
         .on('end', ticked);
 
     // Function updating the nodes' position
@@ -358,5 +360,15 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
           .attr('cy', d => d.y - 2);
     }
 
+  }
+
+  createNodeLabelFromNodeId(nodeId: string): string {
+    const chant = this.chants.get(nodeId);
+    let label = chant.incipit + ' / ' + chant.siglum + ' / ' + chant.folio + '<br>';
+    if (chant.cantus_id) {
+      label = label + 'cID: ' + chant.cantus_id + ' / ';
+    }
+    label = label + chant.genre_id + ' / ' + chant.feast_id;
+    return label;
   }
 }
