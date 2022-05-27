@@ -54,7 +54,7 @@ export class AlignedPageComponent implements OnInit {
         console.error('Requested non-existent alignment: ' + this.requestedAlignmentName);
         throw new RuntimeError();
       }
-      this.inputAlignment = this.alignmentManagementService.retrieveAlignment(this.requestedAlignmentName)
+      this.inputAlignment = this.alignmentManagementService.retrieveAlignment(this.requestedAlignmentName);
       this.initFromAlignment();
     }
   }

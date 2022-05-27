@@ -48,7 +48,9 @@
             <button mat-raised-button (click)="doShowManuscriptNetwork()" color="{{ showManuscriptNetworkColor }}"
                     class="widget-control-button">Manuscript Network</button>
         </li>
-        <li><button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button></li>
+        <li><button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
+            <button mat-raised-button (click)="doShowPhylogeneticTree()" color="{{ showPhylogeneticTreeColor }}" class="widget-control-button">Phylogenetic Tree</button>
+        </li>
       </ul>
     </div>
 
@@ -149,6 +151,13 @@
       [allDistances]="distanceMatrix"
       [names]="visibleSequencesDistanceMatrixChantNames"
     ></app-distance-matrix>
+  </div>
+
+  <div *ngIf="showPhylogeneticTree"
+       class="distance-matrix-wrapper">
+    <app-phylogenetic-tree
+      [treeString]="alignment.guideTree">
+    </app-phylogenetic-tree>
   </div>
 
   <app-network-graph-wrapper

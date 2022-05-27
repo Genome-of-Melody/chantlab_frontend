@@ -20,7 +20,8 @@ export class Alignment {
     public alpianos: Array<string>,
     public ids: Array<number>,
     public urls: Array<string>,
-    public sources: Array<string>
+    public sources: Array<string>,
+    public guideTree: string
   ) {}
 
   static fromResponse(response: any): Alignment {
@@ -30,7 +31,8 @@ export class Alignment {
       response.success.volpianos,
       response.success.ids,
       response.success.urls,
-      response.success.sources);
+      response.success.sources,
+      response.guide_tree);
   }
 
   static fromJson(json: any): Alignment {
@@ -40,7 +42,8 @@ export class Alignment {
       json.alpianos,
       json.ids,
       json.urls,
-      json.sources
+      json.sources,
+      json.guide_tree,
     );
   }
 
@@ -51,8 +54,9 @@ export class Alignment {
       "alpianos": this.alpianos,
       "ids": this.ids,
       "urls": this.urls,
-      "sources": this.sources
-    })
+      "sources": this.sources,
+      "guide_tree": this.guideTree
+    });
   }
 
   get length(): number {
@@ -116,7 +120,8 @@ export class Alignment {
       sources.push(this.sources[idx]);
     }
 
-    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources);
+    // The guide tree is not valid after selecting a subset, so it does not get passed.
+    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources, null);
   }
 
   /**

@@ -63,6 +63,7 @@ import { VolpianoUpdatedDialogComponent } from './components/dialogs/volpiano-up
 import { ChantNotFoundDialogComponent } from './components/dialogs/chant-not-found-dialog/chant-not-found-dialog.component';
 import { ZoomableCanvasComponent } from './components/visualization/zoomable-canvas/zoomable-canvas.component';
 import { ZoomableSvgViewComponent } from './components/visualization/zoomable-svg-view/zoomable-svg-view.component';
+import { PhylogeneticTreeComponent } from './components/phylogenetic-tree/phylogenetic-tree.component';
 
 
 @NgModule({
@@ -106,6 +107,7 @@ import { ZoomableSvgViewComponent } from './components/visualization/zoomable-sv
     ChantNotFoundDialogComponent,
     ZoomableCanvasComponent,
     ZoomableSvgViewComponent,
+    PhylogeneticTreeComponent,
   ],
     imports: [
         BrowserModule,

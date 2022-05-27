@@ -47,6 +47,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
   showText = true;
 
   showDistanceMatrix = false;
+  showPhylogeneticTree = false;
 
   showChantNetwork = false;
   showManuscriptNetwork = false;
@@ -413,7 +414,18 @@ export class AlignedComponent implements OnInit, OnDestroy {
     if (this.showManuscriptNetwork) { this.doShowManuscriptNetwork(); }
   }
 
-
+  doShowPhylogeneticTree(): void {
+    if (this.alignment) {
+      this.showPhylogeneticTree = !this.showPhylogeneticTree;
+    }
+  }
+  get showPhylogeneticTreeColor(): string {
+    if (this.showPhylogeneticTree) { return 'accent'; }
+    return 'primary';
+  }
+  ensurePhylogeneticTreeClosed(): void {
+    if (this.showPhylogeneticTree) { this.doShowPhylogeneticTree(); }
+  }
 
   restrictToContrafacts(): void {
     if (!this.alignment) { return; }
@@ -452,6 +464,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
       this.ensureDistanceMatrixClosed();
       this.ensureChantNetworkClosed();
       this.ensureManuscriptNetworkClosed();
+      this.ensurePhylogeneticTreeClosed();
     }
     // event.preventDefault();
   }
