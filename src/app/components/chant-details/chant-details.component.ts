@@ -24,6 +24,7 @@ export class ChantDetailsComponent implements OnInit, OnDestroy {
   office: string;
 
   volpiano: string;
+  humanReadableCentury: string;
 
   private readonly componentDestroyed$ = new Subject();
 
@@ -49,6 +50,8 @@ export class ChantDetailsComponent implements OnInit, OnDestroy {
           this.office = this.csvTranslateService.getOffice(this.chant.db_source.office_id);
 
           this.volpiano = this.chant.db_source.volpiano;
+
+          this.humanReadableCentury = this.buildHumanReadableCentury(this.chant);
         },
         error => {
           console.log(error);
@@ -72,5 +75,17 @@ export class ChantDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
+  }
+
+  buildHumanReadableCentury(chant: IChantPrecomputed): string {
+    const century = chant.db_source.century_code;
+    if (!century) {
+      return '(century unknown)';
+    }
+    const centuryComponents = century.split('_').slice(1);
+    if (centuryComponents.length != 2) {
+      return '(century malformed)';
+    }
+    return centuryComponents[0] + ' - ' + centuryComponents[1];
   }
 }

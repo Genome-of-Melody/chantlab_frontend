@@ -16,6 +16,7 @@ export class Chant {
   genre_id?: string;
   office_id?: string;
   source_id?: string;
+  century_code?: string;
   melody_id?: string;
   drupal_path?: string;
   full_text?: string;

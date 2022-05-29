@@ -194,6 +194,11 @@ export class AlignedComponent implements OnInit, OnDestroy {
     this.downloadService.download(blob, 'aligned.json');
   }
 
+  downloadPhyloNewick(): void {
+    const blob = new Blob([this.alignment.guideTree], {type: 'text'});
+    this.downloadService.download(blob, 'guide_tree.txt');
+  }
+
   saveAlignment(): void {
 
     let alignmentName: string;
