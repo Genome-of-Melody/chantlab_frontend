@@ -16,6 +16,10 @@ export class DistanceMatrixComponent implements OnInit, AfterContentChecked {
     return this.names.map(n => n.split(' ').slice(0, 2).join(' '));
   }
 
+  getShortName(name: string): string {
+    return name.split(' ').slice(0, 2).join(' ');
+  }
+
   /**
    * Handles displaying overlays with cell names to help orient the user in a large matrix.
    */

@@ -32,7 +32,7 @@ export class Alignment {
       response.success.ids,
       response.success.urls,
       response.success.sources,
-      response.guide_tree);
+      response.guideTree);
   }
 
   static fromJson(json: any): Alignment {
@@ -43,7 +43,7 @@ export class Alignment {
       json.ids,
       json.urls,
       json.sources,
-      json.guide_tree,
+      json.guideTree,
     );
   }
 
@@ -55,7 +55,7 @@ export class Alignment {
       "ids": this.ids,
       "urls": this.urls,
       "sources": this.sources,
-      "guide_tree": this.guideTree
+      "guideTree": this.guideTree
     });
   }
 

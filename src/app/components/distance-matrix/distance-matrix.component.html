@@ -9,7 +9,7 @@
       </td>
     </tr>
     <tr class="distance-matrix" *ngFor="let name1 of names">
-      <td class="distance-matrix-header-column">{{ name1 }}</td>
+      <td class="distance-matrix-header-column">{{ getShortName(name1) }}</td>
       <td class="distance-matrix distance-matrix-cell"
           *ngFor="let name2 of names"
           style="background-color: rgb({{ backgroundColorRGB(allDistances.get(name1).get(name2)) }})"
