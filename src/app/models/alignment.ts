@@ -14,6 +14,13 @@ export class Alignment {
 
   // alpianos: Array<string> = [];
 
+  // newickNamesDict is the mapping of names in the Newick tree to IChant IDs.
+  // The phylo tree in Newick format does not allow whitespace in node names,
+  // but at the same time, it must contain meaningful names for display, and these
+  // names can only be substituted into the Newick string on the server side.
+  // Hence, a separate mapping must arrive from the server that then enables
+  // matching tree nodes to actual ICHant objects, in order to make the view
+  // more informative.
   constructor(
     public parsedChants: Array<Array<{text: string, type: string, volpiano: Array<string>}>>,
     public iChants: Array<IChant>,
@@ -21,8 +28,10 @@ export class Alignment {
     public ids: Array<number>,
     public urls: Array<string>,
     public sources: Array<string>,
-    public guideTree: string
+    public guideTree: string,
+    public newickNamesDict: Map<string, string>
   ) {}
+
 
   static fromResponse(response: any): Alignment {
     return new Alignment(
@@ -32,7 +41,8 @@ export class Alignment {
       response.success.ids,
       response.success.urls,
       response.success.sources,
-      response.guideTree);
+      response.guideTree,
+      response.newickNamesDict);
   }
 
   static fromJson(json: any): Alignment {
@@ -44,6 +54,7 @@ export class Alignment {
       json.urls,
       json.sources,
       json.guideTree,
+      json.newickNamesDict,
     );
   }
 
@@ -55,7 +66,8 @@ export class Alignment {
       "ids": this.ids,
       "urls": this.urls,
       "sources": this.sources,
-      "guideTree": this.guideTree
+      "guideTree": this.guideTree,
+      "newickNamesDict": this.newickNamesDict,
     });
   }
 
@@ -121,7 +133,7 @@ export class Alignment {
     }
 
     // The guide tree is not valid after selecting a subset, so it does not get passed.
-    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources, null);
+    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources, null, null);
   }
 
   /**

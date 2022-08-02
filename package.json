@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "~12.2.9",
     "@angular/router": "~12.2.9",
     "d3": "^7.0.0",
+    "newick-js": "^1.1.1",
     "phylotree": "^1.0.13",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

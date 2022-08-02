@@ -158,7 +158,9 @@
   <div *ngIf="showPhylogeneticTree"
        class="distance-matrix-wrapper">
     <app-phylogenetic-tree
-      [treeString]="alignment.guideTree">
+      [treeString]="alignment.guideTree"
+      [newickNamesDict]="alignment.newickNamesDict"
+      [chants]="alignment.iChants">
     </app-phylogenetic-tree>
   </div>
 

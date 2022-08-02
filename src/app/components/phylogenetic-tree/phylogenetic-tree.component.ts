@@ -1,6 +1,8 @@
 import {Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 
 import * as phylotree from 'phylotree';
+import {IChant} from '../../interfaces/chant.interface';
+import {PhyloService} from '../../services/phylo.service';
 
 @Component({
   selector: 'app-phylogenetic-tree',
@@ -11,13 +13,23 @@ import * as phylotree from 'phylotree';
 export class PhylogeneticTreeComponent implements OnInit {
 
   @Input() treeString: string;
+  @Input() newickNamesDict: Map<string, number>;
+  @Input() chants: Array<IChant>;
   @ViewChild('treeContainer', {static: true}) treeContainer: ElementRef;
 
   public treeShowValue: string;
 
-  constructor() { }
+  constructor(
+    private phyloService: PhyloService,
+  ) { }
 
   ngOnInit(): void {
+
+    // TODO: Add names dict handling.
+    // const orderedCenturiesProportion = this.phyloService.computeOrderedCenturiesProportion(
+    //   this.treeString, this.newickNamesDict, this.chants
+    // );
+
     const tree = new phylotree.phylotree(this.treeString);
     const renderedTree = tree.render({height: 600, width: 1000,
       'left-right-spacing': 'fit-to-size',
