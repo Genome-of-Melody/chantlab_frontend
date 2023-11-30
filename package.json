@@ -25,7 +25,7 @@
     "newick-js": "^1.1.1",
     "phylotree": "^1.0.13",
     "rxjs": "~6.6.0",
-    "tslib": "^2.0.0",
+    "tslib": "^2.6.2",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
