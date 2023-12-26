@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ChantListWrapperComponent } from './chant-list-wrapper.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ChantListWrapperComponent', () => {
   let component: ChantListWrapperComponent;
@@ -8,6 +8,7 @@ describe('ChantListWrapperComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [ RouterTestingModule ],
       declarations: [ ChantListWrapperComponent ]
     })
     .compileComponents();

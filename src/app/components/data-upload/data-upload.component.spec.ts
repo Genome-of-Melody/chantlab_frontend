@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DataUploadComponent } from './data-upload.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('DataUploadComponent', () => {
   let component: DataUploadComponent;
@@ -8,7 +9,11 @@ describe('DataUploadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DataUploadComponent ]
+      imports: [ HttpClientTestingModule ],
+      declarations: [ DataUploadComponent ],
+      providers: [
+        {provide: MatDialog, useValue: {}}
+      ]
     })
     .compileComponents();
   });

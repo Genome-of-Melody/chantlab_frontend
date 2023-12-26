@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AlignmentManagerComponent } from './alignment-manager.component';
+import { RouterModule } from '@angular/router';
 
 describe('AlignmentManagerComponent', () => {
   let component: AlignmentManagerComponent;
@@ -8,6 +8,7 @@ describe('AlignmentManagerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [ RouterModule.forRoot([]) ],
       declarations: [ AlignmentManagerComponent ]
     })
     .compileComponents();

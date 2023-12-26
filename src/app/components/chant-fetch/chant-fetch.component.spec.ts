@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ChantFetchComponent } from './chant-fetch.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ChantFetchComponent', () => {
   let component: ChantFetchComponent;
@@ -8,6 +8,7 @@ describe('ChantFetchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [ RouterTestingModule ],
       declarations: [ ChantFetchComponent ]
     })
     .compileComponents();

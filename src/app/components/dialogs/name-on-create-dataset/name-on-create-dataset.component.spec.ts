@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { NameOnCreateDatasetComponent } from './name-on-create-dataset.component';
 
 describe('NameOnCreateDatasetComponent', () => {
@@ -8,7 +8,11 @@ describe('NameOnCreateDatasetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NameOnCreateDatasetComponent ]
+      declarations: [ NameOnCreateDatasetComponent ],
+      providers: [
+        {provide: MatDialogRef, useValue: {}},
+        {provide: MAT_DIALOG_DATA, useValue: []}
+      ]
     })
     .compileComponents();
   });
