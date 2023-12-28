@@ -16,6 +16,12 @@ describe('DistanceMatrixComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DistanceMatrixComponent);
     component = fixture.componentInstance;
+    component.names = ["A Christo de caelo vocatus / F-Pn lat. 12044 / 0"];
+    component.allDistances = new Map([
+      ["A Christo de caelo vocatus / F-Pn lat. 12044 / 0", new Map([
+        ["A Christo de caelo vocatus / F-Pn lat. 12044 / 0", 0]
+      ])]
+    ]);
     fixture.detectChanges();
   });
 

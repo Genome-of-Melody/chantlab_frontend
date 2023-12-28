@@ -29,19 +29,22 @@ export class PhylogeneticTreeComponent implements OnInit {
     // const orderedCenturiesProportion = this.phyloService.computeOrderedCenturiesProportion(
     //   this.treeString, this.newickNamesDict, this.chants
     // );
+    if(this.treeString != null){ // ToDo Remove the if-statement, and fix the functionality of the component
+      const tree = new phylotree.phylotree(this.treeString);
+      const renderedTree = tree.render({height: 600, width: 1000,
+        'left-right-spacing': 'fit-to-size',
+        'top-bottom-spacing': 'fit-to-size'});
+      // console.log(renderedTree);
 
-    const tree = new phylotree.phylotree(this.treeString);
-    const renderedTree = tree.render({height: 600, width: 1000,
-      'left-right-spacing': 'fit-to-size',
-      'top-bottom-spacing': 'fit-to-size'});
-    // console.log(renderedTree);
-
-    const showValue = renderedTree.show();
-    // console.log(showValue);
-    // console.log(showValue.outerHTML);
-    this.treeShowValue = showValue.outerHTML;
-    // console.log(this.testBox);
-    this.treeContainer.nativeElement.innerHTML = this.treeShowValue;
+      const showValue = renderedTree.show();
+      // console.log(showValue);
+      // console.log(showValue.outerHTML);
+      this.treeShowValue = showValue.outerHTML;
+      // console.log(this.testBox);
+      this.treeContainer.nativeElement.innerHTML = this.treeShowValue;
+    }else{
+      console.error("The Tree String is null or undefined. The functionality of Phylogenetic Trees is not supported in this case.");
+    }
   }
 
 }
