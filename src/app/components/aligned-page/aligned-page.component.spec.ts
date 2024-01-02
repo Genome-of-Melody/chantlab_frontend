@@ -3,6 +3,7 @@ import { AlignedPageComponent } from './aligned-page.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 describe('AlignedPageComponent', () => {
   let component: AlignedPageComponent;
@@ -12,7 +13,8 @@ describe('AlignedPageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule
+        RouterTestingModule,
+        MatProgressSpinnerModule
       ],
       declarations: [ AlignedPageComponent ],
       providers: [

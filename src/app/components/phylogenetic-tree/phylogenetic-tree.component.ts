@@ -43,7 +43,7 @@ export class PhylogeneticTreeComponent implements OnInit {
       // console.log(this.testBox);
       this.treeContainer.nativeElement.innerHTML = this.treeShowValue;
     }else{
-      console.error("The Tree String is null or undefined. The functionality of Phylogenetic Trees is not supported in this case.");
+      console.error("The Tree String is null or undefined. For this case, the functionality of Phylogenetic Trees is not supported.");
     }
   }
 

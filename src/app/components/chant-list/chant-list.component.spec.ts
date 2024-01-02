@@ -3,6 +3,12 @@ import { ChantListComponent } from './chant-list.component';
 import { RouterModule } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { SearchFilterComponent } from '../search-filter/search-filter.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 describe('ChantListComponent', () => {
   let component: ChantListComponent;
@@ -12,9 +18,17 @@ describe('ChantListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterModule.forRoot([])
+        RouterModule.forRoot([]),
+        MatCheckboxModule,
+        MatPaginatorModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        FormsModule
       ],
-      declarations: [ ChantListComponent ],
+      declarations: [
+        ChantListComponent,
+        SearchFilterComponent
+      ],
       providers: [
         {provide: MatDialog, useValue: {}}
       ]

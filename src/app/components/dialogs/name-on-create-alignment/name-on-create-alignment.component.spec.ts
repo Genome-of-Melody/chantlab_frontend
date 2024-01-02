@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { NameOnCreateAlignmentComponent } from './name-on-create-alignment.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('NameOnCreateAlignmentComponent', () => {
   let component: NameOnCreateAlignmentComponent;
@@ -8,6 +12,13 @@ describe('NameOnCreateAlignmentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [
+        BrowserAnimationsModule,
+        FormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatDialogModule
+      ],
       declarations: [ NameOnCreateAlignmentComponent ],
       providers: [
               {provide: MatDialogRef, useValue: {}},

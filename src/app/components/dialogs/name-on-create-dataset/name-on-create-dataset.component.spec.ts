@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { NameOnCreateDatasetComponent } from './name-on-create-dataset.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
 
 describe('NameOnCreateDatasetComponent', () => {
   let component: NameOnCreateDatasetComponent;
@@ -8,6 +12,13 @@ describe('NameOnCreateDatasetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        MatDialogModule
+      ],
       declarations: [ NameOnCreateDatasetComponent ],
       providers: [
         {provide: MatDialogRef, useValue: {}},

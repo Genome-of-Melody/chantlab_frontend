@@ -3,6 +3,13 @@ import { AlignedComponent } from './aligned.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { Alignment } from '../../models/alignment';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { NetworkGraphWrapperComponent } from '../visualization/network-graph-wrapper/network-graph-wrapper.component';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 describe('AlignedComponent', () => {
   let component: AlignedComponent;
@@ -10,8 +17,19 @@ describe('AlignedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AlignedComponent ],
-      imports: [HttpClientTestingModule],
+      declarations: [
+        AlignedComponent,
+        NetworkGraphWrapperComponent
+      ],
+      imports: [
+        HttpClientTestingModule,
+        MatCheckboxModule,
+        MatButtonToggleModule,
+        FormsModule,
+        BrowserModule,
+        MatButtonModule,
+        ScrollingModule
+      ],
       providers: [
         {provide: MatDialog, useValue: {}}
       ]

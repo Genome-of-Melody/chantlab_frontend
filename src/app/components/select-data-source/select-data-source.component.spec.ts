@@ -9,7 +9,7 @@ describe('SelectDataSourceComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [ HttpClientTestingModule ],
       declarations: [ SelectDataSourceComponent ],
       providers: [{provide: MatDialog, useValue: {}}]
     })
