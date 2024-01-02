@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SavedFilterDialogComponent } from './saved-filter-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('SavedFilterDialogComponent', () => {
   let component: SavedFilterDialogComponent;
@@ -8,6 +8,7 @@ describe('SavedFilterDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [ MatDialogModule ],
       declarations: [ SavedFilterDialogComponent ]
     })
     .compileComponents();

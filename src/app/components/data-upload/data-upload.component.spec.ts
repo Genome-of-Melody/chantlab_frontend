@@ -1,6 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DataUploadComponent } from './data-upload.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatInputModule } from '@angular/material/input';
+import { DatasetListComponent } from '../dataset-list/dataset-list.component';
+import { FormsModule } from '@angular/forms';
 
 describe('DataUploadComponent', () => {
   let component: DataUploadComponent;
@@ -8,7 +15,22 @@ describe('DataUploadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DataUploadComponent ]
+      imports: [
+        HttpClientTestingModule,
+        MatCardModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatFormFieldModule,
+        BrowserAnimationsModule,
+        FormsModule
+      ],
+      declarations: [
+        DataUploadComponent,
+        DatasetListComponent
+      ],
+      providers: [
+        {provide: MatDialog, useValue: {}}
+      ]
     })
     .compileComponents();
   });

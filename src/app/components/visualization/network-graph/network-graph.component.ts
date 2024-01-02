@@ -58,8 +58,12 @@ export class NetworkGraphComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.nodeLabel.remove();
-    this.edgeLabel.remove();
+    if(this.nodeLabel != null){
+      this.nodeLabel.remove();
+    }
+    if(this.edgeLabel != null){
+      this.edgeLabel.remove();
+    }
   }
 
   computeLinkStrength(distance: number): number {

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { UploadSuccessfulDialogComponent } from './upload-successful-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('UploadSuccessfulDialogComponent', () => {
   let component: UploadSuccessfulDialogComponent;
@@ -8,6 +8,7 @@ describe('UploadSuccessfulDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [ MatDialogModule ],
       declarations: [ UploadSuccessfulDialogComponent ]
     })
     .compileComponents();

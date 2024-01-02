@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NoChantTextDialogComponent } from './no-chant-text-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('NoChantTextDialogComponent', () => {
   let component: NoChantTextDialogComponent;
@@ -8,6 +9,7 @@ describe('NoChantTextDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [ MatDialogModule ],
       declarations: [ NoChantTextDialogComponent ]
     })
     .compileComponents();

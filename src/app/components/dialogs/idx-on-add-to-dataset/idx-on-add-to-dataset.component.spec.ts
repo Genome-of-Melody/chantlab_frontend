@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { IdxOnAddToDatasetComponent } from './idx-on-add-to-dataset.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
 
 describe('IdxOnAddToDatasetComponent', () => {
   let component: IdxOnAddToDatasetComponent;
@@ -8,7 +10,16 @@ describe('IdxOnAddToDatasetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IdxOnAddToDatasetComponent ]
+      imports: [
+        MatRadioModule,
+        FormsModule,
+        MatDialogModule
+      ],
+      declarations: [ IdxOnAddToDatasetComponent ],
+      providers: [
+        {provide: MatDialogRef, useValue: {}},
+        {provide: MAT_DIALOG_DATA, useValue: []}
+      ]
     })
     .compileComponents();
   });

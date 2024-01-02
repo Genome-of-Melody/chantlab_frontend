@@ -107,7 +107,7 @@ export class AlignedPageComponent implements OnInit {
 
         // The errors are also handled here -- the AlignedComponent is meant
         // to display the alignment, not to deal with what was *not* aligned.
-        console.log("here");
+        console.log("here"); // ToDo Remove this log
         console.log(this.alignedResponse);
         if (this.alignedResponse.errorShortNames.length > 0) {
           const dialogRef = this.dialog.open(AlignmentErrorDialogComponent);
