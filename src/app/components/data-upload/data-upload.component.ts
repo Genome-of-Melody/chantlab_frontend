@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DatasetManagementService } from 'src/app/services/dataset-management.service';
 import { MissingDatasetNameDialogComponent } from '../dialogs/missing-dataset-name-dialog/missing-dataset-name-dialog.component';
 import { UploadSuccessfulDialogComponent } from '../dialogs/upload-successful-dialog/upload-successful-dialog.component';

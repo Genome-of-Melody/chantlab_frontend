@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { take } from 'rxjs/operators';
 import { CsvTranslateService } from 'src/app/services/csv-translate.service';
 import { SearchFilterService } from 'src/app/services/search-filter.service';

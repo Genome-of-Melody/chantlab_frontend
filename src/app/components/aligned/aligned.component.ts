@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
+import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {AlignmentService} from 'src/app/services/alignment.service';
 import {ChantService} from 'src/app/services/chant.service';
@@ -14,7 +14,7 @@ import {NameOnCreateAlignmentComponent} from '../dialogs/name-on-create-alignmen
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {ContrafactService} from '../../services/contrafact.service';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatLegacyPaginator as MatPaginator} from '@angular/material/legacy-paginator';
 import {NetworkGraphWrapperComponent} from '../visualization/network-graph-wrapper/network-graph-wrapper.component';
 
 @Component({

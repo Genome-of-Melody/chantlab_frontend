@@ -3,7 +3,7 @@ import { ChantFetchComponent } from './chant-fetch.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ChantDetailsComponent } from '../chant-details/chant-details.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 
 describe('ChantFetchComponent', () => {
   let component: ChantFetchComponent;

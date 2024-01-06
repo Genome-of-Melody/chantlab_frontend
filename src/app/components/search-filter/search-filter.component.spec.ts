@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchFilterComponent } from './search-filter.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MatIconModule } from '@angular/material/icon';
 
 describe('SearchFilterComponent', () => {

@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AlignedComponent } from './aligned.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Alignment } from '../../models/alignment';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NetworkGraphWrapperComponent } from '../visualization/network-graph-wrapper/network-graph-wrapper.component';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 describe('AlignedComponent', () => {

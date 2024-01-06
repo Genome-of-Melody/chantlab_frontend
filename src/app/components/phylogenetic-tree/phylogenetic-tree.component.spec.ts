@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PhylogeneticTreeComponent } from './phylogenetic-tree.component';
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 
 describe('PhylogeneticTreeComponent', () => {
   let component: PhylogeneticTreeComponent;
