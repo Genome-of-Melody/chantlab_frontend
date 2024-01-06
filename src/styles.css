@@ -156,3 +156,11 @@
   }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.mat-mdc-button .mdc-button__label,
+.mat-mdc-unelevated-button .mdc-button__label,
+.mat-mdc-raised-button .mdc-button__label,
+.mat-mdc-outlined-button .mdc-button__label {
+    z-index: 0 !important;
+}

@@ -51,3 +51,7 @@ td.distance-matrix-header-column {
   background-color: antiquewhite;
   overflow: visible;
 }
+
+::ng-deep mat-card.distance-matrix-card {
+  padding: 20px;
+}
