@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectDataSourceComponent } from './select-data-source.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('SelectDataSourceComponent', () => {
   let component: SelectDataSourceComponent;

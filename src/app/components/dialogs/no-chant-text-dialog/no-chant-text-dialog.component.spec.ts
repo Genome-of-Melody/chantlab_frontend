@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NoChantTextDialogComponent } from './no-chant-text-dialog.component';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('NoChantTextDialogComponent', () => {
   let component: NoChantTextDialogComponent;

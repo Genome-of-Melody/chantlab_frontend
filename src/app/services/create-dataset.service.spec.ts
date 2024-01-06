@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { CreateDatasetService } from './create-dataset.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('CreateDatasetService', () => {
   let service: CreateDatasetService;

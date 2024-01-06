@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatasetCreatedDialogComponent } from './dataset-created-dialog.component';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('DatasetCreatedDialogComponent', () => {
   let component: DatasetCreatedDialogComponent;
