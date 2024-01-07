@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ChantService} from '../../services/chant.service';
 import {AlignmentService} from '../../services/alignment.service';
 import {Alignment, AlignmentResponse} from '../../models/alignment';

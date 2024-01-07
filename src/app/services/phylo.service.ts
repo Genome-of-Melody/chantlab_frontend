@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {IChant} from '../interfaces/chant.interface';
 
-import {parse, Vertex, write} from 'newick-js';
+import {parse, Vertex } from 'newick-js';
 // import {hasOwnProperty} from 'tslint/lib/utils';
 // import getOwnPropertyDescriptor = Reflect.getOwnPropertyDescriptor;
 
