@@ -4,7 +4,7 @@ import {AlignmentService} from '../../services/alignment.service';
 import {Alignment, AlignmentResponse} from '../../models/alignment';
 import {AlignmentErrorDialogComponent} from '../dialogs/alignment-error-dialog/alignment-error-dialog.component';
 import {IChant} from '../../interfaces/chant.interface';
-import {MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {AlignmentManagementService} from '../../services/alignment-management.service';
 import {ActivatedRoute} from '@angular/router';
 import RuntimeError = WebAssembly.RuntimeError;

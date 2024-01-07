@@ -102,3 +102,7 @@ h3 {
 
 .tree-widget {
 }
+
+mat-card.phylogenetic-tree-card {
+  padding: 20px;
+}
