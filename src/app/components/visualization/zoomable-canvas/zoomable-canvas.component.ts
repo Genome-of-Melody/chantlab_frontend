@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { RouterEvent } from '@angular/router';
 
 // Copied over from:
 // https://github.com/Durwella/zoomable-canvas/blob/master/src/zoomablecanvas.component.ts,
@@ -297,7 +298,7 @@ export class ZoomableCanvasComponent implements AfterViewInit {
     }
   }
 
-  public mousewheel(_event: Event): void {
+  public mousewheel(_event: Event|RouterEvent): void {
     const event = _event as unknown as WheelEvent;
     event.preventDefault();
 
