@@ -2,7 +2,6 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { IStackedHistogram } from 'src/app/interfaces/stacked-histogram.interface';
 
 import * as d3 from 'd3';
-import { delay } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 
 @Component({

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ChantService } from './chant.service';
-import { startWith } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

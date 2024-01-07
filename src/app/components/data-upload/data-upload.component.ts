@@ -4,7 +4,6 @@ import { DatasetManagementService } from 'src/app/services/dataset-management.se
 import { MissingDatasetNameDialogComponent } from '../dialogs/missing-dataset-name-dialog/missing-dataset-name-dialog.component';
 import { UploadSuccessfulDialogComponent } from '../dialogs/upload-successful-dialog/upload-successful-dialog.component';
 import {DatasetListComponent} from '../dataset-list/dataset-list.component';
-import {Data} from '@angular/router';
 
 @Component({
   selector: 'app-data-upload',
