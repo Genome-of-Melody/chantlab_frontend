@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DistanceMatrixComponent } from './distance-matrix.component';
-import { MatCardModule } from '@angular/material/card'
+import { MatCardModule } from '@angular/material/card';
 
 describe('DistanceMatrixComponent', () => {
   let component: DistanceMatrixComponent;
