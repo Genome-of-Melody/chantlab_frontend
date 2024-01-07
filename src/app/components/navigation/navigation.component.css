@@ -31,7 +31,7 @@
 
 /* Search bar, emphasise bottom border color when focused on */
 ::ng-deep .searchBar .mdc-text-field--filled .mdc-line-ripple::after {
-    border-bottom: 2px solid rgb(255, 255, 255);
+    border-bottom: 2px solid rgb(255, 255, 255) !important;
 }
 
 /* Search bar, input text white color */
@@ -41,7 +41,7 @@
 
 /* Search bar, change the color of caret (|) */
 ::ng-deep .searchBar .mdc-text-field .mdc-text-field__input {
-    caret-color: rgb(255, 255, 255);
+    caret-color: rgb(255, 255, 255) !important;
 }
 
 /* Search bar, remove the 'cross' cancel 'X" button */
