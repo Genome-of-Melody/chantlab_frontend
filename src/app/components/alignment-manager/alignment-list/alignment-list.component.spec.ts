@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AlignmentListComponent } from './alignment-list.component';
 
 describe('AlignmentListComponent', () => {

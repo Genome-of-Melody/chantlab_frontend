@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { RouterModule } from '@angular/router';
 import { ChantDetailsComponent } from './chant-details.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('ChantDetailsComponent', () => {
   let component: ChantDetailsComponent;
@@ -8,7 +10,14 @@ describe('ChantDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChantDetailsComponent ]
+      imports: [
+        HttpClientTestingModule,
+        RouterModule.forRoot([])
+      ],
+      declarations: [ ChantDetailsComponent ],
+      providers: [
+        {provide: MatDialog, useValue: {}},
+      ]
     })
     .compileComponents();
   });

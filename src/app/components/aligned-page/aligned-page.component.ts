@@ -1,10 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ChantService} from '../../services/chant.service';
 import {AlignmentService} from '../../services/alignment.service';
 import {Alignment, AlignmentResponse} from '../../models/alignment';
 import {AlignmentErrorDialogComponent} from '../dialogs/alignment-error-dialog/alignment-error-dialog.component';
 import {IChant} from '../../interfaces/chant.interface';
-import {MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import {AlignmentManagementService} from '../../services/alignment-management.service';
 import {ActivatedRoute} from '@angular/router';
 import RuntimeError = WebAssembly.RuntimeError;
@@ -107,7 +107,7 @@ export class AlignedPageComponent implements OnInit {
 
         // The errors are also handled here -- the AlignedComponent is meant
         // to display the alignment, not to deal with what was *not* aligned.
-        console.log("here");
+        console.log("here"); // ToDo Remove this log
         console.log(this.alignedResponse);
         if (this.alignedResponse.errorShortNames.length > 0) {
           const dialogRef = this.dialog.open(AlignmentErrorDialogComponent);

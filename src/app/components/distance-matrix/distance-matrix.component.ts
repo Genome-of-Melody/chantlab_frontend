@@ -1,6 +1,5 @@
 import {AfterContentChecked, Component, Input, OnInit} from '@angular/core';
 import {DistanceService} from '../../services/distance.service';
-import {AlignmentService} from '../../services/alignment.service';
 
 @Component({
   selector: 'app-distance-matrix',

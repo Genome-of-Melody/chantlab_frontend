@@ -12,6 +12,10 @@
   display: block;
 }
 
+::ng-deep .upload-content mat-card, ::ng-deep .selection-content mat-card{
+  padding: 10px;
+}
+
 .selection-content {
   width: fit-content;
   /*margin: auto;*/

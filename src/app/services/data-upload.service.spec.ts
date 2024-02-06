@@ -1,12 +1,18 @@
 import { TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatasetManagementService } from './dataset-management.service';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('DataUploadService', () => {
   let service: DatasetManagementService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [
+        {provide: MatDialog, useValue: {}},
+      ]
+    });
     service = TestBed.inject(DatasetManagementService);
   });
 

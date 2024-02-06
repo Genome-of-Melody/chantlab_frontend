@@ -8,7 +8,6 @@ import { IChant } from '../interfaces/chant.interface';
 import { SelectedDataSourcesService } from './selected-data-sources.service';
 import { IncipitService } from './incipit.service';
 import { SearchFilterService } from './search-filter.service';
-import {FontesService} from './fontes.service';
 
 
 @Injectable({

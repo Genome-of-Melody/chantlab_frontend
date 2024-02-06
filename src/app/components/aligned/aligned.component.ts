@@ -14,7 +14,6 @@ import {NameOnCreateAlignmentComponent} from '../dialogs/name-on-create-alignmen
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {ContrafactService} from '../../services/contrafact.service';
-import {MatPaginator} from '@angular/material/paginator';
 import {NetworkGraphWrapperComponent} from '../visualization/network-graph-wrapper/network-graph-wrapper.component';
 
 @Component({
