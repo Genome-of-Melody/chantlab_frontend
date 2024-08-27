@@ -473,4 +473,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     // event.preventDefault();
   }
 
+  openPhylogeneticAnalysis(): void {
+    // ToDo implement redirection to phylogenetic analysis page
+  }
 }
