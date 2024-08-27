@@ -62,7 +62,6 @@ export class AlignedPageComponent implements OnInit {
   initFromAlignment(): void {
     this.idsToAlign = this.inputAlignment.ids;
     this.chantsToAlign = this.inputAlignment.iChants;
-    this.alignmentMode = this.inputAlignment.alignmentMode;
     this.alignedResponse = new AlignmentResponse(
       this.inputAlignment.parsedChants,
       [],
@@ -75,50 +74,67 @@ export class AlignedPageComponent implements OnInit {
     this.idsToAlign = this.alignmentService.idsToAlign;
     this.chantsToAlign = this.alignmentService.chantsToAlign;
 
-    const formData: FormData = new FormData();
-    formData.append('idsToAlign', JSON.stringify(this.alignmentService.idsToAlign));
-    formData.append('mode', this.alignmentService.getMode());
+    if (this.alignmentService.alignment === undefined) {
 
-    this.chantService.getAlignment(formData).subscribe(
-      response => {
+      const formData: FormData = new FormData();
+      formData.append('idsToAlign', JSON.stringify(this.alignmentService.idsToAlign));
+      formData.append('mode', this.alignmentService.getMode());
 
-        console.log('AlignedPage: got response:');
-        console.log(response);
+      this.chantService.getAlignment(formData).subscribe(
+        response => {
+  
+          console.log('AlignedPage: got response:');
+          console.log(response);
+  
+          // Select the IChant data objects that contain incipits, cantus IDs, texts, etc.
+          // The Alignment object should get the IChants, so it needs to be prepared
+          // before the constructor is called.
+          const alignedIChants = [];
+          response.success.ids.forEach(alignedID => {
+            const iChant = this.alignmentService.chantsToAlign.find(ch => ch.id === alignedID);
+            alignedIChants.push(iChant);
+          });
+          // Because I think in the (near) future the IChants will ride with the request
+          // and response, I think I can afford to do this. But of course it is
+          // not good software design to modify your response objects!
+          response.iChants = alignedIChants;
+          this.alignmentService.alignment = Alignment.fromResponse(response)
 
-        // Select the IChant data objects that contain incipits, cantus IDs, texts, etc.
-        // The Alignment object should get the IChants, so it needs to be prepared
-        // before the constructor is called.
-        const alignedIChants = [];
-        response.success.ids.forEach(alignedID => {
-          const iChant = this.alignmentService.chantsToAlign.find(ch => ch.id === alignedID);
-          alignedIChants.push(iChant);
-        });
-        // Because I think in the (near) future the IChants will ride with the request
-        // and response, I think I can afford to do this. But of course it is
-        // not good software design to modify your response objects!
-        response.iChants = alignedIChants;
+          console.log(response);
+          this.alignedResponse = new AlignmentResponse(
+            response.chants,
+            response.errors.sources,
+            response.errors.ids,
+            this.alignmentService.alignment
+          );
+          
+          
 
-        console.log(response);
-        this.alignedResponse = new AlignmentResponse(
-          response.chants,
-          response.errors.sources,
-          response.errors.ids,
-          Alignment.fromResponse(response)
-        );
-
-        // The errors are also handled here -- the AlignedComponent is meant
-        // to display the alignment, not to deal with what was *not* aligned.
-        console.log(this.alignedResponse);
-        if (this.alignedResponse.errorShortNames.length > 0) {
-          const dialogRef = this.dialog.open(AlignmentErrorDialogComponent);
-          const instance = dialogRef.componentInstance;
-          instance.sources = this.alignedResponse.errorShortNames;
-          instance.ids = this.alignedResponse.errorIds;
+          // The errors are also handled here -- the AlignedComponent is meant
+          // to display the alignment, not to deal with what was *not* aligned.
+          console.log(this.alignedResponse);
+          if (this.alignedResponse.errorShortNames.length > 0) {
+            const dialogRef = this.dialog.open(AlignmentErrorDialogComponent);
+            const instance = dialogRef.componentInstance;
+            instance.sources = this.alignedResponse.errorShortNames;
+            instance.ids = this.alignedResponse.errorIds;
+          }
+  
+          console.log('AlignedPage: finished subscribe()');
         }
+      );
+    } else {
+      const alignment = this.alignmentService.alignment;
+      this.idsToAlign = alignment.ids;
+      this.chantsToAlign = alignment.iChants;
+      this.alignedResponse = new AlignmentResponse(
+        alignment.parsedChants,
+        [],
+        [],
+        alignment
+      );
+    }
 
-        console.log('AlignedPage: finished subscribe()');
-      }
-    );
 
     console.log('AlignedPage: onInit() done.');
   }

@@ -169,6 +169,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
 
     this.alignmentService.idsToAlign = selected;
     this.alignmentService.chantsToAlign = selectedChants;
+    this.alignmentService.alignment = undefined;
     this.router.navigate(['/align']);
   }
 
