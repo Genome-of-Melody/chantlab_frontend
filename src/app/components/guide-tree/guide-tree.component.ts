@@ -5,12 +5,12 @@ import {IChant} from '../../interfaces/chant.interface';
 import {PhyloService} from '../../services/phylo.service';
 
 @Component({
-  selector: 'app-phylogenetic-tree',
-  templateUrl: './phylogenetic-tree.component.html',
-  styleUrls: ['./phylogenetic-tree.component.css'],
+  selector: 'app-guide-tree',
+  templateUrl: './guide-tree.component.html',
+  styleUrls: ['./guide-tree.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class PhylogeneticTreeComponent implements OnInit {
+export class GuideTreeComponent implements OnInit {
 
   @Input() treeString: string;
   @Input() newickNamesDict: Map<string, number>;
@@ -43,7 +43,7 @@ export class PhylogeneticTreeComponent implements OnInit {
       // console.log(this.testBox);
       this.treeContainer.nativeElement.innerHTML = this.treeShowValue;
     }else{
-      console.error("The Tree String is null or undefined. For this case, the functionality of Phylogenetic Trees is not supported.");
+      console.error("The Tree String is null or undefined. For this case, the functionality of Guide Trees is not supported.");
     }
   }
 

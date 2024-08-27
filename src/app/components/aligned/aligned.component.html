@@ -51,7 +51,7 @@
                     class="widget-control-button">Manuscript Network</button>
         </li>
         <li><button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
-            <button mat-raised-button (click)="doShowPhylogeneticTree()" color="{{ showPhylogeneticTreeColor }}" class="widget-control-button">Phylogenetic Tree</button>
+            <button *ngIf="alignmentMode !== 'syllables'" mat-raised-button (click)="doShowGuideTree()" color="{{ showGuideTreeColor }}" class="widget-control-button">Guide Tree</button>
         </li>
       </ul>
     </div>
@@ -155,13 +155,13 @@
     ></app-distance-matrix>
   </div>
 
-  <div *ngIf="showPhylogeneticTree"
+  <div *ngIf="showGuideTree"
        class="distance-matrix-wrapper">
-    <app-phylogenetic-tree
+    <app-guide-tree
       [treeString]="alignment.guideTree"
       [newickNamesDict]="alignment.newickNamesDict"
       [chants]="alignment.iChants">
-    </app-phylogenetic-tree>
+    </app-guide-tree>
   </div>
 
   <app-network-graph-wrapper
