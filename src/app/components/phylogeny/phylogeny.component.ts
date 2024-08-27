@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import { PhylogenyResponse } from 'src/app/models/phylogeny';
@@ -30,6 +30,20 @@ export class PhylogenyComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
+  }
+
+
+  copyToClipboard() {
+    const textarea = document.getElementById('phylogenetic-textarea') as HTMLTextAreaElement;
+    if (textarea) {
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        console.log('Text copied to clipboard');
+      } catch (err) {
+        console.error('Failed to copy text to clipboard', err);
+      }
+    }
   }
 
 }

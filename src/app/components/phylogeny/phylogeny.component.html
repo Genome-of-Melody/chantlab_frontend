@@ -1,3 +1,29 @@
-<div class="phylogeny">
-  {{ phylogeneticTree }}
+<div class="phylogeny-container">
+  <div>
+    <button mat-raised-button class="copy-button" color="primary" (click)="copyToClipboard()">Copy</button>
+  </div>
+  <div>
+    <textarea class="phylogenetic-textarea" id="phylogenetic-textarea" readonly>{{ phylogeneticTree }}</textarea>
+  </div>
 </div>
+
+<div class="instructions">
+  <h3>Instructions to Upload Tree Data:</h3>
+  <ol>
+    <li>Copy the text from the field above.</li>
+    <li>Click on the 'File' button inside the frame below.</li>
+    <li>Click on 'Enter tree directly...' (eventually press key 'e').</li>
+    <li>Paste the copied text into the provided field and click 'Done'.</li>
+  </ol>
+</div>
+
+<div class="icytree-container">
+  <iframe id="icytree-iframe"
+    src="https://icytree.org/" 
+    width="100%" 
+    height="600px" 
+    frameborder="0" 
+    allowfullscreen>
+  </iframe>
+</div>
+<br><br>
