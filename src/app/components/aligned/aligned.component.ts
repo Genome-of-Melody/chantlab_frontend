@@ -15,6 +15,8 @@ import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {ContrafactService} from '../../services/contrafact.service';
 import {NetworkGraphWrapperComponent} from '../visualization/network-graph-wrapper/network-graph-wrapper.component';
+import { Router } from '@angular/router';
+import { PhylogenyService } from 'src/app/services/phylogeny.service';
 
 @Component({
   selector: 'app-aligned',
@@ -76,12 +78,14 @@ export class AlignedComponent implements OnInit, OnDestroy {
     private chantService: ChantService,
     private downloadService: DownloadService,
     private alignmentService: AlignmentService,
+    private phylogenyService: PhylogenyService,
     private alignmentManagementService: AlignmentManagementService,
     private conservationProfileService: ConservationProfileService,
     private distanceService: DistanceService,
     private settingsService: SettingsService,
     private contrafactService: ContrafactService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -474,6 +478,9 @@ export class AlignedComponent implements OnInit, OnDestroy {
   }
 
   openPhylogeneticAnalysis(): void {
-    // ToDo implement redirection to phylogenetic analysis page
+    // Save the current chant alignment for phylogeny to local storage
+    this.phylogenyService.alignmentForPhylogeny = this.alignmentService.alignment
+    this.phylogenyService.phylogeneticTree = undefined
+    this.router.navigate(['/phylogeny']);
   }
 }

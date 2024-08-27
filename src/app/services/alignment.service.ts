@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {IChant} from '../interfaces/chant.interface';
-import { Alignment, AlignmentResponse } from '../models/alignment';
+import { Alignment } from '../models/alignment';
 
 @Injectable({
   providedIn: 'root'

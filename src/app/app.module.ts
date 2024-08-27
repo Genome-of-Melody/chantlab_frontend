@@ -64,7 +64,8 @@ import { ChantNotFoundDialogComponent } from './components/dialogs/chant-not-fou
 import { ZoomableCanvasComponent } from './components/visualization/zoomable-canvas/zoomable-canvas.component';
 import { ZoomableSvgViewComponent } from './components/visualization/zoomable-svg-view/zoomable-svg-view.component';
 import { GuideTreeComponent } from './components/guide-tree/guide-tree.component';
-
+import { PhylogenyComponent } from './components/phylogeny/phylogeny.component';
+import { PhylogenyPageComponent } from './components/phylogeny-page/phylogeny-page.component';
 
 @NgModule({
     declarations: [
@@ -108,6 +109,8 @@ import { GuideTreeComponent } from './components/guide-tree/guide-tree.component
         ZoomableCanvasComponent,
         ZoomableSvgViewComponent,
         GuideTreeComponent,
+        PhylogenyPageComponent,
+        PhylogenyComponent
     ],
     imports: [
         BrowserModule,

@@ -8,6 +8,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import {AlignedPageComponent} from './components/aligned-page/aligned-page.component';
 import {AlignmentManagerComponent} from './components/alignment-manager/alignment-manager.component';
 import { HelpPageComponent } from './components/help-page/help-page.component';
+import { PhylogenyPageComponent } from './components/phylogeny-page/phylogeny-page.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'settings', component: SettingsComponent },
   { path: 'alignment-manager', component: AlignmentManagerComponent },
   { path: 'help', component: HelpPageComponent },
+  { path: 'phylogeny', component: PhylogenyPageComponent },
 ];
 
 @NgModule({
