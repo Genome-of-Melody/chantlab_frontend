@@ -14,15 +14,48 @@ export class PhylogenyService {
   private _mode: string = null;
   private storage = window.localStorage;
 
-  get phylogeneticTree(): string {
-    const tree = this.storage.getItem('phylogeneticTree');
+  get newick(): string {
+    const tree = this.storage.getItem('phylogenyNewick');
     if (tree === "undefined" || tree === undefined){ return undefined;}
     if (tree === "null" || tree === null){ return null;}
     return tree;
   }
 
-  set phylogeneticTree(tree: string){
-    this.storage.setItem('phylogeneticTree', tree);
+  set newick(tree: string){
+    this.storage.setItem('phylogenyNewick', tree);
+  }
+
+  get mrBayesScript(): string {
+    const tree = this.storage.getItem('phylogenyMrBayesScript');
+    if (tree === "undefined" || tree === undefined){ return undefined;}
+    if (tree === "null" || tree === null){ return null;}
+    return tree;
+  }
+
+  set mrBayesScript(tree: string){
+    this.storage.setItem('phylogenyMrBayesScript', tree);
+  }
+
+  get nexusAlignment(): string {
+    const tree = this.storage.getItem('phylogenyNexusAlignment');
+    if (tree === "undefined" || tree === undefined){ return undefined;}
+    if (tree === "null" || tree === null){ return null;}
+    return tree;
+  }
+
+  set nexusAlignment(tree: string){
+    this.storage.setItem('phylogenyNexusAlignment', tree);
+  }
+
+  get nexusConTre(): string {
+    const tree = this.storage.getItem('phylogenyNexusConTre');
+    if (tree === "undefined" || tree === undefined){ return undefined;}
+    if (tree === "null" || tree === null){ return null;}
+    return tree;
+  }
+
+  set nexusConTre(tree: string){
+    this.storage.setItem('phylogenyNexusConTre', tree);
   }
 
   get alignmentForPhylogeny(): Alignment {

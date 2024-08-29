@@ -19,8 +19,11 @@ import { ChantService } from 'src/app/services/chant.service';
 export class PhylogenyPageComponent implements OnInit {
 
   phylogenyResponse: PhylogenyResponse;
-  phylogeneticTree: string;
   alignmentForPhylogeny: Alignment;
+  newick: string;
+  mb_script: string;
+  nexus_alignment: string;
+  nexus_con_tre: string;
 
 
   constructor(
@@ -32,11 +35,12 @@ export class PhylogenyPageComponent implements OnInit {
   ngOnInit(): void {
     this.alignmentForPhylogeny = this.phylogenyService.alignmentForPhylogeny;
 
-    if (this.phylogenyService.phylogeneticTree === undefined || this.phylogenyService.phylogeneticTree === null) {
+    if (this.phylogenyService.newick === undefined || this.phylogenyService.newick === null) {
 
       const formData: FormData = new FormData();
-      formData.append('parsedChants', JSON.stringify(this.alignmentForPhylogeny.parsedChants))
+      formData.append('alpianos', JSON.stringify(this.alignmentForPhylogeny.alpianos))
       formData.append('ids', JSON.stringify(this.alignmentForPhylogeny.ids));
+      formData.append('numberOfGenerations', "1000") // TODO parametrize number of generations
 
       this.chantService.mrbayesVolpiano(formData).subscribe(
         response => {
@@ -44,19 +48,36 @@ export class PhylogenyPageComponent implements OnInit {
           console.log('PhylogenyPage: got response:');
           console.log(response);
 
-          this.phylogenyService.phylogeneticTree = response.phylogeneticTree
-          this.phylogeneticTree = this.phylogenyService.phylogeneticTree
+          this.phylogenyService.newick = response.newick
+          this.phylogenyService.mrBayesScript = response.mbScript
+          this.phylogenyService.nexusAlignment = response.nexusAlignment
+          this.phylogenyService.nexusConTre = response.nexusConTre
+
+
+          this.newick = this.phylogenyService.newick
+          this.mb_script = this.phylogenyService.mrBayesScript
+          this.nexus_alignment = this.phylogenyService.nexusAlignment
+          this.nexus_con_tre = this.phylogenyService.nexusConTre
           this.phylogenyResponse = new PhylogenyResponse(
-            this.phylogeneticTree
+            this.newick,
+            this.mb_script,
+            this.nexus_alignment,
+            this.nexus_con_tre
           )
 
           console.log('PhylogenyPage: finished subscribe()');
         }
       );
     } else {
-      this.phylogeneticTree = this.phylogenyService.phylogeneticTree
+      this.newick = this.phylogenyService.newick
+      this.mb_script = this.phylogenyService.mrBayesScript
+      this.nexus_alignment = this.phylogenyService.nexusAlignment
+      this.nexus_con_tre = this.phylogenyService.nexusConTre
       this.phylogenyResponse = new PhylogenyResponse(
-        this.phylogeneticTree
+        this.newick,
+        this.mb_script,
+        this.nexus_alignment,
+        this.nexus_con_tre
       )
     }
     console.log('PhylogenyPage: onInit() done.');

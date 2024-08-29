@@ -480,7 +480,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
   openPhylogeneticAnalysis(): void {
     // Save the current chant alignment for phylogeny to local storage
     this.phylogenyService.alignmentForPhylogeny = this.alignmentService.alignment
-    this.phylogenyService.phylogeneticTree = undefined
+    this.phylogenyService.newick = undefined
     this.router.navigate(['/phylogeny']);
   }
 }

@@ -13,9 +13,8 @@ import { PhylogenyService } from 'src/app/services/phylogeny.service';
 export class PhylogenyComponent implements OnInit, OnDestroy {
 
 
-  phylogenyResponse: PhylogenyResponse;
 
-  @Input() phylogeneticTree: string;
+  @Input() phylogeny: PhylogenyResponse;
 
   private readonly componentDestroyed$ = new Subject();
 

@@ -1,7 +1,10 @@
 
 export class PhylogenyResponse {
     constructor(
-      public phylogeneticTree: string
+      public newick: string,
+      public mbScript: string,
+      public nexusAlignment: string,
+      public nexusConTre: string,
     ) {}
   }
   

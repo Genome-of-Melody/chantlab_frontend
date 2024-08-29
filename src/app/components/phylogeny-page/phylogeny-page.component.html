@@ -1,6 +1,6 @@
 <div class="phylogeny-page">
   <app-phylogeny *ngIf="phylogenyResponse; else progressSpinner"
-               [phylogeneticTree]="phylogenyResponse.phylogeneticTree">
+               [phylogeny]="phylogenyResponse">
   </app-phylogeny>
 
   <ng-template #progressSpinner>
