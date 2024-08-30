@@ -11,6 +11,7 @@ export class SettingsComponent implements OnInit {
   alignmentSettingsVisible = true;
   networkGraphSettingsVisible = true;
   dashboardSettingsVisible = false;
+  phylogenySettingsVisible = true;
 
   constructor(
     public settingsService: SettingsService

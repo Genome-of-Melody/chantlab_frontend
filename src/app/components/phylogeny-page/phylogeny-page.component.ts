@@ -7,6 +7,7 @@ import { PhylogenyResponse } from 'src/app/models/phylogeny';
 import { PhylogenyService } from 'src/app/services/phylogeny.service';
 import { Alignment } from 'src/app/models/alignment';
 import { ChantService } from 'src/app/services/chant.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 
 
@@ -29,6 +30,7 @@ export class PhylogenyPageComponent implements OnInit {
   constructor(
     private phylogenyService: PhylogenyService,
     private chantService: ChantService,
+    private settingsService: SettingsService,
     public dialog: MatDialog
   ) { }
 
@@ -40,7 +42,7 @@ export class PhylogenyPageComponent implements OnInit {
       const formData: FormData = new FormData();
       formData.append('alpianos', JSON.stringify(this.alignmentForPhylogeny.alpianos))
       formData.append('ids', JSON.stringify(this.alignmentForPhylogeny.ids));
-      formData.append('numberOfGenerations', "1000") // TODO parametrize number of generations
+      formData.append('numberOfGenerations', JSON.stringify(this.settingsService.phylogenySettingsService.mrbayesGenerations))
 
       this.chantService.mrbayesVolpiano(formData).subscribe(
         response => {

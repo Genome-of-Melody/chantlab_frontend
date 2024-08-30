@@ -10,7 +10,8 @@ export class SettingsService {
   constructor(
     public alignmentSettingsService: AlignmentSettingsService,
     public dashboardSettingsService: DashboardSettingsService,
-    public networkGraphSettingsService: NetworkGraphSettingsService
+    public networkGraphSettingsService: NetworkGraphSettingsService,
+    public phylogenySettingsService: PhylogenySettingsService
   ) { }
 
 }
@@ -47,3 +48,12 @@ export class NetworkGraphSettingsService {
   linkMaximumDistanceThreshold = 0.5;
 }
 
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PhylogenySettingsService {
+  constructor() { }
+
+  mrbayesGenerations = 4000;
+}
