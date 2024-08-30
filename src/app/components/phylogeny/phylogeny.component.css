@@ -1,45 +1,114 @@
-.phylogenetic-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+.phylogenetic-textarea {
+  font-size: 14px;
+}
+.newick-text {
+  margin-top: 10px;
 }
 
-.phylogenetic-textarea {
-    width: 78%; 
-    height: 80px;
-    border: 1px solid #000000;
+.newick-button {
+  height: 10px;
+  margin-left:20px;
+  padding: 10px 20px;
+  border-radius: 4px;
+}
+
+
+.instructions {
+  margin: 20px;
+}
+
+.instructions h3 {
+  margin-bottom: 10px;
+}
+
+.instructions ol {
+  margin-left: 20px;
+}
+
+
+
+
+.card {
     margin-left: 20px;
-    margin-top: 5px;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    background-color: #dbdbdb;
-    resize: none; 
-  }
-  .copy-button {
-    height: 10px;
-    margin-left:20px;
-    margin-top:20px;
-    padding: 10px 20px;
-    border-radius: 4px;
-  }
-
-  .icytree-container {
-    margin: 20px;
-    border: 2px solid;
-    padding: 5px;
-  }
-  
-
-  .instructions {
-    margin: 20px;
-    font-size: 16px;
-  }
-  
-  .instructions h3 {
+    margin-right: 20px;
     margin-bottom: 10px;
-  }
-  
-  .instructions ol {
-    margin-left: 20px;
-  }
+}
+
+
+.control-button {
+  margin: 20px;
+  width: fit-content;
+}
+
+
+.phylogeny {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.spinner {
+    margin: auto;
+}
+
+.raw {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+
+div.controls-wrapper {
+  display: flex;
+}
+
+div.display-controls {
+  display: inline-block;
+  float: left;
+  margin: 20px;
+}
+
+div.newick-help-upload-instructions-wrapper {
+  position: absolute;
+  margin-top: 10%;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  left: 0;
+  right: 0;
+}
+
+div.widget-control-wrapper {
+  display: flex;
+  flex-direction: column;
+  unicode-bidi: isolate;
+}
+
+div.widget-control {
+  display: inline-block;
+  margin-left: 20px;
+  margin-right: 20px;
+  flex-grow: 1;
+}
+
+
+ul.widget-control {
+  list-style: none;
+}
+
+.widget-control-button {
+  width: fit-content;
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.icytree-container {
+  /*width: 100%;*/
+  height: 600px;
+  border: 1px solid #3F51B5;
+  margin-left: 10px;
+  padding: 20px;
+}
+
+

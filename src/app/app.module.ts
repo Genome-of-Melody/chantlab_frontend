@@ -66,6 +66,7 @@ import { ZoomableSvgViewComponent } from './components/visualization/zoomable-sv
 import { GuideTreeComponent } from './components/guide-tree/guide-tree.component';
 import { PhylogenyComponent } from './components/phylogeny/phylogeny.component';
 import { PhylogenyPageComponent } from './components/phylogeny-page/phylogeny-page.component';
+import { PhylogenyErrorDialogComponent } from './components/dialogs/phylogeny-error-dialog/phylogeny-error-dialog.component';
 
 @NgModule({
     declarations: [
@@ -81,6 +82,7 @@ import { PhylogenyPageComponent } from './components/phylogeny-page/phylogeny-pa
         NoChantTextDialogComponent,
         NotEnoughToAlingDialogComponent,
         AlignmentErrorDialogComponent,
+        PhylogenyErrorDialogComponent,
         ChantDetailDialogComponent,
         MultipleSeriesScatterplotComponent,
         DataUploadComponent,

@@ -8,6 +8,8 @@ import { PhylogenyService } from 'src/app/services/phylogeny.service';
 import { Alignment } from 'src/app/models/alignment';
 import { ChantService } from 'src/app/services/chant.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { AlignmentErrorDialogComponent } from '../dialogs/alignment-error-dialog/alignment-error-dialog.component';
+import { PhylogenyErrorDialogComponent } from '../dialogs/phylogeny-error-dialog/phylogeny-error-dialog.component';
 
 
 
@@ -66,6 +68,12 @@ export class PhylogenyPageComponent implements OnInit {
             this.nexus_alignment,
             this.nexus_con_tre
           )
+
+          if (response.error.length > 0) {
+            const dialogRef = this.dialog.open(PhylogenyErrorDialogComponent);
+            const instance = dialogRef.componentInstance;
+            instance.error_message = response.error
+          }
 
           console.log('PhylogenyPage: finished subscribe()');
         }
