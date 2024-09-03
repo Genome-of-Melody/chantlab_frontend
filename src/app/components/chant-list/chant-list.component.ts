@@ -34,6 +34,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
   currentIndex = -1;
   selected: boolean[] = [];
   selectedAll: boolean;
+  concatenatedMode: boolean = false;
 
   pageEvent = new BehaviorSubject<PageEvent>(null);
   pageIndex: number;
@@ -169,6 +170,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
 
     this.alignmentService.idsToAlign = selected;
     this.alignmentService.chantsToAlign = selectedChants;
+    this.alignmentService.concatenatedMode = this.concatenatedMode;
     this.alignmentService.alignment = undefined;
     this.router.navigate(['/align']);
   }

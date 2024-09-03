@@ -42,9 +42,10 @@ export class PhylogenyPageComponent implements OnInit {
     if (this.phylogenyService.newick === undefined || this.phylogenyService.newick === null) {
 
       const formData: FormData = new FormData();
-      formData.append('alpianos', JSON.stringify(this.alignmentForPhylogeny.alpianos))
+      formData.append('alpianos', JSON.stringify(this.alignmentForPhylogeny.alpianos));
       formData.append('ids', JSON.stringify(this.alignmentForPhylogeny.ids));
-      formData.append('numberOfGenerations', JSON.stringify(this.settingsService.phylogenySettingsService.mrbayesGenerations))
+      formData.append('sources', JSON.stringify(this.alignmentForPhylogeny.sources));
+      formData.append('numberOfGenerations', JSON.stringify(this.settingsService.phylogenySettingsService.mrbayesGenerations));
 
       this.chantService.mrbayesVolpiano(formData).subscribe(
         response => {

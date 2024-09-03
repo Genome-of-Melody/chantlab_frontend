@@ -79,6 +79,7 @@ export class AlignedPageComponent implements OnInit {
       const formData: FormData = new FormData();
       formData.append('idsToAlign', JSON.stringify(this.alignmentService.idsToAlign));
       formData.append('mode', this.alignmentService.getMode());
+      formData.append('concatenated', JSON.stringify(this.alignmentService.concatenatedMode))
 
       this.chantService.getAlignment(formData).subscribe(
         response => {

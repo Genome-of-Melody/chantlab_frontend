@@ -38,6 +38,16 @@ export class AlignmentService {
     this.storage.setItem('chantsToAlign', JSON.stringify(chants));
   }
 
+  get concatenatedMode(): boolean {
+    const concatenated = this.storage.getItem('concatenatedMode');
+    if (concatenated === null) { return false; }
+    return JSON.parse(concatenated);
+  }
+
+  set concatenatedMode(concatenated: boolean) {
+    this.storage.setItem('concatenatedMode', JSON.stringify(concatenated));
+  }
+  
 
   get alignment(): Alignment {
     const alignment = this.storage.getItem('alignment');
