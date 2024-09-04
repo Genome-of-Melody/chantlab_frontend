@@ -107,7 +107,8 @@ describe('AlignedComponent', () => {
       ['http://cantus.uwaterloo.ca/chant/399542/'],
       ['F-Pn lat. 12044, 053v, 3.'],
       null,
-      null
+      null,
+      "full"
       );
     component.alignment = alignment;
     fixture.detectChanges();

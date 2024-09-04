@@ -15,6 +15,8 @@ import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {ContrafactService} from '../../services/contrafact.service';
 import {NetworkGraphWrapperComponent} from '../visualization/network-graph-wrapper/network-graph-wrapper.component';
+import { Router } from '@angular/router';
+import { PhylogenyService } from 'src/app/services/phylogeny.service';
 
 @Component({
   selector: 'app-aligned',
@@ -46,7 +48,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
   showText = true;
 
   showDistanceMatrix = false;
-  showPhylogeneticTree = false;
+  showGuideTree = false;
 
   showChantNetwork = false;
   showManuscriptNetwork = false;
@@ -76,20 +78,22 @@ export class AlignedComponent implements OnInit, OnDestroy {
     private chantService: ChantService,
     private downloadService: DownloadService,
     private alignmentService: AlignmentService,
+    private phylogenyService: PhylogenyService,
     private alignmentManagementService: AlignmentManagementService,
     private conservationProfileService: ConservationProfileService,
     private distanceService: DistanceService,
     private settingsService: SettingsService,
     private contrafactService: ContrafactService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     console.log('AlignedComponent.onInit() started');
 
-    this.idsToAlign = this.alignmentService.idsToAlign;
-    this.alignmentMode = this.alignmentService.getMode();
-    this.chantsToAlign = this.alignmentService.chantsToAlign;
+    this.idsToAlign = this.alignment.ids;
+    this.alignmentMode = this.alignment.alignmentMode;
+    this.chantsToAlign = this.alignmentService.chantsToAlign; // Probably not used anywhere
     console.log('AlignedComponent.alignment:');
     console.log(this.alignment);
 
@@ -418,17 +422,17 @@ export class AlignedComponent implements OnInit, OnDestroy {
     if (this.showManuscriptNetwork) { this.doShowManuscriptNetwork(); }
   }
 
-  doShowPhylogeneticTree(): void {
+  doShowGuideTree(): void {
     if (this.alignment) {
-      this.showPhylogeneticTree = !this.showPhylogeneticTree;
+      this.showGuideTree = !this.showGuideTree;
     }
   }
-  get showPhylogeneticTreeColor(): string {
-    if (this.showPhylogeneticTree) { return 'accent'; }
+  get showGuideTreeColor(): string {
+    if (this.showGuideTree) { return 'accent'; }
     return 'primary';
   }
-  ensurePhylogeneticTreeClosed(): void {
-    if (this.showPhylogeneticTree) { this.doShowPhylogeneticTree(); }
+  ensureGuideTreeClosed(): void {
+    if (this.showGuideTree) { this.doShowGuideTree(); }
   }
 
   restrictToContrafacts(): void {
@@ -468,9 +472,15 @@ export class AlignedComponent implements OnInit, OnDestroy {
       this.ensureDistanceMatrixClosed();
       this.ensureChantNetworkClosed();
       this.ensureManuscriptNetworkClosed();
-      this.ensurePhylogeneticTreeClosed();
+      this.ensureGuideTreeClosed();
     }
     // event.preventDefault();
   }
 
+  openPhylogeneticAnalysis(): void {
+    // Save the current chant alignment for phylogeny to local storage
+    this.phylogenyService.alignmentForPhylogeny = this.alignmentService.alignment
+    this.phylogenyService.newick = undefined
+    this.router.navigate(['/phylogeny']);
+  }
 }

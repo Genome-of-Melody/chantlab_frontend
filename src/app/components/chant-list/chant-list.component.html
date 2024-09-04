@@ -18,6 +18,12 @@
         Select/deselect all
         <span style="float: right; margin-left: 20px">(Selected: {{ nChantsSelected }})</span>
       </mat-checkbox>
+      <mat-checkbox
+        class="margin-right"
+        style="margin-left: 50px;"
+        [(ngModel)]="concatenatedMode">
+        Concatenated
+      </mat-checkbox>
 
       <table>
         <tr>

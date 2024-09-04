@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PhylogeneticTreeComponent } from './phylogenetic-tree.component';
+import { GuideTreeComponent } from './guide-tree.component';
 import { MatCardModule } from '@angular/material/card';
 
-describe('PhylogeneticTreeComponent', () => {
-  let component: PhylogeneticTreeComponent;
-  let fixture: ComponentFixture<PhylogeneticTreeComponent>;
+describe('GuideTreeComponent', () => {
+  let component: GuideTreeComponent;
+  let fixture: ComponentFixture<GuideTreeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ MatCardModule ],
-      declarations: [ PhylogeneticTreeComponent ]
+      declarations: [ GuideTreeComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PhylogeneticTreeComponent);
+    fixture = TestBed.createComponent(GuideTreeComponent);
     component = fixture.componentInstance;
     component.treeString = "(1__A_Christo_de_caelo_vocatus__F-Pn_lat._12044:0.66255,((2__A_Christo_de_caelo_vocatus__US-CHNbcbl_097:0.26667,4__A_Christo_de_caelo_vocatus__A-KN_1018:0.26667):0.10118,3__A_Christo_de_caelo_vocatus__D-KA_Aug._LX:0.36784):0.29471);";
     component.newickNamesDict = new Map([

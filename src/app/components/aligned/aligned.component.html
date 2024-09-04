@@ -35,25 +35,33 @@
       <br>
       {{ nAlignmentsShown }} sequences
     </div>
-
-    <div class="widget-control">
-      <ul class="widget-control">
-        <li><button mat-raised-button (click)="saveAlignment()" color="primary" class="widget-control-button">Save</button>
-            <button mat-raised-button (click)="downloadAlignedFasta()" color="primary" class="widget-control-button">Download FASTA</button>
-            <button mat-raised-button (click)="downloadAlignedJson()" color="primary" class="widget-control-button">Download JSON</button>
-            <button mat-raised-button (click)="downloadPhyloNewick()" color="primary" class="widget-control-button">Download Newick</button>
-        </li>
-        <li><button mat-raised-button (click)="doShowDistanceMatrix()" color="{{ showDistanceMatrixColor }}"
-                    class="widget-control-button">Distance Matrix</button>
-            <button mat-raised-button (click)="doShowChantNetwork()" color="{{ showChantNetworkColor }}"
-                    class="widget-control-button">Chant Network</button>
-            <button mat-raised-button (click)="doShowManuscriptNetwork()" color="{{ showManuscriptNetworkColor }}"
-                    class="widget-control-button">Manuscript Network</button>
-        </li>
-        <li><button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
-            <button mat-raised-button (click)="doShowPhylogeneticTree()" color="{{ showPhylogeneticTreeColor }}" class="widget-control-button">Phylogenetic Tree</button>
-        </li>
-      </ul>
+    
+    <div class="widget-control-wrapper">
+      <div class="widget-control">
+        <ul class="widget-control">
+          <li><button mat-raised-button (click)="saveAlignment()" color="primary" class="widget-control-button">Save</button>
+              <button mat-raised-button (click)="downloadAlignedFasta()" color="primary" class="widget-control-button">Download FASTA</button>
+              <button mat-raised-button (click)="downloadAlignedJson()" color="primary" class="widget-control-button">Download JSON</button>
+              <button mat-raised-button (click)="downloadPhyloNewick()" color="primary" class="widget-control-button">Download Newick</button>
+          </li>
+          <li><button mat-raised-button (click)="doShowDistanceMatrix()" color="{{ showDistanceMatrixColor }}"
+                      class="widget-control-button">Distance Matrix</button>
+              <button mat-raised-button (click)="doShowChantNetwork()" color="{{ showChantNetworkColor }}"
+                      class="widget-control-button">Chant Network</button>
+              <button mat-raised-button (click)="doShowManuscriptNetwork()" color="{{ showManuscriptNetworkColor }}"
+                      class="widget-control-button">Manuscript Network</button>
+          </li>
+          <li><button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
+              <button *ngIf="alignmentMode !== 'syllables'" mat-raised-button (click)="doShowGuideTree()" color="{{ showGuideTreeColor }}" class="widget-control-button">Guide Tree</button>
+          </li>
+        </ul>
+      </div>
+      <div class="redirect-widget-control">
+        <ul class="widget-control">
+          <li><button mat-raised-button (click)="openPhylogeneticAnalysis()" color="accent" class="widget-control-button">Phylogenetic Analysis</button>
+          </li>
+        </ul>
+      </div>
     </div>
 
   </div>
@@ -101,6 +109,7 @@
                       <span *ngIf="showConservation"
                             [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ neume }}</span>
                       <span *ngIf="!showColors && !showConservation">{{ neume }}</span>
+                      <span *ngIf="neume === '4'" style="color: white;" >#</span> <!--solve the space between melodies better-->
                     </span>
                   </div>
                   <div *ngIf="showText" class="text">
@@ -155,13 +164,13 @@
     ></app-distance-matrix>
   </div>
 
-  <div *ngIf="showPhylogeneticTree"
+  <div *ngIf="showGuideTree"
        class="distance-matrix-wrapper">
-    <app-phylogenetic-tree
+    <app-guide-tree
       [treeString]="alignment.guideTree"
       [newickNamesDict]="alignment.newickNamesDict"
       [chants]="alignment.iChants">
-    </app-phylogenetic-tree>
+    </app-guide-tree>
   </div>
 
   <app-network-graph-wrapper

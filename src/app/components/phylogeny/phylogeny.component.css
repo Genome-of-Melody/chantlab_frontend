@@ -1,49 +1,51 @@
+.phylogenetic-textarea {
+  font-size: 14px;
+}
+.newick-text {
+  margin-top: 10px;
+}
+
+.newick-button {
+  height: 10px;
+  margin-left:20px;
+  padding: 10px 20px;
+  border-radius: 4px;
+}
+
+
+.instructions {
+  margin: 20px;
+}
+
+.instructions h3 {
+  margin-bottom: 10px;
+}
+
+.instructions ol {
+  margin-left: 20px;
+}
+
+
+
+
 .card {
     margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 10px;
 }
 
-.syllable-nomargin {
-    display: inline-block;
-    height: fit-content;
-    margin-bottom: 0.6em;
-}
-
-.title-group {
-    width: 100%;
-    display: flex;
-    justify-content: left;
-}
-
-.download-button {
-    margin: 20px;
-    width: fit-content;
-}
 
 .control-button {
   margin: 20px;
   width: fit-content;
 }
 
-.scrollable {
-    min-height: 100%;
-    min-width: 100%;
-}
 
-.alignment {
+.phylogeny {
     width: 100%;
     display: flex;
     flex-direction: column;
     min-height: 100%;
-}
-
-.color-checkbox,
-.conservation-checkbox,
-.header-checkbox,
-.text-checkbox,
-.conservation-indicator {
-    margin-left: 20px;
 }
 
 .spinner {
@@ -54,15 +56,6 @@
     font-family: 'Courier New', Courier, monospace;
 }
 
-.mode-selector {
-    margin: 20px;
-}
-
-.volpiano {
-    font-size: 35px;
-}
-
-/* Layout */
 
 div.controls-wrapper {
   display: flex;
@@ -74,7 +67,7 @@ div.display-controls {
   margin: 20px;
 }
 
-div.distance-matrix-wrapper {
+div.newick-help-upload-instructions-wrapper {
   position: absolute;
   margin-top: 10%;
   margin-left: auto;
@@ -82,8 +75,6 @@ div.distance-matrix-wrapper {
   width: fit-content;
   left: 0;
   right: 0;
-  /*display: inline;*/
-  /*float: right;*/
 }
 
 div.widget-control-wrapper {
@@ -99,12 +90,6 @@ div.widget-control {
   flex-grow: 1;
 }
 
-div.redirect-widget-control {
-  margin-top: auto;
-  display: inline-block;
-  margin-left: 20px;
-  margin-right: 20px;
-}
 
 ul.widget-control {
   list-style: none;
@@ -118,11 +103,12 @@ ul.widget-control {
   margin-bottom: 2px;
 }
 
-.alignment-scroll-viewport {
+.icytree-container {
   /*width: 100%;*/
   height: 600px;
   border: 1px solid #3F51B5;
   margin-left: 10px;
+  padding: 20px;
 }
 
 

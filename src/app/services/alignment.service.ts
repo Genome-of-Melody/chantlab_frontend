@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {IChant} from '../interfaces/chant.interface';
+import { Alignment } from '../models/alignment';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,31 @@ export class AlignmentService {
     this.storage.setItem('chantsToAlign', JSON.stringify(chants));
   }
 
+  get concatenatedMode(): boolean {
+    const concatenated = this.storage.getItem('concatenatedMode');
+    if (concatenated === null) { return false; }
+    return JSON.parse(concatenated);
+  }
+
+  set concatenatedMode(concatenated: boolean) {
+    this.storage.setItem('concatenatedMode', JSON.stringify(concatenated));
+  }
+  
+
+  get alignment(): Alignment {
+    const alignment = this.storage.getItem('alignment');
+    if (alignment === null || alignment === undefined || alignment === "undefined") { return undefined; }
+    return Alignment.fromJson(JSON.parse(alignment));
+  }
+
+  set alignment(alignment: Alignment) {
+    if (alignment === undefined || alignment === null) {
+      this.storage.setItem('alignment', JSON.stringify(alignment));
+    } else {
+      this.storage.setItem('alignment', alignment.toJson());
+    }
+  }
+  
   getMode(): string {
     const storedMode = this.storage.getItem('alignmentMode');
     if (null === storedMode) {

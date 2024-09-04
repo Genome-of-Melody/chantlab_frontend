@@ -1,0 +1,71 @@
+<div class="phylogeny">
+
+  <div class="controls-wrapper">
+    <div class="display-controls">
+      <h3>Newick Phylogenetic Tree </h3>
+      <div class="phylogeny-container">
+        <div>
+          <button mat-raised-button class="newick-button" color="primary" (click)="copyToClipboard()">Copy</button>
+          <button mat-raised-button class="newick-button" color="{{ showNewickHelpColor }}" (click)="displayHelp()">Help</button>
+        </div>
+        <div class="newick-text">
+          <mat-form-field class="newick-text-form-field" appearance="fill" class="settings-item" style="width: 100%;min-width:400px">
+            <mat-label>Newick</mat-label>
+            <textarea matInput class="phylogenetic-textarea" id="phylogenetic-textarea" readonly>{{ phylogeny.newick }}</textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+
+    
+    <div class="widget-control-wrapper">
+      <div class="widget-control">
+        <ul class="widget-control">
+          <li>
+              <button mat-raised-button (click)="downloadNewick()" color="primary" class="widget-control-button">Download Newick</button>
+              <button mat-raised-button (click)="downloadNexusConTre()" color="primary" class="widget-control-button">Download nexus.con.tre</button>
+          </li>
+          <li><button mat-raised-button (click)="downloadMBScript()" color="primary" class="widget-control-button">Download MrBayes script</button>
+              <button mat-raised-button (click)="downloadNexusAlignment()" color="primary" class="widget-control-button">Download nexus alignment</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="icytree-container">
+    <iframe id="icytree-iframe"
+      src="https://icytree.org/" 
+      width="100%" 
+      height="600px" 
+      frameborder="0" 
+      allowfullscreen>
+    </iframe>
+  </div>
+
+
+  <ng-template #progressSpinner>
+      <div class="spinner">
+          <mat-spinner></mat-spinner>
+      </div>
+  </ng-template>
+
+  <div *ngIf="uploadInstructions"
+       class="newick-help-upload-instructions-wrapper"
+       (keyup)="onKeyUp($event)">
+    <mat-card cdkDrag class="newick-help-card">
+      <div class="instructions">
+        <h3>Instructions to Upload Tree Data:</h3>
+        <ol>
+          <li>Copy the text from the field above.</li>
+          <li>Click on the 'File' button inside the frame below.</li>
+          <li>Click on 'Enter tree directly...' (eventually press key 'e').</li>
+          <li>Paste the copied text into the provided field and click 'Done'.</li>
+        </ol>
+      </div>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+
+
+<h2 mat-dialog-title>There have been some errors</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="error-textarea-container" style="min-width: 500px;">
+    <textarea matInput readonly class="error-textarea" [(ngModel)]="error_message" style="height:200px;"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>OK</button>
+</mat-dialog-actions>

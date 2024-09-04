@@ -29,7 +29,8 @@ export class Alignment {
     public urls: Array<string>,
     public sources: Array<string>,
     public guideTree: string,
-    public newickNamesDict: Map<string, string>
+    public newickNamesDict: Map<string, string>,
+    public alignmentMode: string
   ) {}
 
 
@@ -42,7 +43,8 @@ export class Alignment {
       response.success.urls,
       response.success.sources,
       response.guideTree,
-      response.newickNamesDict);
+      response.newickNamesDict,
+      response.alignmentMode);
   }
 
   static fromJson(json: any): Alignment {
@@ -55,6 +57,7 @@ export class Alignment {
       json.sources,
       json.guideTree,
       json.newickNamesDict,
+      json.alignmentMode
     );
   }
 
@@ -68,6 +71,7 @@ export class Alignment {
       "sources": this.sources,
       "guideTree": this.guideTree,
       "newickNamesDict": this.newickNamesDict,
+      "alignmentMode": this.alignmentMode
     });
   }
 
@@ -133,7 +137,7 @@ export class Alignment {
     }
 
     // The guide tree is not valid after selecting a subset, so it does not get passed.
-    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources, null, null);
+    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources, null, null, this.alignmentMode);
   }
 
   /**
