@@ -53,7 +53,7 @@ import { AlignedPageComponent } from './components/aligned-page/aligned-page.com
 import { AlignmentManagerComponent } from './components/alignment-manager/alignment-manager.component';
 import { AlignmentListComponent } from './components/alignment-manager/alignment-list/alignment-list.component';
 import { NameOnCreateAlignmentComponent } from './components/dialogs/name-on-create-alignment/name-on-create-alignment.component';
-import { HelpPageComponent } from './components/help-page/help-page.component';
+import { AboutPageComponent } from './components/about-page/about-page.component';
 import { NetworkGraphComponent } from './components/visualization/network-graph/network-graph.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import { NetworkGraphWrapperComponent } from './components/visualization/network-graph-wrapper/network-graph-wrapper.component';
@@ -101,7 +101,7 @@ import { PhylogenyErrorDialogComponent } from './components/dialogs/phylogeny-er
         AlignmentManagerComponent,
         AlignmentListComponent,
         NameOnCreateAlignmentComponent,
-        HelpPageComponent,
+        AboutPageComponent,
         NetworkGraphComponent,
         NetworkGraphWrapperComponent,
         AddedToDatasetDialogComponent,

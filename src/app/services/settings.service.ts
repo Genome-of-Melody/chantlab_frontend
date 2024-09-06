@@ -23,7 +23,6 @@ export class SettingsService {
 export class AlignmentSettingsService {
   constructor() { }
 
-  useTextSeparators = true;
   distanceMatrixUseAbsoluteDistances = false;
 }
 
