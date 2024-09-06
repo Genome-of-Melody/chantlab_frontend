@@ -14,10 +14,6 @@
 
   <mat-card-content *ngIf="alignmentSettingsVisible" class="settings-group">
     <mat-checkbox class="settings-item-active-element"
-      [(ngModel)]="settingsService.alignmentSettingsService.useTextSeparators">
-      Use word separators when performing alignment
-    </mat-checkbox>
-    <mat-checkbox class="settings-item-active-element"
                   [(ngModel)]="settingsService.alignmentSettingsService.distanceMatrixUseAbsoluteDistances">
       Use absolute distances in distance matrix computation (not recommended for most uses)
     </mat-checkbox>

@@ -7,7 +7,7 @@ import { DataUploadComponent } from './components/data-upload/data-upload.compon
 import { SettingsComponent } from './components/settings/settings.component';
 import {AlignedPageComponent} from './components/aligned-page/aligned-page.component';
 import {AlignmentManagerComponent} from './components/alignment-manager/alignment-manager.component';
-import { HelpPageComponent } from './components/help-page/help-page.component';
+import { AboutPageComponent } from './components/about-page/about-page.component';
 import { PhylogenyPageComponent } from './components/phylogeny-page/phylogeny-page.component';
 
 
@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'upload', component: DataUploadComponent },
   { path: 'settings', component: SettingsComponent },
   { path: 'alignment-manager', component: AlignmentManagerComponent },
-  { path: 'help', component: HelpPageComponent },
+  { path: 'about', component: AboutPageComponent },
   { path: 'phylogeny', component: PhylogenyPageComponent },
 ];
 
