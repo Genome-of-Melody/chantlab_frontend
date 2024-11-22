@@ -109,7 +109,7 @@
                       <span *ngIf="showConservation"
                             [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ neume }}</span>
                       <span *ngIf="!showColors && !showConservation">{{ neume }}</span>
-                      <span *ngIf="neume === '4'" style="color: white;" >#</span> <!--solve the space between melodies better-->
+                      <span *ngIf="neume === '4'">&nbsp;</span>
                     </span>
                   </div>
                   <div *ngIf="showText" class="text">
