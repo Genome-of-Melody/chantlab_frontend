@@ -6,7 +6,7 @@
     <div class="display-controls">
       <h3>Display options</h3>
       <mat-checkbox [(ngModel)]="showHeaders" class="header-checkbox">Show headers</mat-checkbox><br>
-      <mat-checkbox [(ngModel)]="showText" class="text-checkbox">Show text</mat-checkbox><br>
+      <mat-checkbox [(ngModel)]="showText" class="text-checkbox">Show text</mat-checkbox><br>      
       <mat-checkbox
         [(ngModel)]="showColors"
         (ngModelChange)="showConservation = false"
@@ -23,6 +23,7 @@
 <!--        Conservation of chant set: {{ conservationOfSet }}-->
 <!--      </span>-->
       <br>
+      <mat-checkbox [(ngModel)]="showWordBars" class="wordbars-checkbox">Segment words</mat-checkbox><br> 
 <!--      <button mat-raised-button (click)="downloadAligned()" color="primary" class="download-button">Download</button>-->
     </div>
 
@@ -34,7 +35,18 @@
       </mat-button-toggle-group>
       <br>
       {{ nAlignmentsShown }} sequences
+      <div *ngIf="displayMode === 'volpiano'">
+        <br>
+        <mat-button-toggle-group 
+          [(ngModel)]="isNotesOnly" 
+          aria-label="Volpiano Display Mode">
+          <mat-button-toggle [value]="true">Notes</mat-button-toggle>
+          <mat-button-toggle [value]="false">All</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <br><br>
     </div>
+
     
     <div class="widget-control-wrapper">
       <div class="widget-control">
@@ -105,10 +117,10 @@
                 <div *ngFor="let syllable of word; let lastSyllable = last; let sylIdx = index" [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
                   <div [attr.class]="displayMode">
                     <span class="neumes" *ngFor="let neume of syllable.volpiano; let neumeIdx = index">
-                      <span *ngIf="showColors" [ngStyle]="getColor(neume)">{{ neume }}</span>
+                      <span *ngIf="showColors" [ngStyle]="getColor(neume)">{{ normalizeVolpianoCharacter(neume) }}</span>
                       <span *ngIf="showConservation"
-                            [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ neume }}</span>
-                      <span *ngIf="!showColors && !showConservation">{{ neume }}</span>
+                            [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ normalizeVolpianoCharacter(neume) }}</span>
+                      <span *ngIf="!showColors && !showConservation">{{ normalizeVolpianoCharacter(neume) }}</span>
                       <span *ngIf="neume === '4'">&nbsp;</span>
                     </span>
                   </div>

@@ -43,6 +43,8 @@ export class AlignedComponent implements OnInit, OnDestroy {
   alignmentUncollapsed: boolean[] = [];
 
   showColors = false;
+  showWordBars = false;
+  isNotesOnly = true;
   showHeaders = true;
   showConservation = false;
   showText = true;
@@ -496,5 +498,22 @@ export class AlignedComponent implements OnInit, OnDestroy {
     this.phylogenyService.alignmentForPhylogeny = this.alignmentService.alignment
     this.phylogenyService.newick = undefined
     this.router.navigate(['/phylogeny']);
+  }
+
+  normalizeVolpianoCharacter(volpiano_character: string): string {
+    // Hide bars visualizing Word Boundaries
+    if (!this.showWordBars && volpiano_character === '3') {
+      return '-';
+    }
+  
+    // If in 'volpiano' display mode and 'notesOnly' is true, keep only notes
+    // remove flats and pause breaks
+    if (this.displayMode === 'volpiano' && this.isNotesOnly) {
+      const replaceSet = ['7', 'i', 'I', 'y', 'Y', 'z', 'Z', 'x', 'X'];
+      if (replaceSet.includes(volpiano_character)) {
+        return '-';
+      }
+    }
+    return volpiano_character;
   }
 }
