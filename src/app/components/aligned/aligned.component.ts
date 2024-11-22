@@ -376,19 +376,33 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return 'primary';
   }
 
-  distanceMatrixChantNameFromChant(chant: IChant): string {
-    return (chant.incipit + ' / ' + chant.siglum + ' / ' + chant.id);
+  private getSerializedReversedNamesDict(): Map<string, string> {
+    return new Map(
+      Object.entries(this.alignment.newickNamesDict).map(([key, value]) => [
+        JSON.stringify(value),
+        key,
+      ])
+    );
   }
+
+  private getSequenceNames(ids: (number[] | number)[]): string[] {
+    const serializedDict = this.getSerializedReversedNamesDict();
+    return ids
+      .map(sub_ids => serializedDict.get(JSON.stringify(sub_ids)))
+  }
+
   get distanceMatrixChantNames(): string[] {
-    return this.alignment.iChants.map(ch => this.distanceMatrixChantNameFromChant(ch));
+    return this.getSequenceNames(this.alignment.ids);
   }
+
   get visibleSequencesDistanceMatrixChantNames(): string[] {
-    return this.visibleAlignmentSubset.iChants.map(ch => this.distanceMatrixChantNameFromChant(ch));
+    return this.getSequenceNames(this.visibleAlignmentSubset.ids);
   }
+
   get chantsMapForNetworkGraphs(): Map<string, IChant> {
     const chantsForNetworkGraphs = new Map<string, IChant>();
     this.visibleAlignmentSubset.iChants.forEach(ch => {
-      chantsForNetworkGraphs.set(this.distanceMatrixChantNameFromChant(ch), ch);
+      chantsForNetworkGraphs.set(ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id, ch);
     });
     return chantsForNetworkGraphs;
   }

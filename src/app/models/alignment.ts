@@ -76,7 +76,7 @@ export class Alignment {
   }
 
   get length(): number {
-    return this.ids.length;
+    return this.alpianos.length;
   }
 
   get nPositions(): number {
@@ -137,7 +137,7 @@ export class Alignment {
     }
 
     // The guide tree is not valid after selecting a subset, so it does not get passed.
-    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources, null, null, this.alignmentMode);
+    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources, null, this.newickNamesDict, this.alignmentMode);
   }
 
   /**
