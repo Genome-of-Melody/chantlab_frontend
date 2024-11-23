@@ -228,20 +228,13 @@ export class AlignedComponent implements OnInit, OnDestroy {
     if (this.conservationChanged) {
       const conservation =
         this.conservationProfileService.calculateConservationProfile(
-          this.alignment.alpianos);
+          this.alignment.parsedChants);
       this.conservationProfile = conservation.conservationProfile;
       this.conservationOfSet = conservation.conservationOfSet;
       this.conservationChanged = false;
     }
 
-    // check if syllable is actually 'syllable' type
-    // if not, return 0
-    const realSylIdx = this.getRealSyllableIndex(volpianoIdx, wordIdx, sylIdx);
-    if (realSylIdx === -1) {
-      return 0;
-    }
-
-    return this.conservationProfile[volpianoIdx][wordIdx][realSylIdx][neumeIdx];
+    return this.conservationProfile[volpianoIdx][wordIdx][sylIdx][neumeIdx];
   }
 
   getColor(neume: string): object {
