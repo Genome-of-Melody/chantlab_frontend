@@ -109,7 +109,7 @@
                 </div>
                 <button mat-button class="title-button"
                 (click)="showDetail(alignment.ids[volpianoIdx])">
-                    {{ volpianoIdx + ': ' + alignment.sources[volpianoIdx] }}
+                    {{ (volpianoIdx + 1) + ': ' + getSequenceName(alignment.ids[volpianoIdx]) }}
                 </button>
               </div>
               <br>
@@ -145,7 +145,7 @@
                 </div>
                 <button mat-button class="title-button"
                 (click)="showDetail(alignment.ids[volpianoIdx])">
-                  {{ alignment.sources[volpianoIdx] }}
+                  {{ getSequenceName(alignment.ids[volpianoIdx]) }}
                 </button>
               </div>
             </div>

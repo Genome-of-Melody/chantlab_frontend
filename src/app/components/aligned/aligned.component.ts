@@ -41,6 +41,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
   visibleDetails: {[id: number]: boolean} = {};
   alignmentPresent: boolean[] = [];
   alignmentUncollapsed: boolean[] = [];
+  sequenceNamesByIds: Map<string, string>
 
   showColors = false;
   showWordBars = false;
@@ -104,6 +105,8 @@ export class AlignedComponent implements OnInit, OnDestroy {
       this.alignmentPresent.push(true);
       this.alignmentUncollapsed.push(true);
     });
+
+    this.sequenceNamesByIds = this.getSerializedReversedNamesDict();
 
     console.log('AlignedComponent.onInit() done.');
     console.log('AlignedChants:');
@@ -298,26 +301,6 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return {'background-color': color};
   }
 
-  getRealSyllableIndex(volpianoIdx: number,
-                       wordIdx: number,
-                       sylIdx: number): number {
-    // if element is any other type than syllable, return -1
-    if (this.alignment.parsedChants[volpianoIdx][wordIdx][sylIdx].type !== 'syllable') {
-      return -1;
-    }
-
-    // otherwise, count how many 'syllable' type elements there are before
-    // the desired one
-    let idx = 0;
-    for (let i = 0; i < sylIdx; i++) {
-      if (this.alignment.parsedChants[volpianoIdx][wordIdx][i].type === 'syllable') {
-        idx++;
-      }
-    }
-
-    return idx;
-  }
-
   computeDistances(visibleOnly: boolean): Map<string, Map<string, number>> {
     if (!this.alignment) {
       return undefined;
@@ -380,10 +363,13 @@ export class AlignedComponent implements OnInit, OnDestroy {
     );
   }
 
+  private getSequenceName(sub_ids: number[] | number): string {
+    return this.sequenceNamesByIds.get(JSON.stringify(sub_ids));
+  }
+
   private getSequenceNames(ids: (number[] | number)[]): string[] {
-    const serializedDict = this.getSerializedReversedNamesDict();
     return ids
-      .map(sub_ids => serializedDict.get(JSON.stringify(sub_ids)))
+      .map(sub_ids => this.getSequenceName(sub_ids));
   }
 
   get distanceMatrixChantNames(): string[] {
