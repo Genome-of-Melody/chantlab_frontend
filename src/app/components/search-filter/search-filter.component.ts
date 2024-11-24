@@ -146,12 +146,11 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
 
   updateFontes(): Observable<any> {
-    return of(this.fontesService.refreshFontes()).pipe(
-      switchMap(() => {
-        return this.initFontes();
-      })
+    return this.fontesService.refreshFontes().pipe(
+      switchMap(() => this.initFontes())
     );
   }
+  
 
   getFilterSettings(): { genres: string[]; offices: string[]; fontes: string[]; hideIncomplete: boolean } {
     const genres = [];

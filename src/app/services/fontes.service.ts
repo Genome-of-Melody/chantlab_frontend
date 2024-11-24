@@ -1,34 +1,30 @@
 import { Injectable } from '@angular/core';
 import {ChantService} from './chant.service';
-import {Subject} from 'rxjs';
+import {BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import {SelectedDataSourcesService} from './selected-data-sources.service';
 
 @Injectable({
   providedIn: 'root'
-})
-export class FontesService {
+}) export class FontesService {
+  private _allFontes: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
   constructor(
     private chantService: ChantService,
     private selectedDataSourcesService: SelectedDataSourcesService
-  ) { }
+  ) {}
 
-  private _allFontes: Subject<string[]> = new Subject<string[]>();
-
-  getAllFontes(): Subject<string[]> {
-    return this._allFontes;
+  getAllFontes(): Observable<string[]> {
+    return this._allFontes.asObservable();
   }
 
-  refreshFontes(): void {
+  refreshFontes(): Observable<any> {
     const formData = new FormData();
     const dataSources = this.selectedDataSourcesService.getStoredSourceList();
+    formData.append('dataSources', dataSources ? JSON.stringify(dataSources) : '[]');
 
-    formData.append('dataSources',
-      dataSources ? JSON.stringify(dataSources) : '[]');
-
-    this.chantService.getFontes(formData).subscribe(
-      data => {
-        this._allFontes.next(data.fontes); }
+    return this.chantService.getFontes(formData).pipe(
+      tap(data => this._allFontes.next(data.fontes))
     );
   }
 }

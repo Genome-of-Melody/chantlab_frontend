@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { delay, switchMap, tap } from 'rxjs/operators';
+import { of, EMPTY, BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { debounceTime, switchMap, tap, catchError } from 'rxjs/operators';
 import CONFIG from '../config.json';
 import { IChantPrecomputed } from '../interfaces/chant-precomputed.interface';
 import { IChant } from '../interfaces/chant.interface';
@@ -37,8 +37,20 @@ export class ChantService {
       this.searchFilterService.getFilterSettings(),
       this.incipitService.getIncipit(),
     ]).pipe(
+      debounceTime(300),
       switchMap(
         ([dataSources, filterSettings, incipit]) => {
+          const one_of_filters_empty =
+            !dataSources?.length ||
+            (!filterSettings ||
+              !filterSettings['genres']?.length ||
+              !filterSettings['offices']?.length ||
+              !filterSettings['fontes']?.length);
+
+          if (one_of_filters_empty) {
+            this._chantList.next([]); 
+            return of([]);
+          }
           const formData = new FormData();
           formData.append('dataSources', dataSources ? JSON.stringify(dataSources) : "[]");
           formData.append('incipit', incipit ? incipit : '');
@@ -51,7 +63,11 @@ export class ChantService {
           return this.http.post(this._baseUrl + '/', formData);
         }
       ),
-      tap((data: IChant[]) => this._chantList.next(data))
+      tap((data: IChant[]) => this._chantList.next(data)),
+      catchError((err) => {
+        console.error('Error loading chants:', err);
+        return EMPTY;
+      })
     );
   }
 
