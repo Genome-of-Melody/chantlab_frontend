@@ -17,6 +17,7 @@ import { IdxOnAddToDatasetComponent } from '../dialogs/idx-on-add-to-dataset/idx
 import { NameOnCreateDatasetComponent } from '../dialogs/name-on-create-dataset/name-on-create-dataset.component';
 import { NotEnoughToAlingDialogComponent } from '../dialogs/not-enough-to-aling-dialog/not-enough-to-aling-dialog.component';
 import {SearchFilterComponent} from '../search-filter/search-filter.component';
+import { ChantListService } from 'src/app/services/chant-list.service';
 
 @Component({
   selector: 'app-chant-list',
@@ -35,6 +36,8 @@ export class ChantListComponent implements OnInit, OnDestroy {
   selected: boolean[] = [];
   selectedAll: boolean;
   concatenatedMode: boolean = false;
+  selectedChants: Set<number>;
+  hideIncompleteChants: boolean;
 
   pageEvent = new BehaviorSubject<PageEvent>(null);
   pageIndex: number;
@@ -54,6 +57,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
     private alignmentService: AlignmentService,
     private csvTranslateService: CsvTranslateService,
     private downloadService: DownloadService,
+    private chantListService: ChantListService,
     private dataSourceListService: DataSourceListService,
     private datasetManagementService: DatasetManagementService,
     public dialog: MatDialog
@@ -76,14 +80,22 @@ export class ChantListComponent implements OnInit, OnDestroy {
         this.paginator.firstPage();
 
         if (this.allChants !== data) {
+          this.selectedChants = new Set(this.chantListService.selectedChants);
           this.selected = [];
           if (data) {
             this.dataLength = data.length;
             for (let i = 0; i < data.length; i++) {
-              this.selected.push(false);
+              this.selected.push(this.selectedChants.has(data[i].id));
             }
           }
           this.allChants = data;
+          this.updateSelectedAll();
+        }
+        const filters = this.chantListService.filterSettings;
+        if (filters) {
+          this.hideIncompleteChants = filters.hideIncomplete;
+        } else {
+          this.hideIncompleteChants = true;
         }
 
         this.pageIndex = event ? event.pageIndex : 0;
@@ -95,6 +107,36 @@ export class ChantListComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  onSelectionChange(index: number): void {
+    this.updateSelectedChants(index);
+    this.chantListService.selectedChants = Array.from(this.selectedChants);
+    this.updateSelectedAll();
+  }
+
+  updateSelectedChants(index: number): void {
+    const chantId = this.allChants[index].id;
+    if (this.selected[index]) {
+      this.selectedChants.add(chantId);
+    } else {
+      this.selectedChants.delete(chantId);
+    }
+  }
+
+  updateSelectedAll(): void {
+    if (this.allChants && this.allChants.length > 0) {
+      const consideredChantsIndices = this.allChants.map((chant, index) => ({
+        chant,index
+      })).filter(item => 
+        !this.hideIncompleteChants || this.isChantComplete(item.chant)
+      ).map(item => item.index);
+      if (consideredChantsIndices.length === 0) {
+        this.selectedAll = false;
+      } else{
+        this.selectedAll = consideredChantsIndices.every(index => this.selected[index]);
+      }
+    }
   }
 
   changePage(event: PageEvent): void {
@@ -112,12 +154,14 @@ export class ChantListComponent implements OnInit, OnDestroy {
       this.selected[i] = this.selectedAll;
 
       // If incomplete chants are hidden, do not select all.
-      if (this.searchFilterComponent.hideIncompleteChants) {
+      if (this.hideIncompleteChants) {
         if (!this.isChantComplete(this.allChants[i])) {
           this.selected[i] = false;
         }
       }
+      this.updateSelectedChants(i);
     }
+    this.chantListService.selectedChants = Array.from(this.selectedChants);
   }
 
   selectNone(): void {

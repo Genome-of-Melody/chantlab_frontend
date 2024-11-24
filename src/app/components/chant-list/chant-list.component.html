@@ -1,5 +1,5 @@
 <app-search-filter></app-search-filter>
-
+<app-select-data-source></app-select-data-source>
 <div class="list row">
   <div class="col-md-8">
     <div class="input-group mb-3">
@@ -41,7 +41,8 @@
             <td>
               <mat-checkbox
                 class="margin-right"
-                [(ngModel)]="selected[pageIndex * pageSize + i]">
+                [(ngModel)]="selected[pageIndex * pageSize + i]"
+                (ngModelChange)="onSelectionChange(pageIndex * pageSize + i)">
               </mat-checkbox>
             </td>
             <td>
