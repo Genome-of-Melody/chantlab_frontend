@@ -65,7 +65,7 @@
               <!--<button mat-raised-button (click)="doShowManuscriptNetwork()" color="{{ showManuscriptNetworkColor }}"
                       class="widget-control-button">Manuscript Network</button>-->
           </li>
-          <li><button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
+          <li><button *ngIf="!concatenated" mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
               <button *ngIf="alignmentMode !== 'syllables'" mat-raised-button (click)="doShowGuideTree()" color="{{ showGuideTreeColor }}" class="widget-control-button">Guide Tree</button>
           </li>
         </ul>
@@ -92,72 +92,70 @@
          class="scrollable"
          (cdkDropListDropped)="drop($event)"> -->
 
-      <div *cdkVirtualFor="let chant of alignment.parsedChants; let volpianoIdx = index"
-           class="card">
+  <div *cdkVirtualFor="let volpianoIdx of visibleIndices" class="card">
 <!--           cdkVirtualForTemplateCacheSize=50-->
 <!--           cdkDrag-->
-        <div *ngIf="alignmentPresent[volpianoIdx]">
 
-          <div *ngIf="alignmentUncollapsed[volpianoIdx]; else collapsed">
-            <div class="chant">
-              <div class="title-group" *ngIf="showHeaders">
-                <div class="alignment-options">
-                  <button mat-button class="collapse-button" (click)="collapseAlignment(volpianoIdx)">
-                    <mat-icon>keyboard_arrow_up</mat-icon>
-                  </button>
-                  <button *ngIf="hasMultipleSequencesPresent" mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </div>
-                <button mat-button class="title-button"
-                (click)="showDetail(alignment.ids[volpianoIdx])">
-                    {{ (volpianoIdx + 1) + ': ' + getSequenceName(alignment.ids[volpianoIdx]) }}
+        <div *ngIf="alignmentUncollapsed[volpianoIdx]; else collapsed">
+          <div class="chant">
+            <div class="title-group" *ngIf="showHeaders">
+              <div class="alignment-options">
+                <button mat-button class="collapse-button" (click)="collapseAlignment(volpianoIdx)">
+                  <mat-icon>keyboard_arrow_up</mat-icon>
+                </button>
+                <button *ngIf="hasMultipleSequencesPresent" mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
+                  <mat-icon>visibility_off</mat-icon>
                 </button>
               </div>
-              <br>
-              <div *ngFor="let word of chant; let wordIdx = index" class="word">
-                <div *ngFor="let syllable of word; let lastSyllable = last; let sylIdx = index" [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
-                  <div [attr.class]="displayMode">
-                    <span class="neumes" *ngFor="let neume of syllable.volpiano; let neumeIdx = index">
-                      <span *ngIf="showColors" [ngStyle]="getColor(neume)">{{ normalizeVolpianoCharacter(neume) }}</span>
-                      <span *ngIf="showConservation"
-                            [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ normalizeVolpianoCharacter(neume) }}</span>
-                      <span *ngIf="!showColors && !showConservation">{{ normalizeVolpianoCharacter(neume) }}</span>
-                      <span *ngIf="neume === '4'">&nbsp;</span>
-                    </span>
-                  </div>
-                  <div *ngIf="showText" class="text">
-                    <span class="lyric">{{ syllable.text }}</span>
-                  </div>
+              <button mat-button class="title-button"
+              (click)="showDetail(alignment.ids[volpianoIdx])">
+                  {{ (volpianoIdx + 1) + ': ' + getSequenceName(alignment.ids[volpianoIdx]) }}
+              </button>
+            </div>
+            <br>
+            <div *ngFor="let word of alignment.parsedChants[volpianoIdx]; let wordIdx = index" class="word">
+              <div *ngFor="let syllable of word; let lastSyllable = last; let sylIdx = index" [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
+                <div [attr.class]="displayMode">
+                  <span class="neumes" *ngFor="let neume of syllable.volpiano; let neumeIdx = index">
+                    <span *ngIf="showColors" [ngStyle]="getColor(neume)">{{ normalizeVolpianoCharacter(neume) }}</span>
+                    <span *ngIf="showConservation"
+                          [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ normalizeVolpianoCharacter(neume) }}</span>
+                    <span *ngIf="!showColors && !showConservation">{{ normalizeVolpianoCharacter(neume) }}</span>
+                    <span *ngIf="neume === '4'">&nbsp;</span>
+                  </span>
+                </div>
+                <div *ngIf="showText" class="text">
+                  <span class="lyric">{{ syllable.text }}</span>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <ng-template #collapsed>
-            <div class="collapsed-chant">
-              <div class="title-group" *ngIf="showHeaders">
-                <div class="alignment-options">
-                  <button mat-button class="collapse-button" (click)="uncollapseAlignment(volpianoIdx)">
-                    <mat-icon>keyboard_arrow_down</mat-icon>
-                  </button>
-                  <button mat-button *ngIf="hasMultipleSequencesPresent" class="delete-button" (click)="deleteAlignment(volpianoIdx)">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </div>
-                <button mat-button class="title-button"
-                (click)="showDetail(alignment.ids[volpianoIdx])">
-                  {{ getSequenceName(alignment.ids[volpianoIdx]) }}
+        <ng-template #collapsed>
+          <div class="collapsed-chant">
+            <div class="title-group" *ngIf="showHeaders">
+              <div class="alignment-options">
+                <button mat-button class="collapse-button" (click)="uncollapseAlignment(volpianoIdx)">
+                  <mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
+                <button mat-button *ngIf="hasMultipleSequencesPresent" class="delete-button" (click)="deleteAlignment(volpianoIdx)">
+                  <mat-icon>visibility_off</mat-icon>
                 </button>
               </div>
+              <button mat-button class="title-button"
+              (click)="showDetail(alignment.ids[volpianoIdx])">
+                {{ getSequenceName(alignment.ids[volpianoIdx]) }}
+              </button>
             </div>
-          </ng-template>
+          </div>
+        </ng-template>
 
-        </div>
-        <div class="detail" *ngIf="visibleDetails[alignment.ids[volpianoIdx]]">
-            <app-chant-details [id]="alignment.ids[volpianoIdx]"></app-chant-details>
-        </div>
       </div>
+      <div class="detail" *ngIf="visibleDetails[alignment.ids[volpianoIdx]]">
+          <app-chant-details [id]="alignment.ids[volpianoIdx]"></app-chant-details>
+      </div>
+
 
     <!--</div>--> <!-- of cdkDropList -->
   </cdk-virtual-scroll-viewport>

@@ -18,6 +18,7 @@ import {NetworkGraphWrapperComponent} from '../visualization/network-graph-wrapp
 import { Router } from '@angular/router';
 import { PhylogenyService } from 'src/app/services/phylogeny.service';
 import { NotEnoughToRemoveDialogComponent } from '../dialogs/not-enough-to-remove-dialog/not-enough-to-remove-dialog.component';
+import { ContrafactReductionResultDialogComponent } from '../dialogs/contrafact-reduction-result-dialog/contrafact-reduction-result-dialog.component';
 
 @Component({
   selector: 'app-aligned',
@@ -50,6 +51,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
   showHeaders = true;
   showConservation = false;
   showText = true;
+  concatenated: boolean;
 
   showDistanceMatrix = false;
   showGuideTree = false;
@@ -108,6 +110,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     });
 
     this.sequenceNamesByIds = this.getSerializedReversedNamesDict();
+    this.concatenated = this.alignment.ids.some(id => Array.isArray(id));
 
     console.log('AlignedComponent.onInit() done.');
     console.log('AlignedChants:');
@@ -117,6 +120,12 @@ export class AlignedComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
+  }
+
+  get visibleIndices(): number[] {
+    return this.alignmentPresent
+      .map((present, idx) => (present ? idx : -1))
+      .filter(idx => idx !== -1);
   }
 
   get visibleAlignmentSubset(): Alignment {
@@ -478,7 +487,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     const contrafacts = this.contrafactService.discover(this.alignment, distanceMap);
 
     if (contrafacts.alignment.length < 1) {
-      console.log('No contrafacts found.');
+      this.dialog.open(ContrafactReductionResultDialogComponent);
       return;
     }
 
@@ -497,8 +506,10 @@ export class AlignedComponent implements OnInit, OnDestroy {
       console.log('Removing alignment idx ' + idx);
       this.deleteAlignment(idx);
     }
+    const dialogRef = this.dialog.open(ContrafactReductionResultDialogComponent);
+    const instance = dialogRef.componentInstance;
+    instance.reducedSequenceIds = nonContrafactIdxs.sort();
 
-    // this.alignment.reduceGaps(); -- TODO: uncomment
     this.computeAndCacheDistances();
   }
 

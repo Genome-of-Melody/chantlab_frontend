@@ -68,6 +68,7 @@ import { PhylogenyComponent } from './components/phylogeny/phylogeny.component';
 import { PhylogenyPageComponent } from './components/phylogeny-page/phylogeny-page.component';
 import { PhylogenyErrorDialogComponent } from './components/dialogs/phylogeny-error-dialog/phylogeny-error-dialog.component';
 import { NotEnoughToRemoveDialogComponent } from './components/dialogs/not-enough-to-remove-dialog/not-enough-to-remove-dialog.component';
+import { ContrafactReductionResultDialogComponent } from './components/dialogs/contrafact-reduction-result-dialog/contrafact-reduction-result-dialog.component';
 
 @NgModule({
     declarations: [
@@ -91,6 +92,7 @@ import { NotEnoughToRemoveDialogComponent } from './components/dialogs/not-enoug
         SelectDataSourceComponent,
         SourceSelectionSavedDialogComponent,
         UploadSuccessfulDialogComponent,
+        ContrafactReductionResultDialogComponent,
         SearchFilterComponent,
         SavedFilterDialogComponent,
         NameOnCreateDatasetComponent,
