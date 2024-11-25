@@ -5,6 +5,8 @@
                 <mat-icon>keyboard_arrow_up</mat-icon>
             </button>
             <h2>Filter search</h2>
+
+            <button class="save-filter" mat-stroked-button (click)="saveFilter()">Apply and refresh</button>
         </div>
 
         <div class="filter-content">
@@ -71,7 +73,7 @@
           </div>
           <br>
 
-          <button mat-stroked-button (click)="saveFilter()">Save</button>
+          <button mat-stroked-button (click)="saveFilter()">Apply and refresh</button>
         </div>
     </div>
     <div *ngIf="!visible">
@@ -80,6 +82,8 @@
                 <mat-icon>keyboard_arrow_down</mat-icon>
             </button>
             <h2>Filter search</h2>
+
+            <button class="save-filter" mat-stroked-button (click)="saveFilter()">Apply and refresh</button>
         </div>
     </div>
 </div>
