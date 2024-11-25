@@ -44,7 +44,7 @@
         <ng-container *ngFor="let chant of chants; let i = index">
           <tr mat-cell
             class="list-group-item"
-            *ngIf="!(hideIncompleteChants && (!isChantComplete(chant)))">
+            *ngIf="!hideIncompleteChants || isChantComplete(chant)">
             <td>
               <mat-checkbox
                 class="margin-right"

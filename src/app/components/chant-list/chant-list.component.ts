@@ -88,12 +88,12 @@ export class ChantListComponent implements OnInit, OnDestroy {
           this.selectedChants = new Set(this.chantListService.selectedChants);
           this.selected = [];
           if (data) {
-            this.dataLength = data.filter(chant => !(this.hideIncompleteChants && !this.isChantComplete(chant))).length;
-            for (let i = 0; i < data.length; i++) {
-              this.selected.push(this.selectedChants.has(data[i].id));
+            this.allChants = data.filter(chant => !this.hideIncompleteChants || this.isChantComplete(chant));
+            this.dataLength = this.allChants.length;
+            for (let i = 0; i < this.allChants.length; i++) {
+              this.selected.push(this.selectedChants.has(this.allChants[i].id));
             }
           }
-          this.allChants = data;
           this.updateSelectedAll();
         }
 
@@ -110,7 +110,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
         if (this.allChants) {
           this.chants = this.allChants
           .filter(chant => {
-            return !(this.hideIncompleteChants && !this.isChantComplete(chant));
+            return !this.hideIncompleteChants || this.isChantComplete(chant);
           })
           .slice(start, end);        
         }
@@ -205,15 +205,9 @@ export class ChantListComponent implements OnInit, OnDestroy {
   }
 
   selectAllVisible(): void {
+    this.selectedChants = new Set<number>();
     for (let i = 0; i < this.selected.length; i++) {
       this.selected[i] = this.selectedAll;
-
-      // If incomplete chants are hidden, do not select all.
-      if (this.hideIncompleteChants) {
-        if (!this.isChantComplete(this.allChants[i])) {
-          this.selected[i] = false;
-        }
-      }
       this.updateSelectedChants(i);
     }
     this.chantListService.selectedChants = Array.from(this.selectedChants);
