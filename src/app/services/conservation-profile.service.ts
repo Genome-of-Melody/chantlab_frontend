@@ -10,7 +10,10 @@ export class ConservationProfileService {
 
 
 
-  calculateConservationProfile(parsedChants: Array<Array<Array<{text: string, type: string, volpiano: Array<string>}>>>): {
+  calculateConservationProfile(
+    parsedChants: Array<Array<Array<{text: string, type: string, volpiano: Array<string>}>>>,
+    alignmentPresent: boolean[]
+  ): {
     conservationProfile: number[][][][],
     conservationOfSet: number
   } {
@@ -65,7 +68,9 @@ export class ConservationProfileService {
     for (let pos = 0; pos < alpianos[0].length; pos++) {
       const charsInPosition = [];
       for (let volpianoIdx = 0; volpianoIdx < alpianos.length; volpianoIdx++) {
-        charsInPosition.push(alpianos[volpianoIdx][pos]);
+        if (alignmentPresent[volpianoIdx]) {
+          charsInPosition.push(alpianos[volpianoIdx][pos]);
+        }
       }
       const conservationInPosition = this.calculateConservationInPosition(charsInPosition);
       // append conservation value for current char

@@ -15,7 +15,7 @@ import { DatasetManagementService } from 'src/app/services/dataset-management.se
 import { DownloadService } from 'src/app/services/download.service';
 import { IdxOnAddToDatasetComponent } from '../dialogs/idx-on-add-to-dataset/idx-on-add-to-dataset.component';
 import { NameOnCreateDatasetComponent } from '../dialogs/name-on-create-dataset/name-on-create-dataset.component';
-import { NotEnoughToAlingDialogComponent } from '../dialogs/not-enough-to-aling-dialog/not-enough-to-aling-dialog.component';
+import { NotEnoughToAlignDialogComponent } from '../dialogs/not-enough-to-aling-dialog/not-enough-to-aling-dialog.component';
 import {SearchFilterComponent} from '../search-filter/search-filter.component';
 import { ChantListService } from 'src/app/services/chant-list.service';
 
@@ -201,7 +201,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
 
     if (selected.length < 2) {
       const dialogRef = this.dialog.open(
-        NotEnoughToAlingDialogComponent
+        NotEnoughToAlignDialogComponent
       );
       return;
     }

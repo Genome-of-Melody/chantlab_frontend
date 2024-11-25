@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NotEnoughToAlignDialogComponent } from './not-enough-to-aling-dialog.component';
+import { NotEnoughToRemoveDialogComponent } from './not-enough-to-remove-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
-describe('NotEnoughToAlignDialogComponent', () => {
-  let component: NotEnoughToAlignDialogComponent;
-  let fixture: ComponentFixture<NotEnoughToAlignDialogComponent>;
+describe('NotEnoughToRemoveDialogComponent', () => {
+  let component: NotEnoughToRemoveDialogComponent;
+  let fixture: ComponentFixture<NotEnoughToRemoveDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ MatDialogModule ],
-      declarations: [ NotEnoughToAlignDialogComponent ]
+      declarations: [ NotEnoughToRemoveDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NotEnoughToAlignDialogComponent);
+    fixture = TestBed.createComponent(NotEnoughToRemoveDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

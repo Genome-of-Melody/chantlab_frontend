@@ -105,7 +105,7 @@
                   <button mat-button class="collapse-button" (click)="collapseAlignment(volpianoIdx)">
                     <mat-icon>keyboard_arrow_up</mat-icon>
                   </button>
-                  <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
+                  <button *ngIf="hasMultipleSequencesPresent" mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
                     <mat-icon>close</mat-icon>
                   </button>
                 </div>
@@ -141,7 +141,7 @@
                   <button mat-button class="collapse-button" (click)="uncollapseAlignment(volpianoIdx)">
                     <mat-icon>keyboard_arrow_down</mat-icon>
                   </button>
-                  <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
+                  <button mat-button *ngIf="hasMultipleSequencesPresent" class="delete-button" (click)="deleteAlignment(volpianoIdx)">
                     <mat-icon>close</mat-icon>
                   </button>
                 </div>

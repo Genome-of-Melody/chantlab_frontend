@@ -17,6 +17,7 @@ import {ContrafactService} from '../../services/contrafact.service';
 import {NetworkGraphWrapperComponent} from '../visualization/network-graph-wrapper/network-graph-wrapper.component';
 import { Router } from '@angular/router';
 import { PhylogenyService } from 'src/app/services/phylogeny.service';
+import { NotEnoughToRemoveDialogComponent } from '../dialogs/not-enough-to-remove-dialog/not-enough-to-remove-dialog.component';
 
 @Component({
   selector: 'app-aligned',
@@ -101,7 +102,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     console.log(this.alignment);
 
     this.alignedChants = this.alignment.iChants;
-    this.alignedChants.forEach(_ => {
+    this.alignment.alpianos.forEach(_ => {
       this.alignmentPresent.push(true);
       this.alignmentUncollapsed.push(true);
     });
@@ -145,13 +146,23 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return this.alignmentPresent.filter(a => a).length;
   }
 
-  deleteAlignment(i: number): void {
-    this.alignmentPresent[i] = false;
-    this.alignmentUncollapsed[i] = false;
-    this.visibleDetails[this.alignment.ids[i]] = false;
+  get hasMultipleSequencesPresent(): boolean {
+    return this.alignmentPresent.filter(Boolean).length > 1;
+  }
 
-    this.conservationChanged = true;
-    this.alignmentChanged();
+  deleteAlignment(i: number): void {
+    if (this.hasMultipleSequencesPresent) {
+      this.alignmentPresent[i] = false;
+      this.alignmentUncollapsed[i] = false;
+      this.visibleDetails[this.alignment.ids[i]] = false;
+  
+      this.conservationChanged = true;
+      this.alignmentChanged();
+    } else {
+      this.dialog.open(
+        NotEnoughToRemoveDialogComponent,
+      );
+    }
   }
 
   collapseAlignment(i: number): void {
@@ -262,7 +273,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     if (this.conservationChanged) {
       const conservation =
         this.conservationProfileService.calculateConservationProfile(
-          this.alignment.parsedChants);
+          this.alignment.parsedChants, this.alignmentPresent);
       this.conservationProfile = conservation.conservationProfile;
       this.conservationOfSet = conservation.conservationOfSet;
       this.conservationChanged = false;
