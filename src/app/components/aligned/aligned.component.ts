@@ -279,7 +279,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
       this.conservationChanged = false;
     }
 
-    return this.conservationProfile[volpianoIdx][wordIdx][sylIdx][neumeIdx];
+    return this.conservationProfile[volpianoIdx][wordIdx][sylIdx][neumeIdx] ?? 0;
   }
 
   getColor(neume: string): object {

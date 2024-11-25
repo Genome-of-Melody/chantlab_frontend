@@ -36,6 +36,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
   selected: boolean[] = [];
   selectedAll: boolean;
   concatenatedMode: boolean = false;
+  sortedByCountusIDFrequency: boolean = false;
   selectedChants: Set<number>;
   hideIncompleteChants: boolean;
 
@@ -79,11 +80,15 @@ export class ChantListComponent implements OnInit, OnDestroy {
       ([data, event]) => {
         this.paginator.firstPage();
 
+        const filters = this.chantListService.filterSettings;
+        this.hideIncompleteChants = filters?.hideIncomplete ?? true;
+
+
         if (this.allChants !== data) {
           this.selectedChants = new Set(this.chantListService.selectedChants);
           this.selected = [];
           if (data) {
-            this.dataLength = data.length;
+            this.dataLength = data.filter(chant => !(this.hideIncompleteChants && !this.isChantComplete(chant))).length;
             for (let i = 0; i < data.length; i++) {
               this.selected.push(this.selectedChants.has(data[i].id));
             }
@@ -91,22 +96,72 @@ export class ChantListComponent implements OnInit, OnDestroy {
           this.allChants = data;
           this.updateSelectedAll();
         }
-        const filters = this.chantListService.filterSettings;
-        if (filters) {
-          this.hideIncompleteChants = filters.hideIncomplete;
+
+        if (this.sortedByCountusIDFrequency) {
+          this.sortByCantusIdFrequency();
         } else {
-          this.hideIncompleteChants = true;
+          this.sortByIncipit();
         }
 
         this.pageIndex = event ? event.pageIndex : 0;
         this.pageSize = event ? event.pageSize : 50;
         const start = this.pageIndex * this.pageSize;
         const end = (this.pageIndex + 1) * this.pageSize;
-        if (data) {
-          this.chants = data.slice(start, end);
+        if (this.allChants) {
+          this.chants = this.allChants
+          .filter(chant => {
+            return !(this.hideIncompleteChants && !this.isChantComplete(chant));
+          })
+          .slice(start, end);        
         }
       }
     );
+  }
+
+  sortByCantusIdFrequency(): void {
+    if (this.allChants && this.selected) {
+      const cantusIdFrequency = new Map<string, number>();
+  
+      this.allChants.forEach(chant => {
+        const cantusId = chant.cantus_id;
+        if (!(this.hideIncompleteChants && (!this.isChantComplete(chant)))) {
+          cantusIdFrequency.set(cantusId, (cantusIdFrequency.get(cantusId) || 0) + 1);
+        } else {
+          cantusIdFrequency.set(cantusId, (cantusIdFrequency.get(cantusId) || 0));
+        }
+      });
+    
+      const zippedList = this.allChants.map((chant, index) => ({
+        chant,
+        selected: this.selected[index],
+        frequency: cantusIdFrequency.get(chant.cantus_id),
+      }));
+    
+      zippedList.sort((a, b) => b.frequency - a.frequency);
+      for (let i = 0; i < zippedList.length; i++) {
+        this.allChants[i] = zippedList[i].chant;
+        this.selected[i] = zippedList[i].selected;
+      }
+    }
+  }
+
+
+  
+  sortByIncipit(): void {
+    if (this.allChants && this.selected) {
+          
+      const zippedList = this.allChants.map((chant, index) => ({
+        chant,
+        selected: this.selected[index],
+        incipit: chant.incipit || '',
+      }));
+    
+      zippedList.sort((a, b) => a.incipit.localeCompare(b.incipit));
+      for (let i = 0; i < zippedList.length; i++) {
+        this.allChants[i] = zippedList[i].chant;
+        this.selected[i] = zippedList[i].selected;
+      }
+    }
   }
 
   onSelectionChange(index: number): void {

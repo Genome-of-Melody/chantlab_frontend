@@ -13,6 +13,7 @@
     <ng-container>
       <mat-checkbox
         class="margin-right"
+        style="margin-right: 30px;"
         (change)="selectAllVisible()"
         [(ngModel)]="selectedAll">
         Select/deselect all
@@ -20,7 +21,13 @@
       </mat-checkbox>
       <mat-checkbox
         class="margin-right"
-        style="margin-left: 50px;"
+        style="margin-right: 30px;"
+        [(ngModel)]="sortedByCountusIDFrequency"
+        (ngModelChange)="retrieveChants()">
+        Sort by Cantus ID frequency
+      </mat-checkbox>
+      <mat-checkbox
+        class="margin-right"
         [(ngModel)]="concatenatedMode">
         Concatenated alignment
       </mat-checkbox>
@@ -37,7 +44,7 @@
         <ng-container *ngFor="let chant of chants; let i = index">
           <tr mat-cell
             class="list-group-item"
-            *ngIf="!(searchFilterComponent.hideIncompleteChants && (!isChantComplete(chant)))">
+            *ngIf="!(hideIncompleteChants && (!isChantComplete(chant)))">
             <td>
               <mat-checkbox
                 class="margin-right"
