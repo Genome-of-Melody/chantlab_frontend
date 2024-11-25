@@ -58,10 +58,12 @@
           </li>
           <li><button mat-raised-button (click)="doShowDistanceMatrix()" color="{{ showDistanceMatrixColor }}"
                       class="widget-control-button">Distance Matrix</button>
-              <button mat-raised-button (click)="doShowChantNetwork()" color="{{ showChantNetworkColor }}"
-                      class="widget-control-button">Chant Network</button>
-              <button mat-raised-button (click)="doShowManuscriptNetwork()" color="{{ showManuscriptNetworkColor }}"
-                      class="widget-control-button">Manuscript Network</button>
+              <button mat-raised-button (click)="downloadDistanceMatrix()" color="primary"
+                      class="widget-control-button">Download Distance Matrix</button>
+              <!--<button mat-raised-button (click)="doShowChantNetwork()" color="{{ showChantNetworkColor }}"
+                      class="widget-control-button">Chant Network</button>-->
+              <!--<button mat-raised-button (click)="doShowManuscriptNetwork()" color="{{ showManuscriptNetworkColor }}"
+                      class="widget-control-button">Manuscript Network</button>-->
           </li>
           <li><button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
               <button *ngIf="alignmentMode !== 'syllables'" mat-raised-button (click)="doShowGuideTree()" color="{{ showGuideTreeColor }}" class="widget-control-button">Guide Tree</button>

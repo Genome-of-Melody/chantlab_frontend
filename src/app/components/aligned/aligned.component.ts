@@ -202,6 +202,37 @@ export class AlignedComponent implements OnInit, OnDestroy {
     this.downloadService.download(blob, 'aligned.json');
   }
 
+  downloadDistanceMatrix(): void {
+    if (!this._distanceMatrix || this._distanceMatrix.size === 0) {
+      // Create an empty CSV file if the matrix is undefined or empty
+      const blob = new Blob([''], { type: 'text/csv' });
+      this.downloadService.download(blob, 'distance_matrix.csv');
+      return;
+    }
+  
+    const keys = Array.from(this._distanceMatrix.keys());
+    const matrix: string[][] = [];
+    matrix.push(['', ...keys]);
+  
+    // Fill matrix rows with vertical headers and values
+    keys.forEach(rowKey => {
+      const row: string[] = [rowKey];
+      keys.forEach(colKey => {
+        const value = this._distanceMatrix.get(rowKey)?.get(colKey);
+        row.push(value !== undefined && value !== null ? value.toString() : '');
+      });
+      matrix.push(row);
+    });
+  
+    const csvContent = matrix
+      .map(row => row.map(cell => `"${cell}"`).join(','))
+      .join('\n');
+  
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    this.downloadService.download(blob, 'distance_matrix.csv');
+  }
+  
+
   downloadPhyloNewick(): void {
     const blob = new Blob([this.alignment.guideTree], {type: 'text'});
     this.downloadService.download(blob, 'guide_tree.txt');
