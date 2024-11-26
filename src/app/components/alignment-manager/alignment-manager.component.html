@@ -8,17 +8,43 @@
       <button class="alignment-manager-action-button" mat-raised-button color="primary" (click)="showSelection()">Show</button>
       <button class="alignment-manager-action-button" mat-raised-button color="primary" (click)="deleteSelection()">Delete</button>
     </mat-card>
+  </div>
+
+  <div class="upload-content">
     <mat-card>
       <h3>Upload alignment</h3>
       <mat-form-field class="alignment-name">
         <mat-label>Alignment name</mat-label>
         <input matInput type="text" [(ngModel)]="alignmentName">
       </mat-form-field>
-      <br>
       <input type="file"
         (change)="handleFileInput($event.target.files)">
-      <br><br>
+      <br>
       <button mat-raised-button color="primary" (click)="upload()">Upload</button>
+      <br><br>
+      <mat-divider></mat-divider>
+      <br>
+      <div class="upload-help narrow-field">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Help: Alignment Format
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>The uploaded file must be in JSON format, generated from the alignment page by clicking on "Download Alignment JSON". It contains the following key elements:</p>
+          <ul>
+            <li><strong>parsedChants:</strong> Data for alignment visualization.</li>
+            <li><strong>iChants:</strong> Details of chants in the alignment.</li>
+            <li><strong>alpianos:</strong> Aligned note sequences for distance matrix and phylogenetic analysis.</li>
+            <li><strong>ids:</strong> IDs of chants in sequences (list of numbers or list of lists of numbers).</li>
+            <li><strong>urls:</strong> URLs of chants in sequences (list of urls or list of lists of urls).</li>
+            <li><strong>sources:</strong> Sources of chants in sequences.</li>
+            <li><strong>guideTree:</strong> Similarity tree structure derived from the alignment.</li>
+            <li><strong>alignmentMode:</strong> Indicates alignment by pitches, intervals, or words.</li>
+          </ul>
+          <p>Ensure the JSON file matches this structure for compatibility with the analysis tools.</p>
+        </mat-expansion-panel>
+      </div>
     </mat-card>
   </div>
 

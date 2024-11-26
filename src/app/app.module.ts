@@ -70,6 +70,7 @@ import { PhylogenyErrorDialogComponent } from './components/dialogs/phylogeny-er
 import { NotEnoughToRemoveDialogComponent } from './components/dialogs/not-enough-to-remove-dialog/not-enough-to-remove-dialog.component';
 import { ContrafactReductionResultDialogComponent } from './components/dialogs/contrafact-reduction-result-dialog/contrafact-reduction-result-dialog.component';
 import { PhylogenyNotSupportedDialogComponent } from './components/dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
     declarations: [
@@ -142,6 +143,7 @@ import { PhylogenyNotSupportedDialogComponent } from './components/dialogs/phylo
         MatButtonToggleModule,
         RouterModule,
         ScrollingModule,
+        MatExpansionModule
     ],
     providers: [],
     bootstrap: [AppComponent]
