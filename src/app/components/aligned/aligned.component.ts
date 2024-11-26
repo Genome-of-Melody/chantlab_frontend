@@ -529,8 +529,9 @@ export class AlignedComponent implements OnInit, OnDestroy {
   openPhylogeneticAnalysis(): void {
     if (this.alignment.parsedChants.length >= 4) {
       // Save the current chant alignment for phylogeny to local storage
-      this.phylogenyService.alignmentForPhylogeny = this.alignmentService.alignment
-      this.phylogenyService.newick = undefined
+      this.phylogenyService.alignmentForPhylogeny = this.alignmentService.alignment;
+      this.phylogenyService.newick = undefined;
+      this.phylogenyService.sequenceNames = this.getSequenceNames(this.phylogenyService.alignmentForPhylogeny.ids);
       this.router.navigate(['/phylogeny']);
     } else {
       const dialogRef = this.dialog.open(PhylogenyNotSupportedDialogComponent);
