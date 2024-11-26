@@ -1,9 +1,7 @@
 <div class="alignment-list">
   <div *ngFor="let alignment of availableAlignments; let i = index">
-    <mat-checkbox class="alignment-checkbox" [(ngModel)]="selectedAlignments[i]">{{ alignment }}</mat-checkbox>
-    <button mat-flat-button color="secondary" (click)="requestShowAlignment(alignment)"
-            class="alignment-action-button">
-      <mat-icon>search</mat-icon>
-    </button>
+    <mat-radio-group [(ngModel)]="selectedAlignment">
+      <mat-radio-button class="alignment-radio" [value]="alignment">{{ alignment }}</mat-radio-button>
+    </mat-radio-group>
   </div>
 </div>
