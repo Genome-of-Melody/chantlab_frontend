@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { PhylogenyService } from 'src/app/services/phylogeny.service';
 import { NotEnoughToRemoveDialogComponent } from '../dialogs/not-enough-to-remove-dialog/not-enough-to-remove-dialog.component';
 import { ContrafactReductionResultDialogComponent } from '../dialogs/contrafact-reduction-result-dialog/contrafact-reduction-result-dialog.component';
+import { PhylogenyNotSupportedDialogComponent } from '../dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
 
 @Component({
   selector: 'app-aligned',
@@ -526,10 +527,16 @@ export class AlignedComponent implements OnInit, OnDestroy {
   }
 
   openPhylogeneticAnalysis(): void {
-    // Save the current chant alignment for phylogeny to local storage
-    this.phylogenyService.alignmentForPhylogeny = this.alignmentService.alignment
-    this.phylogenyService.newick = undefined
-    this.router.navigate(['/phylogeny']);
+    if (this.alignment.parsedChants.length >= 4) {
+      // Save the current chant alignment for phylogeny to local storage
+      this.phylogenyService.alignmentForPhylogeny = this.alignmentService.alignment
+      this.phylogenyService.newick = undefined
+      this.router.navigate(['/phylogeny']);
+    } else {
+      const dialogRef = this.dialog.open(PhylogenyNotSupportedDialogComponent);
+      const instance = dialogRef.componentInstance;
+      instance.numberOfSequences = this.alignment.parsedChants.length;
+    }
   }
 
   normalizeVolpianoCharacter(volpiano_character: string): string {
