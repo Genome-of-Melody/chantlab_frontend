@@ -16,6 +16,11 @@
   padding: 10px;
 }
 
+::ng-deep .selection-content mat-card {
+  margin: 20px;
+  display: block;
+}
+
 .selection-content {
   width: fit-content;
   /*margin: auto;*/
