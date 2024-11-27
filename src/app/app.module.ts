@@ -32,7 +32,7 @@ import { AlignedComponent } from './components/aligned/aligned.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { ChantListWrapperComponent } from './components/chant-list-wrapper/chant-list-wrapper.component';
 import { NoChantTextDialogComponent } from './components/dialogs/no-chant-text-dialog/no-chant-text-dialog.component';
-import { NotEnoughToAlingDialogComponent } from './components/dialogs/not-enough-to-aling-dialog/not-enough-to-aling-dialog.component';
+import { NotEnoughToAlignDialogComponent } from './components/dialogs/not-enough-to-aling-dialog/not-enough-to-aling-dialog.component';
 import { AlignmentErrorDialogComponent } from './components/dialogs/alignment-error-dialog/alignment-error-dialog.component';
 import { ChantDetailDialogComponent } from './components/dialogs/chant-detail-dialog/chant-detail-dialog.component';
 import { MultipleSeriesScatterplotComponent } from './components/visualization/multiple-series-scatterplot/multiple-series-scatterplot.component';
@@ -67,6 +67,10 @@ import { GuideTreeComponent } from './components/guide-tree/guide-tree.component
 import { PhylogenyComponent } from './components/phylogeny/phylogeny.component';
 import { PhylogenyPageComponent } from './components/phylogeny-page/phylogeny-page.component';
 import { PhylogenyErrorDialogComponent } from './components/dialogs/phylogeny-error-dialog/phylogeny-error-dialog.component';
+import { NotEnoughToRemoveDialogComponent } from './components/dialogs/not-enough-to-remove-dialog/not-enough-to-remove-dialog.component';
+import { ContrafactReductionResultDialogComponent } from './components/dialogs/contrafact-reduction-result-dialog/contrafact-reduction-result-dialog.component';
+import { PhylogenyNotSupportedDialogComponent } from './components/dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
     declarations: [
@@ -80,7 +84,8 @@ import { PhylogenyErrorDialogComponent } from './components/dialogs/phylogeny-er
         NavigationComponent,
         ChantListWrapperComponent,
         NoChantTextDialogComponent,
-        NotEnoughToAlingDialogComponent,
+        NotEnoughToAlignDialogComponent,
+        NotEnoughToRemoveDialogComponent,
         AlignmentErrorDialogComponent,
         PhylogenyErrorDialogComponent,
         ChantDetailDialogComponent,
@@ -89,11 +94,13 @@ import { PhylogenyErrorDialogComponent } from './components/dialogs/phylogeny-er
         SelectDataSourceComponent,
         SourceSelectionSavedDialogComponent,
         UploadSuccessfulDialogComponent,
+        ContrafactReductionResultDialogComponent,
         SearchFilterComponent,
         SavedFilterDialogComponent,
         NameOnCreateDatasetComponent,
         MissingDatasetNameDialogComponent,
         DatasetCreatedDialogComponent,
+        PhylogenyNotSupportedDialogComponent,
         DistanceMatrixComponent,
         SettingsComponent,
         DatasetListComponent,
@@ -136,6 +143,7 @@ import { PhylogenyErrorDialogComponent } from './components/dialogs/phylogeny-er
         MatButtonToggleModule,
         RouterModule,
         ScrollingModule,
+        MatExpansionModule
     ],
     providers: [],
     bootstrap: [AppComponent]

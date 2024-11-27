@@ -25,19 +25,18 @@ export class AlignmentManagerComponent implements OnInit {
   }
 
   deleteSelection(): void {
-    const selectedAlignmentNames = this.alignmentList.selectedAlignmentNames;
-    for (const name of selectedAlignmentNames) {
+    const name = this.alignmentList.selectedAlignmentName;
+    if (name) {
       this.alignmentManagementService.deleteAlignment(name);
     }
-    this.alignmentList.unselectAll();
+    this.alignmentList.resetSelectedAlignment();
   }
 
   showSelection(): void {
-    if (this.alignmentList.selectedAlignmentNames.length === 0) {
-      return;
+    const name = this.alignmentList.selectedAlignmentName;
+    if (name) {
+      this.router.navigate(['/align/' + name]);
     }
-    const selectedAlignmentName = this.alignmentList.selectedAlignmentNames[0];
-    this.router.navigate(['/align/' + selectedAlignmentName]);
   }
 
   handleFileInput(files: FileList): void {

@@ -8,39 +8,26 @@ import {AlignmentManagementService} from '../../../services/alignment-management
 })
 export class AlignmentListComponent implements OnInit {
 
-  public selectedAlignments: boolean[] = [];
+  public selectedAlignment: string;
 
   constructor(
     private alignmentManagementService: AlignmentManagementService
   ) { }
 
   ngOnInit(): void {
-    for (const alnName of this.availableAlignments) {
-      this.selectedAlignments.push(false);
-    }
+
   }
 
   get availableAlignments(): string[] {
     return Array.from(this.alignmentManagementService.availableAlignments.keys()).sort();
   }
 
-  get selectedAlignmentNames(): string[] {
-    const selectedAlignmentNames = [];
-    const alignmentNames = this.availableAlignments;
-    for (let idx = 0; idx < alignmentNames.length; idx++) {
-      if (this.selectedAlignments[idx]) {
-        selectedAlignmentNames.push(alignmentNames[idx]);
-      }
-    }
-    return selectedAlignmentNames;
+  get selectedAlignmentName(): string {
+    return this.selectedAlignment;
   }
 
-  unselectAll(): void {
-    this.selectedAlignments.forEach((x, i) => this.selectedAlignments[i] = false);
-  }
-
-  requestShowAlignment(name: string): void {
-    console.log('Requesting show alignment: ' + name);
+  resetSelectedAlignment() {
+    this.selectedAlignment = undefined;
   }
 
 }

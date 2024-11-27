@@ -91,7 +91,10 @@ export class AlignedPageComponent implements OnInit {
           // The Alignment object should get the IChants, so it needs to be prepared
           // before the constructor is called.
           const alignedIChants = [];
-          response.success.ids.forEach(alignedID => {
+          const successfull_ids = Array.isArray(response.success.ids) 
+            ? response.success.ids.flat() 
+            : response.success.ids;
+          successfull_ids.forEach(alignedID => {
             const iChant = this.alignmentService.chantsToAlign.find(ch => ch.id === alignedID);
             alignedIChants.push(iChant);
           });

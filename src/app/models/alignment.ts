@@ -22,7 +22,7 @@ export class Alignment {
   // matching tree nodes to actual ICHant objects, in order to make the view
   // more informative.
   constructor(
-    public parsedChants: Array<Array<{text: string, type: string, volpiano: Array<string>}>>,
+    public parsedChants: Array<Array<Array<{text: string, type: string, volpiano: Array<string>}>>>,
     public iChants: Array<IChant>,
     public alpianos: Array<string>,
     public ids: Array<number>,
@@ -76,7 +76,7 @@ export class Alignment {
   }
 
   get length(): number {
-    return this.ids.length;
+    return this.alpianos.length;
   }
 
   get nPositions(): number {
@@ -120,7 +120,7 @@ export class Alignment {
   }
 
   selectSubset(idxs: number[]): Alignment {
-    const parsedChants: Array<Array<{text: string, type: string, volpiano: Array<string>}>> = [];
+    const parsedChants: Array<Array<Array<{text: string, type: string, volpiano: Array<string>}>>> = [];
     const iChants: Array<IChant> = [];
     const alpianos: Array<string> = [];
     const ids: Array<number> = [];
@@ -137,7 +137,7 @@ export class Alignment {
     }
 
     // The guide tree is not valid after selecting a subset, so it does not get passed.
-    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources, null, null, this.alignmentMode);
+    return new Alignment(parsedChants, iChants, alpianos, ids, urls, sources, null, this.newickNamesDict, this.alignmentMode);
   }
 
   /**
@@ -224,7 +224,7 @@ export class Alignment {
  */
 export class AlignmentResponse {
   constructor(
-    public chants: Array<Array<{text: string, type: string, volpiano: Array<string>}>>,
+    public chants: Array<Array<Array<{text: string, type: string, volpiano: Array<string>}>>>,
     public errorShortNames: Array<string>,
     public errorIds: Array<number>,
     public alignment: Alignment

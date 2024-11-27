@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NotEnoughToAlignDialogComponent } from './not-enough-to-aling-dialog.component';
+import { PhylogenyNotSupportedDialogComponent } from './phylogeny-not-supported-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
-describe('NotEnoughToAlignDialogComponent', () => {
-  let component: NotEnoughToAlignDialogComponent;
-  let fixture: ComponentFixture<NotEnoughToAlignDialogComponent>;
+describe('PhylogenyNotSupportedDialogComponent', () => {
+  let component: PhylogenyNotSupportedDialogComponent;
+  let fixture: ComponentFixture<PhylogenyNotSupportedDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ MatDialogModule ],
-      declarations: [ NotEnoughToAlignDialogComponent ]
+      declarations: [ PhylogenyNotSupportedDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NotEnoughToAlignDialogComponent);
+    fixture = TestBed.createComponent(PhylogenyNotSupportedDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

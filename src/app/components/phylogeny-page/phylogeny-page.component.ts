@@ -44,7 +44,7 @@ export class PhylogenyPageComponent implements OnInit {
       const formData: FormData = new FormData();
       formData.append('alpianos', JSON.stringify(this.alignmentForPhylogeny.alpianos));
       formData.append('ids', JSON.stringify(this.alignmentForPhylogeny.ids));
-      formData.append('sources', JSON.stringify(this.alignmentForPhylogeny.sources));
+      formData.append('alignment_names', JSON.stringify(this.phylogenyService.sequenceNames));
       formData.append('numberOfGenerations', JSON.stringify(this.settingsService.phylogenySettingsService.mrbayesGenerations));
 
       this.chantService.mrbayesVolpiano(formData).subscribe(

@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NotEnoughToAlignDialogComponent } from './not-enough-to-aling-dialog.component';
+import { ContrafactReductionResultDialogComponent } from './contrafact-reduction-result-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
-describe('NotEnoughToAlignDialogComponent', () => {
-  let component: NotEnoughToAlignDialogComponent;
-  let fixture: ComponentFixture<NotEnoughToAlignDialogComponent>;
+describe('ContrafactReductionResultDialogComponent', () => {
+  let component: ContrafactReductionResultDialogComponent;
+  let fixture: ComponentFixture<ContrafactReductionResultDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ MatDialogModule ],
-      declarations: [ NotEnoughToAlignDialogComponent ]
+      declarations: [ ContrafactReductionResultDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NotEnoughToAlignDialogComponent);
+    fixture = TestBed.createComponent(ContrafactReductionResultDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

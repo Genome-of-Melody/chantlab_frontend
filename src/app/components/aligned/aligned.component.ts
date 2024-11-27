@@ -17,6 +17,9 @@ import {ContrafactService} from '../../services/contrafact.service';
 import {NetworkGraphWrapperComponent} from '../visualization/network-graph-wrapper/network-graph-wrapper.component';
 import { Router } from '@angular/router';
 import { PhylogenyService } from 'src/app/services/phylogeny.service';
+import { NotEnoughToRemoveDialogComponent } from '../dialogs/not-enough-to-remove-dialog/not-enough-to-remove-dialog.component';
+import { ContrafactReductionResultDialogComponent } from '../dialogs/contrafact-reduction-result-dialog/contrafact-reduction-result-dialog.component';
+import { PhylogenyNotSupportedDialogComponent } from '../dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
 
 @Component({
   selector: 'app-aligned',
@@ -41,11 +44,15 @@ export class AlignedComponent implements OnInit, OnDestroy {
   visibleDetails: {[id: number]: boolean} = {};
   alignmentPresent: boolean[] = [];
   alignmentUncollapsed: boolean[] = [];
+  sequenceNamesByIds: Map<string, string>
 
   showColors = false;
+  showWordBars = false;
+  isNotesOnly = true;
   showHeaders = true;
   showConservation = false;
   showText = true;
+  concatenated: boolean;
 
   showDistanceMatrix = false;
   showGuideTree = false;
@@ -98,10 +105,13 @@ export class AlignedComponent implements OnInit, OnDestroy {
     console.log(this.alignment);
 
     this.alignedChants = this.alignment.iChants;
-    this.alignedChants.forEach(_ => {
+    this.alignment.alpianos.forEach(_ => {
       this.alignmentPresent.push(true);
       this.alignmentUncollapsed.push(true);
     });
+
+    this.sequenceNamesByIds = this.getSerializedReversedNamesDict();
+    this.concatenated = this.alignment.ids.some(id => Array.isArray(id));
 
     console.log('AlignedComponent.onInit() done.');
     console.log('AlignedChants:');
@@ -111,6 +121,12 @@ export class AlignedComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
+  }
+
+  get visibleIndices(): number[] {
+    return this.alignmentPresent
+      .map((present, idx) => (present ? idx : -1))
+      .filter(idx => idx !== -1);
   }
 
   get visibleAlignmentSubset(): Alignment {
@@ -140,13 +156,23 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return this.alignmentPresent.filter(a => a).length;
   }
 
-  deleteAlignment(i: number): void {
-    this.alignmentPresent[i] = false;
-    this.alignmentUncollapsed[i] = false;
-    this.visibleDetails[this.alignment.ids[i]] = false;
+  get hasMultipleSequencesPresent(): boolean {
+    return this.alignmentPresent.filter(Boolean).length > 1;
+  }
 
-    this.conservationChanged = true;
-    this.alignmentChanged();
+  deleteAlignment(i: number): void {
+    if (this.hasMultipleSequencesPresent) {
+      this.alignmentPresent[i] = false;
+      this.alignmentUncollapsed[i] = false;
+      this.visibleDetails[this.alignment.ids[i]] = false;
+  
+      this.conservationChanged = true;
+      this.alignmentChanged();
+    } else {
+      this.dialog.open(
+        NotEnoughToRemoveDialogComponent,
+      );
+    }
   }
 
   collapseAlignment(i: number): void {
@@ -197,6 +223,37 @@ export class AlignedComponent implements OnInit, OnDestroy {
     this.downloadService.download(blob, 'aligned.json');
   }
 
+  downloadDistanceMatrix(): void {
+    if (!this._distanceMatrix || this._distanceMatrix.size === 0) {
+      // Create an empty CSV file if the matrix is undefined or empty
+      const blob = new Blob([''], { type: 'text/csv' });
+      this.downloadService.download(blob, 'distance_matrix.csv');
+      return;
+    }
+  
+    const keys = Array.from(this._distanceMatrix.keys());
+    const matrix: string[][] = [];
+    matrix.push(['', ...keys]);
+  
+    // Fill matrix rows with vertical headers and values
+    keys.forEach(rowKey => {
+      const row: string[] = [rowKey];
+      keys.forEach(colKey => {
+        const value = this._distanceMatrix.get(rowKey)?.get(colKey);
+        row.push(value !== undefined && value !== null ? value.toString() : '');
+      });
+      matrix.push(row);
+    });
+  
+    const csvContent = matrix
+      .map(row => row.map(cell => `"${cell}"`).join(','))
+      .join('\n');
+  
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    this.downloadService.download(blob, 'distance_matrix.csv');
+  }
+  
+
   downloadPhyloNewick(): void {
     const blob = new Blob([this.alignment.guideTree], {type: 'text'});
     this.downloadService.download(blob, 'guide_tree.txt');
@@ -226,20 +283,13 @@ export class AlignedComponent implements OnInit, OnDestroy {
     if (this.conservationChanged) {
       const conservation =
         this.conservationProfileService.calculateConservationProfile(
-          this.alignment.alpianos);
+          this.alignment.parsedChants, this.alignmentPresent);
       this.conservationProfile = conservation.conservationProfile;
       this.conservationOfSet = conservation.conservationOfSet;
       this.conservationChanged = false;
     }
 
-    // check if syllable is actually 'syllable' type
-    // if not, return 0
-    const realSylIdx = this.getRealSyllableIndex(volpianoIdx, wordIdx, sylIdx);
-    if (realSylIdx === -1) {
-      return 0;
-    }
-
-    return this.conservationProfile[volpianoIdx][wordIdx][realSylIdx][neumeIdx];
+    return this.conservationProfile[volpianoIdx][wordIdx][sylIdx][neumeIdx] ?? 0;
   }
 
   getColor(neume: string): object {
@@ -303,26 +353,6 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return {'background-color': color};
   }
 
-  getRealSyllableIndex(volpianoIdx: number,
-                       wordIdx: number,
-                       sylIdx: number): number {
-    // if element is any other type than syllable, return -1
-    if (this.alignment.parsedChants[volpianoIdx][wordIdx][sylIdx].type !== 'syllable') {
-      return -1;
-    }
-
-    // otherwise, count how many 'syllable' type elements there are before
-    // the desired one
-    let idx = 0;
-    for (let i = 0; i < sylIdx; i++) {
-      if (this.alignment.parsedChants[volpianoIdx][wordIdx][i].type === 'syllable') {
-        idx++;
-      }
-    }
-
-    return idx;
-  }
-
   computeDistances(visibleOnly: boolean): Map<string, Map<string, number>> {
     if (!this.alignment) {
       return undefined;
@@ -376,19 +406,36 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return 'primary';
   }
 
-  distanceMatrixChantNameFromChant(chant: IChant): string {
-    return (chant.incipit + ' / ' + chant.siglum + ' / ' + chant.id);
+  private getSerializedReversedNamesDict(): Map<string, string> {
+    return new Map(
+      Object.entries(this.alignment.newickNamesDict).map(([key, value]) => [
+        JSON.stringify(value),
+        key,
+      ])
+    );
   }
+
+  private getSequenceName(sub_ids: number[] | number): string {
+    return this.sequenceNamesByIds.get(JSON.stringify(sub_ids));
+  }
+
+  private getSequenceNames(ids: (number[] | number)[]): string[] {
+    return ids
+      .map(sub_ids => this.getSequenceName(sub_ids));
+  }
+
   get distanceMatrixChantNames(): string[] {
-    return this.alignment.iChants.map(ch => this.distanceMatrixChantNameFromChant(ch));
+    return this.getSequenceNames(this.alignment.ids);
   }
+
   get visibleSequencesDistanceMatrixChantNames(): string[] {
-    return this.visibleAlignmentSubset.iChants.map(ch => this.distanceMatrixChantNameFromChant(ch));
+    return this.getSequenceNames(this.visibleAlignmentSubset.ids);
   }
+
   get chantsMapForNetworkGraphs(): Map<string, IChant> {
     const chantsForNetworkGraphs = new Map<string, IChant>();
     this.visibleAlignmentSubset.iChants.forEach(ch => {
-      chantsForNetworkGraphs.set(this.distanceMatrixChantNameFromChant(ch), ch);
+      chantsForNetworkGraphs.set(ch.incipit + ' / ' + ch.siglum + ' / ' + ch.id, ch);
     });
     return chantsForNetworkGraphs;
   }
@@ -441,7 +488,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     const contrafacts = this.contrafactService.discover(this.alignment, distanceMap);
 
     if (contrafacts.alignment.length < 1) {
-      console.log('No contrafacts found.');
+      this.dialog.open(ContrafactReductionResultDialogComponent);
       return;
     }
 
@@ -460,8 +507,10 @@ export class AlignedComponent implements OnInit, OnDestroy {
       console.log('Removing alignment idx ' + idx);
       this.deleteAlignment(idx);
     }
+    const dialogRef = this.dialog.open(ContrafactReductionResultDialogComponent);
+    const instance = dialogRef.componentInstance;
+    instance.reducedSequenceIds = nonContrafactIdxs.sort();
 
-    // this.alignment.reduceGaps(); -- TODO: uncomment
     this.computeAndCacheDistances();
   }
 
@@ -478,9 +527,33 @@ export class AlignedComponent implements OnInit, OnDestroy {
   }
 
   openPhylogeneticAnalysis(): void {
-    // Save the current chant alignment for phylogeny to local storage
-    this.phylogenyService.alignmentForPhylogeny = this.alignmentService.alignment
-    this.phylogenyService.newick = undefined
-    this.router.navigate(['/phylogeny']);
+    if (this.alignment.parsedChants.length >= 4) {
+      // Save the current chant alignment for phylogeny to local storage
+      this.phylogenyService.alignmentForPhylogeny = this.alignmentService.alignment;
+      this.phylogenyService.newick = undefined;
+      this.phylogenyService.sequenceNames = this.getSequenceNames(this.phylogenyService.alignmentForPhylogeny.ids);
+      this.router.navigate(['/phylogeny']);
+    } else {
+      const dialogRef = this.dialog.open(PhylogenyNotSupportedDialogComponent);
+      const instance = dialogRef.componentInstance;
+      instance.numberOfSequences = this.alignment.parsedChants.length;
+    }
+  }
+
+  normalizeVolpianoCharacter(volpiano_character: string): string {
+    // Hide bars visualizing Word Boundaries
+    if (!this.showWordBars && volpiano_character === '3') {
+      return '-';
+    }
+  
+    // If in 'volpiano' display mode and 'notesOnly' is true, keep only notes
+    // remove flats and pause breaks
+    if (this.displayMode === 'volpiano' && this.isNotesOnly) {
+      const replaceSet = ['7', 'i', 'I', 'y', 'Y', 'z', 'Z', 'x', 'X'];
+      if (replaceSet.includes(volpiano_character)) {
+        return '-';
+      }
+    }
+    return volpiano_character;
   }
 }

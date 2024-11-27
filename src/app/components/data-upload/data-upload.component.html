@@ -10,18 +10,38 @@
 
   <div class="upload-content">
     <mat-card>
-      <h3>Upload data</h3>
-      <mat-form-field class="dataset-name">
-        <mat-label>Data source name</mat-label>
+      <h3>Upload Data</h3>
+      <mat-form-field class="dataset-name narrow-field">
+        <mat-label>Data Source Name</mat-label>
         <input matInput type="text" [(ngModel)]="datasetName">
       </mat-form-field>
+      <input type="file" class="narrow-field" (change)="handleFileInput($event.target.files)">
       <br>
-      <input type="file"
-        (change)="handleFileInput($event.target.files)">
-      <br><br>
       <button mat-raised-button color="primary" (click)="upload()">Upload</button>
+      <br><br>
+      <mat-divider></mat-divider>
+      <br>
+      <div class="upload-help narrow-field">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Help: Data Format
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>The uploaded file must be in CSV format. The first line should be a header with the following columns:</p>
+          <code>
+            id, incipit, cantus_id, mode, finalis, differentia, siglum, position, 
+            folio, sequence, marginalia, cao_concordances, feast_id, genre_id, 
+            office_id, source_id, melody_id, drupal_path, full_text, 
+            full_text_manuscript, volpiano, notes
+          </code>
+          <p>Each subsequent line represents a single chant record with corresponding data.</p>
+          <p><strong>Example of chant record:</strong></p>
+          <code>
+            46,chant_002772,A timore inimici eripe domine,1196,2,,1,NL-Uu 406,1.5,048r,14,,,feast_0696,genre_a,office_m,source_573,,http://cantus.uwaterloo.ca/chant/493007/,A timore inimici eripe domine animam meam,A timore inimici eripe domine animam meam | ~Nonne deo subiecta,1---f---f--fE--d---f--f--fe--d---d--c--d---f--f--f---f--e--fE---d--d---4,,CantusCorpus v0.2,0,century_1100_1199
+          </code>
+        </mat-expansion-panel>
+      </div>
     </mat-card>
   </div>
-
-
 </div>

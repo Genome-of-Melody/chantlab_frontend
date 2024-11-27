@@ -8,6 +8,9 @@ import {IChant} from '../../interfaces/chant.interface';
 import {FontesService} from '../../services/fontes.service';
 import {SelectedDataSourcesService} from '../../services/selected-data-sources.service';
 import {Subscription} from 'rxjs';
+import { ChantListService } from 'src/app/services/chant-list.service';
+import { Observable, forkJoin, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-filter',
@@ -33,7 +36,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
   checkedFontes: boolean[] = [];
   checkedAllFontes = true;
 
-  hideIncompleteChants = true;
+  hideIncompleteChants: boolean = true;
 
   visible = false;
 
@@ -42,15 +45,15 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
     private searchFilterService: SearchFilterService,
     private fontesService: FontesService,
     private selectedDataSourcesService: SelectedDataSourcesService,
+    private chantListService: ChantListService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.initGenresAndOffices();
-
-    this.fontesService.refreshFontes();
-    this.initFontes();
-
+    const prevFilters = this.chantListService.filterSettings;
+    if (prevFilters) {
+      this.hideIncompleteChants = prevFilters.hideIncomplete;
+    }
     this._subscriptions.add(this.selectedDataSourcesService.selectedDataSourcesChange.subscribe(() => this.refresh()));
   }
 
@@ -59,60 +62,97 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
   }
 
   refresh(): void {
-    this.initGenresAndOffices();
-    this.updateFontes();
+    forkJoin([
+      this.initGenresAndOffices(),
+      this.updateFontes()
+    ]).subscribe({
+      next: () => {
+        // Once both initial options observables have completed, proceed with postprocessing and saving
+        const filters = this.chantListService.filterSettings;
+        if (filters) {
+          this.hideIncompleteChants = filters.hideIncomplete;
+        } else {
+          this.hideIncompleteChants = true;
+        }
+        this.onSelectionChange();
+        this.saveFilter(false);
+      },
+      error: (err) => {
+        console.error('Error occurred while initializing:', err);
+      }
+    });
   }
-
-  initGenresAndOffices(): void {
-    this.csvTranslateService.getAllValues('genres')
-      .pipe(take(1))
-      .subscribe(
-        data => {
-          this.allGenres = data;
-          Object.keys(this.allGenres).forEach(key => {
-            this.genreIds.push(key);
+  
+  initGenresAndOffices(): Observable<any> {
+    return forkJoin([
+      this.csvTranslateService.getAllValues('genres'),
+      this.csvTranslateService.getAllValues('offices')
+    ]).pipe(
+      take(1),
+      map(([genresData, officesData]) => {
+        this.allGenres = genresData;
+        this.checkedGenres = [];
+        const prevFilters = this.chantListService.filterSettings;
+        Object.keys(this.allGenres).forEach(key => {
+          this.genreIds.push(key);
+          if (prevFilters) {
+            this.checkedGenres.push(prevFilters.genres.includes(key));
+          } else {
             this.checkedGenres.push(true);
-          });
-        }
-      );
-    this.csvTranslateService.getAllValues('offices')
-      .pipe(take(1))
-      .subscribe(
-        data => {
-          this.allOffices = data;
-          Object.keys(this.allOffices).forEach(key => {
-            this.officeIds.push(key);
-            this.checkedOffices.push(true);
-          });
-          this.saveFilter(false);
-        }
-      );
-  }
+          }
+        });         
 
-  initFontes(): void {
-    const fontes = this.fontesService.getAllFontes()
-      .pipe(take(1))
-      .subscribe(
-        data => {
+        this.allOffices = officesData;
+        this.checkedOffices = [];
+        Object.keys(this.allOffices).forEach(key => {
+          this.officeIds.push(key);
+          if (prevFilters) {
+            this.checkedOffices.push(prevFilters.offices.includes(key));
+          } else {
+            this.checkedOffices.push(true);
+          }
+        });
+        this.onSelectionChange();
+      })
+    );
+  }
+  
+  initFontes(): Observable<any> {
+    return this.fontesService.getAllFontes()
+      .pipe(
+        take(1),
+        map(data => {
           this.checkedFontes = [];
           this.allFontes = data;
+          const prevFilters = this.chantListService.filterSettings;
           Object.keys(this.allFontes).forEach(key => {
-            this.checkedFontes.push(this.checkedAllFontes);
-            // I haven't been able to track down why the fontes are retrieved
-            // as an array of lists of length 1, like [["D GSTA III 9"], ["CH E-611"]].
-            // The [0] index is a working band-aid solution for now.
             this.fontesSigla.push(data[key][0]);
+            if (prevFilters) {
+              this.checkedFontes.push(prevFilters.fontes.includes(data[key][0]));
+            } else {
+              this.checkedFontes.push(true);
+            }
+            this.onSelectionChange();
           });
-        }
+        })
       );
   }
 
-  updateFontes(): void {
-    this.fontesService.refreshFontes();
-    this.initFontes();
+  onSelectionChange(): void {
+    this.checkedAllFontes = this.checkedFontes.every(item => item === true);
+    this.checkedAllGenres = this.checkedGenres.every(item => item === true);
+    this.checkedAllOffices = this.checkedOffices.every(item => item === true);
   }
 
-  getFilterSettings(): object {
+
+  updateFontes(): Observable<any> {
+    return this.fontesService.refreshFontes().pipe(
+      switchMap(() => this.initFontes())
+    );
+  }
+  
+
+  getFilterSettings(): { genres: string[]; offices: string[]; fontes: string[]; hideIncomplete: boolean } {
     const genres = [];
     for (let g = 0; g < this.checkedGenres.length; g++) {
       if (this.checkedGenres[g]) {
@@ -144,10 +184,12 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
     };
   }
 
-  saveFilter(showDialog: boolean = true): void {
+  saveFilter(manuallyFiltered: boolean = true): void {
     const filterSettings = this.getFilterSettings();
     this.searchFilterService.setFilterSettings(filterSettings);
-    if (showDialog) {
+    this.chantListService.filterSettings = filterSettings;
+    if (manuallyFiltered) {
+      this.chantListService.selectedChants = [];
       this.dialog.open(SavedFilterDialogComponent);
     }
   }

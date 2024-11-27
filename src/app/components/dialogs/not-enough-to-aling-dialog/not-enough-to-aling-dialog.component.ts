@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
   templateUrl: './not-enough-to-aling-dialog.component.html',
   styleUrls: ['./not-enough-to-aling-dialog.component.css']
 })
-export class NotEnoughToAlingDialogComponent{
+export class NotEnoughToAlignDialogComponent{
 
 }

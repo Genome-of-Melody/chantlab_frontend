@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DataSourceListService } from 'src/app/services/data-source-list.service';
 import { SelectedDataSourcesService } from 'src/app/services/selected-data-sources.service';
 import { SourceSelectionSavedDialogComponent } from '../dialogs/source-selection-saved-dialog/source-selection-saved-dialog.component';
+import { ChantListService } from 'src/app/services/chant-list.service';
 
 @Component({
   selector: 'app-select-data-source',
@@ -18,6 +19,7 @@ export class SelectDataSourceComponent implements OnInit {
   constructor(
     private dataSourceListService: DataSourceListService,
     private selectedDataSourceService: SelectedDataSourcesService,
+    private chantListService: ChantListService,
     public dialog: MatDialog
   ) { }
 
@@ -26,14 +28,19 @@ export class SelectDataSourceComponent implements OnInit {
     this.getDataSources();
   }
 
-  changeSelection(showDialog: boolean = true): void {
+  changeSelection(manuallySelected: boolean = true): void {
+    if (manuallySelected) {
+      this.chantListService.selectedChants = [];
+      this.chantListService.filterSettings = undefined;
+    }
+
     const selected: number[] = [];
     for (let i = 0; i < this.selectedDatasets.length; i++) {
       if (this.selectedDatasets[i]) { selected.push(this.dataSources[i][0]); }
     }
     this.selectedDataSourceService.setSourceList(selected);
 
-    if (showDialog) {
+    if (manuallySelected) {
       this.dialog.open(SourceSelectionSavedDialogComponent);
     }
   }

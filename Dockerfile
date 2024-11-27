@@ -1,6 +1,9 @@
-FROM node:20-bullseye
+FROM node:20-slim AS builder
 
-# Copy all project files to the VM
+# Set working directory
+WORKDIR /opt/chantlab_frontend
+
+# Copy project files to the container
 COPY ./src /opt/chantlab_frontend/src
 COPY ./.editorconfig /opt/chantlab_frontend/.editorconfig
 COPY ./angular.json /opt/chantlab_frontend/angular.json
@@ -12,15 +15,28 @@ COPY ./tsconfig.json /opt/chantlab_frontend/tsconfig.json
 COPY ./tsconfig.spec.json /opt/chantlab_frontend/tsconfig.spec.json
 COPY ./tslint.json /opt/chantlab_frontend/tslint.json
 
-# install all packages
+# Install dependencies
 RUN npm install -g npm@latest
 RUN cd /opt/chantlab_frontend && npm install
 
-# Change the working directory
+
+# Build production files
+RUN npm run build --prod
+
+
+# Runtime image
+FROM node:20-slim
+
+# Install only the necessary runtime dependencies (e.g., jq and supervisor)
+RUN apt-get update && apt-get install -y supervisor jq && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy built files and source code from the builder stage
+COPY --from=builder /opt/chantlab_frontend /opt/chantlab_frontend
+
+# Set working directory
 WORKDIR /opt/chantlab_frontend
 
-# Create the entrypoint script file and add the content
-# Apply sed to remove extra spaces at beginnings that echo command added because of compounding strings
+# Create entrypoint script
 RUN echo '#!/bin/bash\n' \
     '# Script that supervisor uses to keep the chantlab front-end running.\n' \
     'if ! ps ax | grep -v grep | grep -e "ng serve --configuration production --host 0.0.0.0 --port 4200 --public-host $PUBLIC_HOST"' \
@@ -45,10 +61,7 @@ RUN echo '#!/bin/bash\n' \
     > /opt/run_chantlab_frontend.sh
 RUN chmod +x /opt/run_chantlab_frontend.sh
 
-
-# Install Supervisord
-RUN apt-get update && apt-get install -y supervisor \
-&& rm -rf /var/lib/apt/lists/*
+# Supervisor configuration
 RUN echo '[program:chantlab_frontend]\n' \
     'command=/opt/run_chantlab_frontend.sh\n' \
     'autostart=true\n' \
@@ -58,13 +71,7 @@ RUN echo '[program:chantlab_frontend]\n' \
     | sed 's/^ //g' \
     > "/etc/supervisor/conf.d/supervisord.conf"
 
-
-# Install jq for updating backend url in when the application is restarted
-RUN apt-get update && \
-    apt-get install -y jq && \
-    apt-get clean
-
-# Set default ENV variables if not set yet (for instance in docker compose)
+# Set default ENV variables if not set yet
 ENV PUBLIC_HOST="localhost"
 ENV BACKEND_URL="localhost:8000/api/chants"
 ENV DEBUG_MODE="True"

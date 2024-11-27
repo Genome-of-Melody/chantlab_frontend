@@ -5,6 +5,8 @@
                 <mat-icon>keyboard_arrow_up</mat-icon>
             </button>
             <h2>Filter search</h2>
+
+            <button class="save-filter" mat-stroked-button (click)="saveFilter()">Apply filters and refresh</button>
         </div>
 
         <div class="filter-content">
@@ -25,7 +27,8 @@
               <div *ngFor="let item of allGenres | keyvalue; let i = index">
                   <mat-checkbox
                       class="genre-checkbox"
-                      [(ngModel)]="checkedGenres[i]">
+                      [(ngModel)]="checkedGenres[i]"
+                      (ngModelChange)="onSelectionChange()">
                       {{ item.value.name }}
                   </mat-checkbox>
               </div>
@@ -43,7 +46,8 @@
               <div *ngFor="let item of allOffices | keyvalue; let i = index">
                   <mat-checkbox
                       class="office-checkbox"
-                      [(ngModel)]="checkedOffices[i]">
+                      [(ngModel)]="checkedOffices[i]"
+                      (ngModelChange)="onSelectionChange()">
                       {{ item.value.name }}
                   </mat-checkbox>
               </div>
@@ -61,14 +65,15 @@
             <div *ngFor="let item of allFontes; let i = index">
               <mat-checkbox
                 class="fontes-checkbox"
-                [(ngModel)]="checkedFontes[i]">
+                [(ngModel)]="checkedFontes[i]"
+                (ngModelChange)="onSelectionChange()">
                 {{ item }}
               </mat-checkbox>
             </div>
           </div>
           <br>
 
-          <button mat-stroked-button (click)="saveFilter()">Save</button>
+          <button mat-stroked-button (click)="saveFilter()">Apply filters and refresh</button>
         </div>
     </div>
     <div *ngIf="!visible">
@@ -77,6 +82,8 @@
                 <mat-icon>keyboard_arrow_down</mat-icon>
             </button>
             <h2>Filter search</h2>
+
+            <button class="save-filter" mat-stroked-button (click)="saveFilter()">Apply filters and refresh</button>
         </div>
     </div>
 </div>
