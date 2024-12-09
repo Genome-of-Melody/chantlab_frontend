@@ -36,6 +36,7 @@
         <tr>
           <th></th>
           <th>Incipit</th>
+          <th>Cantus ID</th>
           <th>Source</th>
           <th>Genre</th>
           <th>Office</th>
@@ -57,6 +58,7 @@
                 {{ chant.incipit }}
               </a>
             </td>
+            <td>{{ chant.cantus_id }}</td>
             <td>{{ chant.siglum }}, {{ chant.folio }}, {{ chant.position }}</td>
             <td>{{ getGenreName(chant.genre_id) }}</td>
             <td>{{ getOfficeName(chant.office_id) }}</td>

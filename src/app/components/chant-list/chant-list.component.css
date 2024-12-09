@@ -20,3 +20,9 @@ button {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+
+table td, table th {
+  padding-left: 5px;
+  padding-right: 5px;
+}

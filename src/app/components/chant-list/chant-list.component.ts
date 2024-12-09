@@ -39,6 +39,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
   sortedByCountusIDFrequency: boolean = false;
   selectedChants: Set<number>;
   hideIncompleteChants: boolean;
+  hideChantsWithoutVolpiano: boolean;
 
   pageEvent = new BehaviorSubject<PageEvent>(null);
   pageIndex: number;
@@ -82,13 +83,14 @@ export class ChantListComponent implements OnInit, OnDestroy {
 
         const filters = this.chantListService.filterSettings;
         this.hideIncompleteChants = filters?.hideIncomplete ?? true;
+        this.hideChantsWithoutVolpiano = filters?.hideChantsWithoutVolpiano ?? true;
 
 
         if (this.allChants !== data) {
           this.selectedChants = new Set(this.chantListService.selectedChants);
           this.selected = [];
           if (data) {
-            this.allChants = data.filter(chant => !this.hideIncompleteChants || this.isChantComplete(chant));
+            this.allChants = data.filter(chant => (!this.hideIncompleteChants || this.isChantComplete(chant)) && (!this.hideChantsWithoutVolpiano || this.doesChantContainVolpiano(chant)));
             this.dataLength = this.allChants.length;
             for (let i = 0; i < this.allChants.length; i++) {
               this.selected.push(this.selectedChants.has(this.allChants[i].id));
@@ -110,7 +112,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
         if (this.allChants) {
           this.chants = this.allChants
           .filter(chant => {
-            return !this.hideIncompleteChants || this.isChantComplete(chant);
+            return (!this.hideIncompleteChants || this.isChantComplete(chant)) && (!this.hideChantsWithoutVolpiano || this.doesChantContainVolpiano(chant));
           })
           .slice(start, end);        
         }
@@ -124,7 +126,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
   
       this.allChants.forEach(chant => {
         const cantusId = chant.cantus_id;
-        if (!(this.hideIncompleteChants && (!this.isChantComplete(chant)))) {
+        if ((!this.hideIncompleteChants || this.isChantComplete(chant)) && (!this.hideChantsWithoutVolpiano || this.doesChantContainVolpiano(chant))) {
           cantusIdFrequency.set(cantusId, (cantusIdFrequency.get(cantusId) || 0) + 1);
         } else {
           cantusIdFrequency.set(cantusId, (cantusIdFrequency.get(cantusId) || 0));
@@ -184,7 +186,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
       const consideredChantsIndices = this.allChants.map((chant, index) => ({
         chant,index
       })).filter(item => 
-        !this.hideIncompleteChants || this.isChantComplete(item.chant)
+        (!this.hideIncompleteChants || this.isChantComplete(item.chant)) && (!this.hideChantsWithoutVolpiano || this.doesChantContainVolpiano(item.chant))
       ).map(item => item.index);
       if (consideredChantsIndices.length === 0) {
         this.selectedAll = false;
@@ -361,4 +363,8 @@ export class ChantListComponent implements OnInit, OnDestroy {
     return true;
   }
 
+
+  doesChantContainVolpiano(chant: IChant): boolean {
+    return !!chant.volpiano;
+  }
 }

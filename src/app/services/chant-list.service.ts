@@ -21,7 +21,7 @@ export class ChantListService {
     this.storage.setItem('chantList_selectedChants', JSON.stringify(selectedChants));
   }
 
-  get filterSettings(): { genres: string[]; offices: string[]; fontes: string[]; hideIncomplete: boolean } {
+  get filterSettings(): { genres: string[]; offices: string[]; fontes: string[]; hideIncomplete: boolean, hideChantsWithoutVolpiano: boolean } {
     const storedFilterSettings = this.storage.getItem('chantList_filterSettings');
     if (storedFilterSettings === null || storedFilterSettings === undefined || storedFilterSettings === "undefined") {
       return undefined;
@@ -29,7 +29,7 @@ export class ChantListService {
     return JSON.parse(storedFilterSettings);
   }
   
-  set filterSettings(filterSettings: { genres: string[]; offices: string[]; fontes: string[]; hideIncomplete: boolean }) {
+  set filterSettings(filterSettings: { genres: string[]; offices: string[]; fontes: string[]; hideIncomplete: boolean, hideChantsWithoutVolpiano: boolean }) {
     if (filterSettings === undefined || null) {
       this.storage.setItem('chantList_filterSettings', undefined);
     } else {
