@@ -37,6 +37,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
   checkedAllFontes = true;
 
   hideIncompleteChants: boolean = true;
+  hideChantsWithoutVolpiano: boolean = true;
 
   visible = false;
 
@@ -53,6 +54,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
     const prevFilters = this.chantListService.filterSettings;
     if (prevFilters) {
       this.hideIncompleteChants = prevFilters.hideIncomplete;
+      this.hideChantsWithoutVolpiano = prevFilters.hideChantsWithoutVolpiano;
     }
     this._subscriptions.add(this.selectedDataSourcesService.selectedDataSourcesChange.subscribe(() => this.refresh()));
   }
@@ -71,8 +73,10 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
         const filters = this.chantListService.filterSettings;
         if (filters) {
           this.hideIncompleteChants = filters.hideIncomplete;
+          this.hideChantsWithoutVolpiano = filters.hideChantsWithoutVolpiano;
         } else {
           this.hideIncompleteChants = true;
+          this.hideChantsWithoutVolpiano = true;
         }
         this.onSelectionChange();
         this.saveFilter(false);
@@ -152,7 +156,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
   }
   
 
-  getFilterSettings(): { genres: string[]; offices: string[]; fontes: string[]; hideIncomplete: boolean } {
+  getFilterSettings(): { genres: string[]; offices: string[]; fontes: string[]; hideIncomplete: boolean, hideChantsWithoutVolpiano: boolean } {
     const genres = [];
     for (let g = 0; g < this.checkedGenres.length; g++) {
       if (this.checkedGenres[g]) {
@@ -175,12 +179,14 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
     }
 
     const hideIncomplete = this.hideIncompleteChants;
+    const hideChantsWithoutVolpiano = this.hideChantsWithoutVolpiano;
 
     return {
       genres: genres,
       offices: offices,
       fontes: fontes,
-      hideIncomplete: hideIncomplete
+      hideIncomplete: hideIncomplete,
+      hideChantsWithoutVolpiano: hideChantsWithoutVolpiano
     };
   }
 
