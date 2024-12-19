@@ -28,12 +28,12 @@
               Help: Data Format
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <p>The uploaded file must be in CSV format. The first line should be a header with the following columns:</p>
+          <p>The uploaded file must be in CSV format. The first line should be a header with the following columns (underlined are mandatory):</p>
           <code>
-            id, incipit, cantus_id, mode, finalis, differentia, siglum, position, 
+            <b><u>id</u></b>, <b><u>incipit</u></b>, <b><u>cantus_id</u></b>, mode, finalis, differentia, <b><u>siglum</u></b>, position, 
             folio, sequence, marginalia, cao_concordances, feast_id, genre_id, 
-            office_id, source_id, melody_id, drupal_path, full_text, 
-            full_text_manuscript, volpiano, notes
+            office_id, source_id, melody_id, drupal_path, <b><u>full_text</u></b>, 
+            full_text_manuscript, <b><u>volpiano</u></b>, notes
           </code>
           <p>Each subsequent line represents a single chant record with corresponding data.</p>
           <p><strong>Example of chant record:</strong></p>

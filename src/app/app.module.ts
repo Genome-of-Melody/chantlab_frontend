@@ -71,6 +71,7 @@ import { NotEnoughToRemoveDialogComponent } from './components/dialogs/not-enoug
 import { ContrafactReductionResultDialogComponent } from './components/dialogs/contrafact-reduction-result-dialog/contrafact-reduction-result-dialog.component';
 import { PhylogenyNotSupportedDialogComponent } from './components/dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { DefaultDatasetsNotDeletableDialogComponent } from './components/dialogs/default-datasets-not-deletable-dialog/default-datasets-not-deletable-dialog.component';
 
 @NgModule({
     declarations: [
@@ -100,6 +101,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
         NameOnCreateDatasetComponent,
         MissingDatasetNameDialogComponent,
         DatasetCreatedDialogComponent,
+        DefaultDatasetsNotDeletableDialogComponent,
         PhylogenyNotSupportedDialogComponent,
         DistanceMatrixComponent,
         SettingsComponent,

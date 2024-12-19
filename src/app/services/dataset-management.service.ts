@@ -6,6 +6,7 @@ import { AddedToDatasetDialogComponent } from '../components/dialogs/added-to-da
 import { ChantService } from './chant.service';
 import { DataSourceListService } from './data-source-list.service';
 import {SelectedDataSourcesService} from './selected-data-sources.service';
+import { DefaultDatasetsNotDeletableDialogComponent } from '../components/dialogs/default-datasets-not-deletable-dialog/default-datasets-not-deletable-dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -60,10 +61,18 @@ export class DatasetManagementService {
 
   deleteMultipleDatasets(datasetNames: string[]): Observable<boolean>[] {
     const results = [];
+    let dialogOpened = false;
     for (const name of datasetNames) {
-      // .subscribe() important so that the request gets actually sent!
-      const result = this.deleteDataset(name).subscribe();
-      results.push(result);
+      if (name === 'CantusCorpus v0.2' || name === 'netvor-0.3') {
+        if (!dialogOpened) {
+          this.dialog.open(DefaultDatasetsNotDeletableDialogComponent);
+        }
+        dialogOpened = true;
+      } else {
+        // .subscribe() important so that the request gets actually sent!
+        const result = this.deleteDataset(name).subscribe();
+        results.push(result);
+      }
     }
     return results;
   }
