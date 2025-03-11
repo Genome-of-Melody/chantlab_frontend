@@ -47,8 +47,18 @@ export class AlignmentService {
   set concatenatedMode(concatenated: boolean) {
     this.storage.setItem('concatenatedMode', JSON.stringify(concatenated));
   }
-  
 
+  get keepLiquescents(): boolean {
+    const keepLiquescents = this.storage.getItem('keepLiquescents');
+    if (keepLiquescents === null) { return false; }
+    return JSON.parse(keepLiquescents);
+  }
+
+  set keepLiquescents(keepLiquescents: boolean) {
+    this.storage.setItem('keepLiquescents', JSON.stringify(keepLiquescents));
+  }
+  
+  
   get alignment(): Alignment {
     const alignment = this.storage.getItem('alignment');
     if (alignment === null || alignment === undefined || alignment === "undefined") { return undefined; }

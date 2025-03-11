@@ -56,7 +56,7 @@ export class DistanceMatrixComponent implements OnInit, AfterContentChecked {
 
   backgroundColorRGB(distance: number): string {
     // Assumes distances are numbers between 0 and 1 for now.
-    const brightnessConstant = 170;
+    const brightnessConstant = 50;
     const rangeCoef = 255.0 - brightnessConstant;
 
     // For zero distance, returns light gray. This should always stand out.

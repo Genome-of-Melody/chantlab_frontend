@@ -80,6 +80,7 @@ export class AlignedPageComponent implements OnInit {
       formData.append('idsToAlign', JSON.stringify(this.alignmentService.idsToAlign));
       formData.append('mode', this.alignmentService.getMode());
       formData.append('concatenated', JSON.stringify(this.alignmentService.concatenatedMode))
+      formData.append('keepLiquescents', JSON.stringify(this.alignmentService.keepLiquescents))
 
       this.chantService.getAlignment(formData).subscribe(
         response => {

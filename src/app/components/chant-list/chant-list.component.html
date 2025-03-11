@@ -28,8 +28,14 @@
       </mat-checkbox>
       <mat-checkbox
         class="margin-right"
+        style="margin-right: 30px;"
         [(ngModel)]="concatenatedMode">
         Concatenated alignment
+      </mat-checkbox>
+      <mat-checkbox
+        class="margin-right"
+        [(ngModel)]="keepLiquescents">
+        Keep liquescents
       </mat-checkbox>
 
       <table>
@@ -40,6 +46,7 @@
           <th>Source</th>
           <th>Genre</th>
           <th>Office</th>
+          <th>Mode</th>
           <th>Dataset name</th>
         </tr>
         <ng-container *ngFor="let chant of chants; let i = index">
@@ -62,6 +69,7 @@
             <td>{{ chant.siglum }}, {{ chant.folio }}, {{ chant.position }}</td>
             <td>{{ getGenreName(chant.genre_id) }}</td>
             <td>{{ getOfficeName(chant.office_id) }}</td>
+            <td>{{ chant.mode }}</td>
             <td>{{ chant.dataset_name }}</td>
           </tr>
         </ng-container>
