@@ -36,6 +36,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
   selected: boolean[] = [];
   selectedAll: boolean;
   concatenatedMode: boolean = false;
+  keepLiquescents: boolean = false;
   sortedByCountusIDFrequency: boolean = false;
   selectedChants: Set<number>;
   hideIncompleteChants: boolean;
@@ -266,6 +267,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
     this.alignmentService.idsToAlign = selected;
     this.alignmentService.chantsToAlign = selectedChants;
     this.alignmentService.concatenatedMode = this.concatenatedMode;
+    this.alignmentService.keepLiquescents = this.keepLiquescents;
     this.alignmentService.alignment = undefined;
     this.router.navigate(['/align']);
   }
