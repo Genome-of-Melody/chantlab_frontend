@@ -56,17 +56,21 @@ export class DistanceMatrixComponent implements OnInit, AfterContentChecked {
 
   backgroundColorRGB(distance: number): string {
     // Assumes distances are numbers between 0 and 1 for now.
-    const brightnessConstant = 50;
-    const rangeCoef = 255.0 - brightnessConstant;
-
-    // For zero distance, returns light gray. This should always stand out.
+    const brightnessConstant = 80;
+    const maxRed = 200;  // cap red intensity
+    const rangeCoef = maxRed - brightnessConstant;
+  
     if (distance === 0.0) {
-      return '' + brightnessConstant + ',' + 255 + ',' + brightnessConstant;
+      return `${brightnessConstant}, 255, ${brightnessConstant}`;
     }
-
-    const greenval = Math.round(rangeCoef * (1 - distance) + brightnessConstant);
-    const redval = Math.round(rangeCoef * distance + brightnessConstant);
-    return '' + redval + ',' + greenval + ',' + brightnessConstant;
+  
+    const scaled = 1 / (1 + Math.exp(-10 * (distance - 0.5)));
+    const adjusted = Math.min(Math.max(scaled, 0), 1);
+  
+    const red = Math.round(rangeCoef * adjusted + brightnessConstant);
+    const green = Math.round((255 - brightnessConstant) * (1 - adjusted) + brightnessConstant);
+  
+    return `${red}, ${green}, ${brightnessConstant}`;
   }
 
   selectCell(name1: string, name2: string): void {}
