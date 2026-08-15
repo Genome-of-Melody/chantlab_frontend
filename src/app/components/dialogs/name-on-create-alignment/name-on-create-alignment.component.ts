@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 export interface NameOnCreateAlignmentDialogData {
@@ -6,9 +6,11 @@ export interface NameOnCreateAlignmentDialogData {
 }
 
 @Component({
-  selector: 'app-name-on-create-alignment',
-  templateUrl: './name-on-create-alignment.component.html',
-  styleUrls: ['./name-on-create-alignment.component.css']
+    selector: 'app-name-on-create-alignment',
+    templateUrl: './name-on-create-alignment.component.html',
+    styleUrls: ['./name-on-create-alignment.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class NameOnCreateAlignmentComponent implements OnInit {
 

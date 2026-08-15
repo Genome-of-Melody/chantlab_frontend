@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {SettingsService} from '../../services/settings.service';
 
 @Component({
-  selector: 'app-alignment-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+    selector: 'app-alignment-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SettingsComponent implements OnInit {
 

@@ -1,14 +1,16 @@
-import {Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 
 import * as phylotree from 'phylotree';
 import {IChant} from '../../interfaces/chant.interface';
 import {PhyloService} from '../../services/phylo.service';
 
 @Component({
-  selector: 'app-guide-tree',
-  templateUrl: './guide-tree.component.html',
-  styleUrls: ['./guide-tree.component.css'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-guide-tree',
+    templateUrl: './guide-tree.component.html',
+    styleUrls: ['./guide-tree.component.css'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class GuideTreeComponent implements OnInit {
 

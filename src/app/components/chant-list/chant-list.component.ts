@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -20,9 +20,11 @@ import {SearchFilterComponent} from '../search-filter/search-filter.component';
 import { ChantListService } from 'src/app/services/chant-list.service';
 
 @Component({
-  selector: 'app-chant-list',
-  templateUrl: './chant-list.component.html',
-  styleUrls: ['./chant-list.component.css']
+    selector: 'app-chant-list',
+    templateUrl: './chant-list.component.html',
+    styleUrls: ['./chant-list.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ChantListComponent implements OnInit, OnDestroy {
 
@@ -50,7 +52,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
   allGenres: object;
   allOffices: object;
 
-  private readonly componentDestroyed$ = new Subject();
+  private readonly componentDestroyed$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -71,7 +73,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.componentDestroyed$.next();
+    this.componentDestroyed$.next(undefined);
     this.componentDestroyed$.complete();
   }
 

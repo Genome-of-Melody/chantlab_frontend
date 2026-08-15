@@ -1,14 +1,16 @@
 <h2 mat-dialog-title>There have been some errors</h2>
 <mat-dialog-content>
-    <p>Couldn't process the following chants:</p>
-    <ul>
-        <li *ngFor="let source of sources; index as i">
-            <a target="_blank" [routerLink]="['/chants', ids[i]]">
-                {{ source }}
-            </a>
-        </li>
-    </ul>
+  <p>Couldn't process the following chants:</p>
+  <ul>
+    @for (source of sources; track source; let i = $index) {
+      <li>
+        <a target="_blank" [routerLink]="['/chants', ids[i]]">
+          {{ source }}
+        </a>
+      </li>
+    }
+  </ul>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>OK</button>
+  <button mat-button mat-dialog-close>OK</button>
 </mat-dialog-actions>

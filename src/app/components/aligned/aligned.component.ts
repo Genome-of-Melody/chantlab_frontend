@@ -22,10 +22,11 @@ import { ContrafactReductionResultDialogComponent } from '../dialogs/contrafact-
 import { PhylogenyNotSupportedDialogComponent } from '../dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
 
 @Component({
-  selector: 'app-aligned',
-  templateUrl: './aligned.component.html',
-  styleUrls: ['./aligned.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-aligned',
+    templateUrl: './aligned.component.html',
+    styleUrls: ['./aligned.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AlignedComponent implements OnInit, OnDestroy {
 
@@ -79,7 +80,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return this._distanceMatrix;
   }
 
-  private readonly componentDestroyed$ = new Subject();
+  private readonly componentDestroyed$ = new Subject<void>();
 
   constructor(
     private chantService: ChantService,
@@ -119,7 +120,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.componentDestroyed$.next();
+    this.componentDestroyed$.next(undefined);
     this.componentDestroyed$.complete();
   }
 

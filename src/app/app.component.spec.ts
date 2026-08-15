@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { SelectDataSourceComponent } from './components/select-data-source/select-data-source.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -11,28 +11,27 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
+    declarations: [
+        AppComponent,
+        NavigationComponent,
+        SelectDataSourceComponent
+    ],
+    imports: [RouterTestingModule,
         MatDialogModule,
         MatToolbarModule,
         MatIconModule,
         MatFormFieldModule,
         FormsModule,
         MatInputModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [
-        AppComponent,
-        NavigationComponent,
-        SelectDataSourceComponent
-      ]
-    }).compileComponents();
+        BrowserAnimationsModule],
+    providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
   });
 
   it('should create the app', () => {

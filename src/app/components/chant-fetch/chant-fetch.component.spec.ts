@@ -2,8 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChantFetchComponent } from './chant-fetch.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ChantDetailsComponent } from '../chant-details/chant-details.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('ChantFetchComponent', () => {
   let component: ChantFetchComponent;
@@ -11,16 +12,14 @@ describe('ChantFetchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        MatDialogModule
-      ],
-      declarations: [
+    declarations: [
         ChantFetchComponent,
         ChantDetailsComponent
-      ]
-    })
+    ],
+    imports: [RouterTestingModule,
+        MatDialogModule],
+    providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   });
 

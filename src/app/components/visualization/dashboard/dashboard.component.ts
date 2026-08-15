@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IScatterData } from 'src/app/interfaces/scatter-data.interface';
@@ -6,9 +6,11 @@ import { IStackedHistogram } from 'src/app/interfaces/stacked-histogram.interfac
 import { ChantService } from 'src/app/services/chant.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
@@ -31,7 +33,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   multiScatterXName = 'Melody length (number of neumes)';
   multiScatterYName = 'Text length (number of words)';
 
-  private readonly componentDestroyed$ = new Subject();
+  private readonly componentDestroyed$ = new Subject<void>();
 
   constructor(
     private chantService: ChantService
@@ -70,7 +72,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.componentDestroyed$.next();
+    this.componentDestroyed$.next(undefined);
     this.componentDestroyed$.complete();
   }
 

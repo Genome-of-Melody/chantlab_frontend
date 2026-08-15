@@ -1,13 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IScatterData } from 'src/app/interfaces/scatter-data.interface';
 import { Router } from '@angular/router';
 
 import * as d3 from 'd3';
 
 @Component({
-  selector: 'app-multiple-series-scatterplot',
-  templateUrl: './multiple-series-scatterplot.component.html',
-  styleUrls: ['./multiple-series-scatterplot.component.css']
+    selector: 'app-multiple-series-scatterplot',
+    templateUrl: './multiple-series-scatterplot.component.html',
+    styleUrls: ['./multiple-series-scatterplot.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class MultipleSeriesScatterplotComponent implements OnInit {
 

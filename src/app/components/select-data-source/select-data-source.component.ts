@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DataSourceListService } from 'src/app/services/data-source-list.service';
 import { SelectedDataSourcesService } from 'src/app/services/selected-data-sources.service';
@@ -6,9 +6,11 @@ import { SourceSelectionSavedDialogComponent } from '../dialogs/source-selection
 import { ChantListService } from 'src/app/services/chant-list.service';
 
 @Component({
-  selector: 'app-select-data-source',
-  templateUrl: './select-data-source.component.html',
-  styleUrls: ['./select-data-source.component.css']
+    selector: 'app-select-data-source',
+    templateUrl: './select-data-source.component.html',
+    styleUrls: ['./select-data-source.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class SelectDataSourceComponent implements OnInit {
 

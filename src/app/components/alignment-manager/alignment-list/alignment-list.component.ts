@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {AlignmentManagementService} from '../../../services/alignment-management.service';
 
 @Component({
-  selector: 'app-alignment-list',
-  templateUrl: './alignment-list.component.html',
-  styleUrls: ['./alignment-list.component.css']
+    selector: 'app-alignment-list',
+    templateUrl: './alignment-list.component.html',
+    styleUrls: ['./alignment-list.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AlignmentListComponent implements OnInit {
 

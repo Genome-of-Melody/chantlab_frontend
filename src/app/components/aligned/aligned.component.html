@@ -6,7 +6,7 @@
     <div class="display-controls">
       <h3>Display options</h3>
       <mat-checkbox [(ngModel)]="showHeaders" class="header-checkbox">Show headers</mat-checkbox><br>
-      <mat-checkbox [(ngModel)]="showText" class="text-checkbox">Show text</mat-checkbox><br>      
+      <mat-checkbox [(ngModel)]="showText" class="text-checkbox">Show text</mat-checkbox><br>
       <mat-checkbox
         [(ngModel)]="showColors"
         (ngModelChange)="showConservation = false"
@@ -19,12 +19,12 @@
         class="conservation-checkbox">
         Show conservation
       </mat-checkbox>
-<!--      <span *ngIf="showConservation" class="conservation-indicator">-->
-<!--        Conservation of chant set: {{ conservationOfSet }}-->
-<!--      </span>-->
-      <br>
-      <mat-checkbox [(ngModel)]="showWordBars" class="wordbars-checkbox">Segment words</mat-checkbox><br> 
-<!--      <button mat-raised-button (click)="downloadAligned()" color="primary" class="download-button">Download</button>-->
+      <!--      <span *ngIf="showConservation" class="conservation-indicator">-->
+      <!--        Conservation of chant set: {{ conservationOfSet }}-->
+    <!--      </span>-->
+    <br>
+      <mat-checkbox [(ngModel)]="showWordBars" class="wordbars-checkbox">Segment words</mat-checkbox><br>
+      <!--      <button mat-raised-button (click)="downloadAligned()" color="primary" class="download-button">Download</button>-->
     </div>
 
     <div class="mode-selector">
@@ -34,160 +34,192 @@
         <mat-button-toggle value="raw">Raw</mat-button-toggle>
       </mat-button-toggle-group>
       <br>
-      {{ nAlignmentsShown }} sequences
-      <div *ngIf="displayMode === 'volpiano'">
-        <br>
-        <mat-button-toggle-group 
-          [(ngModel)]="isNotesOnly" 
-          aria-label="Volpiano Display Mode">
-          <mat-button-toggle [value]="true">Notes</mat-button-toggle>
-          <mat-button-toggle [value]="false">All</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-      <br><br>
-    </div>
+        {{ nAlignmentsShown }} sequences
+        @if (displayMode === 'volpiano') {
+          <div>
+            <br>
+              <mat-button-toggle-group
+                [(ngModel)]="isNotesOnly"
+                aria-label="Volpiano Display Mode">
+                <mat-button-toggle [value]="true">Notes</mat-button-toggle>
+                <mat-button-toggle [value]="false">All</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+          }
+          <br><br>
+        </div>
 
-    
-    <div class="widget-control-wrapper">
-      <div class="widget-control">
-        <ul class="widget-control">
-          <li><button mat-raised-button (click)="saveAlignment()" color="primary" class="widget-control-button">Save</button>
+
+        <div class="widget-control-wrapper">
+          <div class="widget-control">
+            <ul class="widget-control">
+              <li><button mat-raised-button (click)="saveAlignment()" color="primary" class="widget-control-button">Save</button>
               <button mat-raised-button (click)="downloadAlignedJson()" color="primary" class="widget-control-button">Download Alignment JSON</button>
               <button mat-raised-button (click)="downloadAlignedFasta()" color="primary" class="widget-control-button">Download FASTA</button>
               <button mat-raised-button (click)="downloadPhyloNewick()" color="primary" class="widget-control-button">Download Newick</button>
-          </li>
-          <li><button mat-raised-button (click)="doShowDistanceMatrix()" color="{{ showDistanceMatrixColor }}"
-                      class="widget-control-button">Distance Matrix</button>
-              <button mat-raised-button (click)="downloadDistanceMatrix()" color="primary"
-                      class="widget-control-button">Download Distance Matrix</button>
-              <!--<button mat-raised-button (click)="doShowChantNetwork()" color="{{ showChantNetworkColor }}"
-                      class="widget-control-button">Chant Network</button>-->
-              <!--<button mat-raised-button (click)="doShowManuscriptNetwork()" color="{{ showManuscriptNetworkColor }}"
-                      class="widget-control-button">Manuscript Network</button>-->
-          </li>
-          <li><button *ngIf="!concatenated" mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
-              <button *ngIf="alignmentMode !== 'syllables'" mat-raised-button (click)="doShowGuideTree()" color="{{ showGuideTreeColor }}" class="widget-control-button">Guide Tree</button>
-          </li>
-        </ul>
-      </div>
-      <div class="redirect-widget-control">
-        <ul class="widget-control">
-          <li><button mat-raised-button (click)="openPhylogeneticAnalysis()" color="accent" class="widget-control-button">Phylogenetic Analysis</button>
-          </li>
-        </ul>
-      </div>
-    </div>
+            </li>
+            <li><button mat-raised-button (click)="doShowDistanceMatrix()" color="{{ showDistanceMatrixColor }}"
+            class="widget-control-button">Distance Matrix</button>
+            <button mat-raised-button (click)="downloadDistanceMatrix()" color="primary"
+            class="widget-control-button">Download Distance Matrix</button>
+            <!--<button mat-raised-button (click)="doShowChantNetwork()" color="{{ showChantNetworkColor }}"
+          class="widget-control-button">Chant Network</button>-->
+          <!--<button mat-raised-button (click)="doShowManuscriptNetwork()" color="{{ showManuscriptNetworkColor }}"
+        class="widget-control-button">Manuscript Network</button>-->
+      </li>
+      <li>@if (!concatenated) {
+        <button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
+      }
+      @if (alignmentMode !== 'syllables') {
+        <button mat-raised-button (click)="doShowGuideTree()" color="{{ showGuideTreeColor }}" class="widget-control-button">Guide Tree</button>
+      }
+    </li>
+  </ul>
+</div>
+<div class="redirect-widget-control">
+  <ul class="widget-control">
+    <li><button mat-raised-button (click)="openPhylogeneticAnalysis()" color="accent" class="widget-control-button">Phylogenetic Analysis</button>
+  </li>
+</ul>
+</div>
+</div>
 
-  </div>
+</div>
 
 
+@if (alignment) {
   <cdk-virtual-scroll-viewport
     appendOnly
     itemSize="120"
     minBufferPx="240"
     maxBufferPx="1200"
     class="alignment-scroll-viewport"
-    *ngIf="alignment; else progressSpinner">
+    >
     <!--<div cdkDropList
-         class="scrollable"
-         (cdkDropListDropped)="drop($event)"> -->
-
-  <div *cdkVirtualFor="let volpianoIdx of visibleIndices" class="card">
-<!--           cdkVirtualForTemplateCacheSize=50-->
-<!--           cdkDrag-->
-
-        <div *ngIf="alignmentUncollapsed[volpianoIdx]; else collapsed">
+    class="scrollable"
+    (cdkDropListDropped)="drop($event)"> -->
+    <div *cdkVirtualFor="let volpianoIdx of visibleIndices" class="card">
+      <!--           cdkVirtualForTemplateCacheSize=50-->
+      <!--           cdkDrag-->
+      @if (alignmentUncollapsed[volpianoIdx]) {
+        <div>
           <div class="chant">
-            <div class="title-group" *ngIf="showHeaders">
-              <div class="alignment-options">
-                <button mat-button class="collapse-button" (click)="collapseAlignment(volpianoIdx)">
-                  <mat-icon>keyboard_arrow_up</mat-icon>
-                </button>
-                <button *ngIf="hasMultipleSequencesPresent" mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
-                  <mat-icon>visibility_off</mat-icon>
-                </button>
-              </div>
-              <button mat-button class="title-button"
-              (click)="showDetail(alignment.ids[volpianoIdx])">
+            @if (showHeaders) {
+              <div class="title-group">
+                <div class="alignment-options">
+                  <button mat-button class="collapse-button" (click)="collapseAlignment(volpianoIdx)">
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                  </button>
+                  @if (hasMultipleSequencesPresent) {
+                    <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
+                      <mat-icon>visibility_off</mat-icon>
+                    </button>
+                  }
+                </div>
+                <button mat-button class="title-button"
+                  (click)="showDetail(alignment.ids[volpianoIdx])">
                   {{ (volpianoIdx + 1) + ': ' + getSequenceName(alignment.ids[volpianoIdx]) }}
-              </button>
-            </div>
+                </button>
+              </div>
+            }
             <br>
-            <div *ngFor="let word of alignment.parsedChants[volpianoIdx]; let wordIdx = index" class="word">
-              <div *ngFor="let syllable of word; let lastSyllable = last; let sylIdx = index" [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
-                <div [attr.class]="displayMode">
-                  <span class="neumes" *ngFor="let neume of syllable.volpiano; let neumeIdx = index">
-                    <span *ngIf="showColors" [ngStyle]="getColor(neume)">{{ normalizeVolpianoCharacter(neume) }}</span>
-                    <span *ngIf="showConservation"
-                          [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ normalizeVolpianoCharacter(neume) }}</span>
-                    <span *ngIf="!showColors && !showConservation">{{ normalizeVolpianoCharacter(neume) }}</span>
-                    <span *ngIf="neume === '4'">&nbsp;</span>
-                  </span>
+              @for (word of alignment.parsedChants[volpianoIdx]; track word; let wordIdx = $index) {
+                <div class="word">
+                  @for (syllable of word; track syllable; let lastSyllable = $last; let sylIdx = $index) {
+                    <div [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
+                      <div [attr.class]="displayMode">
+                        @for (neume of syllable.volpiano; track neume; let neumeIdx = $index) {
+                          <span class="neumes">
+                            @if (showColors) {
+                              <span [ngStyle]="getColor(neume)">{{ normalizeVolpianoCharacter(neume) }}</span>
+                            }
+                            @if (showConservation) {
+                              <span
+                              [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ normalizeVolpianoCharacter(neume) }}</span>
+                            }
+                            @if (!showColors && !showConservation) {
+                              <span>{{ normalizeVolpianoCharacter(neume) }}</span>
+                            }
+                            @if (neume === '4') {
+                              <span>&nbsp;</span>
+                            }
+                          </span>
+                        }
+                      </div>
+                      @if (showText) {
+                        <div class="text">
+                          <span class="lyric">{{ syllable.text }}</span>
+                        </div>
+                      }
+                    </div>
+                  }
                 </div>
-                <div *ngIf="showText" class="text">
-                  <span class="lyric">{{ syllable.text }}</span>
-                </div>
-              </div>
+              }
             </div>
           </div>
-        </div>
-
-        <ng-template #collapsed>
+        } @else {
           <div class="collapsed-chant">
-            <div class="title-group" *ngIf="showHeaders">
-              <div class="alignment-options">
-                <button mat-button class="collapse-button" (click)="uncollapseAlignment(volpianoIdx)">
-                  <mat-icon>keyboard_arrow_down</mat-icon>
-                </button>
-                <button mat-button *ngIf="hasMultipleSequencesPresent" class="delete-button" (click)="deleteAlignment(volpianoIdx)">
-                  <mat-icon>visibility_off</mat-icon>
+            @if (showHeaders) {
+              <div class="title-group">
+                <div class="alignment-options">
+                  <button mat-button class="collapse-button" (click)="uncollapseAlignment(volpianoIdx)">
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                  </button>
+                  @if (hasMultipleSequencesPresent) {
+                    <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
+                      <mat-icon>visibility_off</mat-icon>
+                    </button>
+                  }
+                </div>
+                <button mat-button class="title-button"
+                  (click)="showDetail(alignment.ids[volpianoIdx])">
+                  {{ getSequenceName(alignment.ids[volpianoIdx]) }}
                 </button>
               </div>
-              <button mat-button class="title-button"
-              (click)="showDetail(alignment.ids[volpianoIdx])">
-                {{ getSequenceName(alignment.ids[volpianoIdx]) }}
-              </button>
-            </div>
+            }
           </div>
-        </ng-template>
-
+        }
       </div>
-      <div class="detail" *ngIf="visibleDetails[alignment.ids[volpianoIdx]]">
+      @if (visibleDetails[alignment.ids[volpianoIdx]]) {
+        <div class="detail">
           <app-chant-details [id]="alignment.ids[volpianoIdx]"></app-chant-details>
-      </div>
-
-
+        </div>
+      }
     <!--</div>--> <!-- of cdkDropList -->
   </cdk-virtual-scroll-viewport>
+} @else {
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+}
 
-  <ng-template #progressSpinner>
-      <div class="spinner">
-          <mat-spinner></mat-spinner>
-      </div>
-  </ng-template>
 
-  <!-- Display tools -->
-  <div *ngIf="showDistanceMatrix"
-       class="distance-matrix-wrapper"
-       (keyup)="onKeyUp($event)">
+<!-- Display tools -->
+@if (showDistanceMatrix) {
+  <div
+    class="distance-matrix-wrapper"
+    (keyup)="onKeyUp($event)">
     <app-distance-matrix
       [allDistances]="distanceMatrix"
       [names]="visibleSequencesDistanceMatrixChantNames"
     ></app-distance-matrix>
   </div>
+}
 
-  <div *ngIf="showGuideTree"
-       class="distance-matrix-wrapper">
+@if (showGuideTree) {
+  <div
+    class="distance-matrix-wrapper">
     <app-guide-tree
       [treeString]="alignment.guideTree"
       [newickNamesDict]="alignment.newickNamesDict"
       [chants]="alignment.iChants">
     </app-guide-tree>
   </div>
+}
 
-  <app-network-graph-wrapper
-    [distanceMatrix]="distanceMatrix"
-    [chants]="chantsMapForNetworkGraphs">
-  </app-network-graph-wrapper>
+<app-network-graph-wrapper
+  [distanceMatrix]="distanceMatrix"
+  [chants]="chantsMapForNetworkGraphs">
+</app-network-graph-wrapper>
 
 </div>

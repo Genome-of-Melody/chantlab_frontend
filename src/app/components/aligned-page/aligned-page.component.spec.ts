@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AlignedPageComponent } from './aligned-page.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('AlignedPageComponent', () => {
   let component: AlignedPageComponent;
@@ -11,16 +12,15 @@ describe('AlignedPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        MatProgressSpinnerModule
-      ],
-      declarations: [ AlignedPageComponent ],
-      providers: [
-        {provide: MatDialog, useValue: {}}
-      ]
-    })
+    declarations: [AlignedPageComponent],
+    imports: [RouterTestingModule,
+        MatProgressSpinnerModule],
+    providers: [
+        { provide: MatDialog, useValue: {} },
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+})
     .compileComponents();
   });
 

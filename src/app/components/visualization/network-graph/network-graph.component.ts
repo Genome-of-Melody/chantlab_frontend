@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import * as d3 from 'd3';
 import {IChant} from '../../../interfaces/chant.interface';
@@ -22,9 +22,11 @@ interface NetworkGraphData {
 }
 
 @Component({
-  selector: 'app-network-graph',
-  templateUrl: './network-graph.component.html',
-  styleUrls: ['./network-graph.component.css']
+    selector: 'app-network-graph',
+    templateUrl: './network-graph.component.html',
+    styleUrls: ['./network-graph.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class NetworkGraphComponent implements OnInit, OnDestroy {
 

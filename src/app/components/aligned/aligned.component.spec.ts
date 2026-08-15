@@ -1,15 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
 import { AlignedComponent } from './aligned.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { Alignment } from '../../models/alignment';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { NetworkGraphWrapperComponent } from '../visualization/network-graph-wrapper/network-graph-wrapper.component';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatButtonModule } from '@angular/material/button';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+
+@Component({
+  selector: 'app-network-graph-wrapper',
+  template: '',
+  standalone: false
+})
+class NetworkGraphWrapperStubComponent {}
 
 describe('AlignedComponent', () => {
   let component: AlignedComponent;
@@ -17,23 +25,22 @@ describe('AlignedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
+    declarations: [
         AlignedComponent,
-        NetworkGraphWrapperComponent
-      ],
-      imports: [
-        HttpClientTestingModule,
-        MatCheckboxModule,
+        NetworkGraphWrapperStubComponent
+    ],
+    imports: [MatCheckboxModule,
         MatButtonToggleModule,
         FormsModule,
         BrowserModule,
         MatButtonModule,
-        ScrollingModule
-      ],
-      providers: [
-        {provide: MatDialog, useValue: {}}
-      ]
-    })
+        ScrollingModule],
+    providers: [
+        { provide: MatDialog, useValue: {} },
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+})
     .compileComponents();
   });
 
@@ -41,7 +48,7 @@ describe('AlignedComponent', () => {
     fixture = TestBed.createComponent(AlignedComponent);
     component = fixture.componentInstance;
     const alignment: Alignment = new Alignment(
-      [
+      [[
         [{type: 'clef', volpiano: Array(1), text: ''}, {type: 'word-space', volpiano: Array(1), text: ''}],
         [{type: 'syllable', volpiano: Array(1), text: 'A'}, {type: 'word-space', volpiano: Array(1), text: ''}],
         [{type: 'syllable', volpiano: Array(3), text: 'Ch'}, {type: 'syllable-space', volpiano: Array(1), text: '-'},
@@ -75,7 +82,7 @@ describe('AlignedComponent', () => {
           {type: 'syllable', volpiano: Array(1), text: 'ti'}, {type: 'syllable-space', volpiano: Array(1), text: '-'},
           {type: 'syllable', volpiano: Array(1), text: 'o'}, {type: 'syllable-space', volpiano: Array(1), text: '-'},
           {type: 'syllable', volpiano: Array(1), text: 'nis'}],
-        [{type: 'end-sequence', volpiano: Array(1), text: ''}]],
+        [{type: 'end-sequence', volpiano: Array(1), text: ''}]]],
       [{
         cantus_id: "001188",
         cao_concordances: null,
@@ -106,8 +113,8 @@ describe('AlignedComponent', () => {
       [0],
       ['http://cantus.uwaterloo.ca/chant/399542/'],
       ['F-Pn lat. 12044, 053v, 3.'],
-      null,
-      null,
+      '',
+      new Map(),
       "full"
       );
     component.alignment = alignment;

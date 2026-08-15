@@ -1,13 +1,15 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IStackedHistogram } from 'src/app/interfaces/stacked-histogram.interface';
 
 import * as d3 from 'd3';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-stacked-histogram',
-  templateUrl: './stacked-histogram.component.html',
-  styleUrls: ['./stacked-histogram.component.css']
+    selector: 'app-stacked-histogram',
+    templateUrl: './stacked-histogram.component.html',
+    styleUrls: ['./stacked-histogram.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class StackedHistogramComponent implements OnInit, AfterViewInit {
 
@@ -32,7 +34,7 @@ export class StackedHistogramComponent implements OnInit, AfterViewInit {
 
   figureID = "f" + Math.floor(Math.random() * 10000).toString();
 
-  private DOMRendered = new Subject();
+  private DOMRendered = new Subject<void>();
   private dataReceived = new BehaviorSubject<IStackedHistogram[]>([]);
 
   constructor() { }
@@ -40,7 +42,10 @@ export class StackedHistogramComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     combineLatest([this.DOMRendered, this.dataReceived]).subscribe(
     ([_, data]) => {
-      d3.select("figure." + this.figureID).select("svg").remove();    
+      if (!data || data.length === 0) {
+        return;
+      }
+      d3.select("figure." + this.figureID).select("svg").remove();
       this.maxValue = d3.max(data, (d: any) => d.value as number);
       this.createSvg(); 
       this.drawHist(data)
@@ -49,7 +54,7 @@ export class StackedHistogramComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.DOMRendered.next();
+    this.DOMRendered.next(undefined);
   }
 
   createSvg(): void {

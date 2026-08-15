@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {DataSourceListService} from '../../services/data-source-list.service';
 
 @Component({
-  selector: 'app-dataset-list',
-  templateUrl: './dataset-list.component.html',
-  styleUrls: ['./dataset-list.component.css']
+    selector: 'app-dataset-list',
+    templateUrl: './dataset-list.component.html',
+    styleUrls: ['./dataset-list.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DatasetListComponent implements OnInit {
 

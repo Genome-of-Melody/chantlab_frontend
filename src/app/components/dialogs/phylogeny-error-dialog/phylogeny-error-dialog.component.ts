@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'app-phylogeny-error-dialog',
-  templateUrl: './phylogeny-error-dialog.component.html',
-  styleUrls: ['./phylogeny-error-dialog.component.css']
+    selector: 'app-phylogeny-error-dialog',
+    templateUrl: './phylogeny-error-dialog.component.html',
+    styleUrls: ['./phylogeny-error-dialog.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PhylogenyErrorDialogComponent {
 

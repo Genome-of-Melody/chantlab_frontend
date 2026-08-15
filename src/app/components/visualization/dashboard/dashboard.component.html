@@ -1,28 +1,31 @@
 <app-select-data-source></app-select-data-source>
 
-<app-multiple-series-scatterplot
-    *ngIf="multiScatterData"
+@if (multiScatterData) {
+  <app-multiple-series-scatterplot
     [chartTitle]="multiScatterTitle"
     [valueXName]="multiScatterXName"
     [valueYName]="multiScatterYName"
     [data]="multiScatterData"
     id="multiScatterPlot">
-</app-multiple-series-scatterplot>
+  </app-multiple-series-scatterplot>
+}
 
-<app-stacked-histogram
-    *ngIf="melodyStackedHistData"
+@if (melodyStackedHistData) {
+  <app-stacked-histogram
     [chartTitle]="melodyStackedHistTitle"
     [groupName]="melodyStackedHistGroupName"
     [valueXName]="melodyStackedHistXName"
     [valueYName]="melodyStackedHistYName"
     [data]="melodyStackedHistData">
-</app-stacked-histogram>
+  </app-stacked-histogram>
+}
 
-<app-stacked-histogram
-    *ngIf="textStackedHistData"
+@if (textStackedHistData) {
+  <app-stacked-histogram
     [chartTitle]="textStackedHistTitle"
     [groupName]="textStackedHistGroupName"
     [valueXName]="textStackedHistXName"
     [valueYName]="textStackedHistYName"
     [data]="textStackedHistData">
-</app-stacked-histogram>
+  </app-stacked-histogram>
+}

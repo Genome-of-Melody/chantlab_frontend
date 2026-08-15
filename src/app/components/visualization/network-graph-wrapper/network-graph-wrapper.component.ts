@@ -1,12 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import * as d3 from 'd3';
 import {IChant} from '../../../interfaces/chant.interface';
 import {SettingsService} from '../../../services/settings.service';
 
 @Component({
-  selector: 'app-network-graph-wrapper',
-  templateUrl: './network-graph-wrapper.component.html',
-  styleUrls: ['./network-graph-wrapper.component.css']
+    selector: 'app-network-graph-wrapper',
+    templateUrl: './network-graph-wrapper.component.html',
+    styleUrls: ['./network-graph-wrapper.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class NetworkGraphWrapperComponent implements OnInit {
 
@@ -29,7 +31,14 @@ export class NetworkGraphWrapperComponent implements OnInit {
     const groupSet = new Set<string>();
     const groupSizes = new Map<string, number>();
 
+    if (!data) {
+      return new Map();
+    }
+
     data.forEach((_, key: string) => {
+      if (!key) {
+        return;
+      }
       const source = key.split(" / ")[1];
       groupSet.add(source);
       if (!groupSizes.has(source)) { groupSizes.set(source, 0); }
