@@ -62,20 +62,19 @@
             class="widget-control-button">Distance Matrix</button>
             <button mat-raised-button (click)="downloadDistanceMatrix()" color="primary"
             class="widget-control-button">Download Distance Matrix</button>
+            @if (alignmentMode !== 'syllables') {
+              <button mat-raised-button (click)="doShowGuideTree()" color="{{ showGuideTreeColor }}" class="widget-control-button">Guide Tree</button>
+            }
             <!--<button mat-raised-button (click)="doShowChantNetwork()" color="{{ showChantNetworkColor }}"
           class="widget-control-button">Chant Network</button>-->
           <!--<button mat-raised-button (click)="doShowManuscriptNetwork()" color="{{ showManuscriptNetworkColor }}"
         class="widget-control-button">Manuscript Network</button>-->
       </li>
-      <li>@if (!concatenated) {
+      <li><button mat-raised-button (click)="downloadMelodiesSnapshot()" color="primary"
+        class="widget-control-button" [disabled]="isDownloadingSnapshot">Download Alignment Snapshot PDF</button>
+      @if (!concatenated) {
         <button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
       }
-      @if (alignmentMode !== 'syllables') {
-        <button mat-raised-button (click)="doShowGuideTree()" color="{{ showGuideTreeColor }}" class="widget-control-button">Guide Tree</button>
-      }
-    </li>
-    <li><button mat-raised-button (click)="downloadMelodiesSnapshot()" color="primary"
-      class="widget-control-button" [disabled]="isDownloadingSnapshot">Download Alignment Snapshot (PDF)</button>
     </li>
   </ul>
 </div>
