@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {AlignmentService} from 'src/app/services/alignment.service';
@@ -20,6 +20,11 @@ import { PhylogenyService } from 'src/app/services/phylogeny.service';
 import { NotEnoughToRemoveDialogComponent } from '../dialogs/not-enough-to-remove-dialog/not-enough-to-remove-dialog.component';
 import { ContrafactReductionResultDialogComponent } from '../dialogs/contrafact-reduction-result-dialog/contrafact-reduction-result-dialog.component';
 import { PhylogenyNotSupportedDialogComponent } from '../dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
+import { AlignmentSnapshotService } from '../../services/alignment-snapshot.service';
+import {
+  AlignmentExportFormat,
+  ALIGNMENT_EXPORT_EXTENSION,
+} from '../../models/alignment-export-format';
 
 @Component({
     selector: 'app-aligned',
@@ -39,6 +44,12 @@ export class AlignedComponent implements OnInit, OnDestroy {
   @Input() alignment: Alignment;
 
   @ViewChild(NetworkGraphWrapperComponent, {static: true}) networkGraphWrapper: NetworkGraphWrapperComponent;
+  @ViewChild('alignmentCapture') alignmentCapture: ElementRef<HTMLElement>;
+
+  isDownloadingSnapshot = false;
+
+  /** Change to 'png' or 'jpeg' to export raster images instead of PDF. */
+  readonly alignmentExportFormat: AlignmentExportFormat = 'pdf';
 
   alignedChants: IChant[];
   blob: Blob;
@@ -93,7 +104,9 @@ export class AlignedComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private contrafactService: ContrafactService,
     public dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private alignmentSnapshotService: AlignmentSnapshotService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -222,6 +235,37 @@ export class AlignedComponent implements OnInit, OnDestroy {
   downloadAlignedJson(): void {
     const blob = new Blob([this.alignment.toJson()], {type: 'text/json'});
     this.downloadService.download(blob, 'aligned.json');
+  }
+
+  async downloadMelodiesSnapshot(): Promise<void> {
+    if (!this.alignment || !this.alignmentCapture || this.isDownloadingSnapshot) {
+      return;
+    }
+
+    this.isDownloadingSnapshot = true;
+    this.changeDetectorRef.detectChanges();
+
+    try {
+      const blob = await this.alignmentSnapshotService.exportFrame(
+        this.alignmentCapture.nativeElement,
+        this.alignmentExportFormat,
+      );
+      this.downloadService.download(blob, this.getSnapshotFilename());
+    } finally {
+      this.isDownloadingSnapshot = false;
+      this.changeDetectorRef.markForCheck();
+    }
+  }
+
+  private getSnapshotFilename(): string {
+    const date = new Date();
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const melodyCount = this.nAlignmentsShown;
+    const extension = ALIGNMENT_EXPORT_EXTENSION[this.alignmentExportFormat];
+
+    return `alignment_snapshot_${yyyy}-${mm}-${dd}_${melodyCount}ch.${extension}`;
   }
 
   downloadDistanceMatrix(): void {

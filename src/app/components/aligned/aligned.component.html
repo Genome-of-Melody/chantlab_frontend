@@ -74,6 +74,9 @@
         <button mat-raised-button (click)="doShowGuideTree()" color="{{ showGuideTreeColor }}" class="widget-control-button">Guide Tree</button>
       }
     </li>
+    <li><button mat-raised-button (click)="downloadMelodiesSnapshot()" color="primary"
+      class="widget-control-button" [disabled]="isDownloadingSnapshot">Download Alignment Snapshot (PDF)</button>
+    </li>
   </ul>
 </div>
 <div class="redirect-widget-control">
@@ -85,6 +88,99 @@
 </div>
 
 </div>
+
+
+<ng-template #alignedChantMelody let-volpianoIdx="volpianoIdx" let-forExport="forExport">
+  <div class="chant">
+    @if (showHeaders) {
+      <div class="title-group">
+        @if (!forExport) {
+          <div class="alignment-options">
+            <button mat-button class="collapse-button" (click)="collapseAlignment(volpianoIdx)">
+              <mat-icon>keyboard_arrow_up</mat-icon>
+            </button>
+            @if (hasMultipleSequencesPresent) {
+              <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
+                <mat-icon>visibility_off</mat-icon>
+              </button>
+            }
+          </div>
+        }
+        @if (forExport) {
+          <span class="snapshot-title">{{ (volpianoIdx + 1) + ': ' + getSequenceName(alignment.ids[volpianoIdx]) }}</span>
+        } @else {
+          <button mat-button class="title-button"
+            (click)="showDetail(alignment.ids[volpianoIdx])">
+            {{ (volpianoIdx + 1) + ': ' + getSequenceName(alignment.ids[volpianoIdx]) }}
+          </button>
+        }
+      </div>
+    }
+    <br>
+      @for (word of alignment.parsedChants[volpianoIdx]; track word; let wordIdx = $index) {
+        <div class="word">
+          @for (syllable of word; track syllable; let sylIdx = $index) {
+            <div [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
+              <div [attr.class]="displayMode">
+                @for (neume of syllable.volpiano; track neume; let neumeIdx = $index) {
+                  <span class="neumes">
+                    @if (showColors) {
+                      <span class="snapshot-neume" [ngStyle]="getColor(neume)">{{ normalizeVolpianoCharacter(neume) }}</span>
+                    }
+                    @if (showConservation) {
+                      <span class="snapshot-neume"
+                      [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ normalizeVolpianoCharacter(neume) }}</span>
+                    }
+                    @if (!showColors && !showConservation) {
+                      <span class="snapshot-neume">{{ normalizeVolpianoCharacter(neume) }}</span>
+                    }
+                    @if (neume === '4') {
+                      <span>&nbsp;</span>
+                    }
+                  </span>
+                }
+              </div>
+              @if (showText) {
+                <div class="text">
+                  <span class="lyric snapshot-lyric">{{ syllable.text }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+  </div>
+</ng-template>
+
+
+<ng-template #alignedChantCollapsed let-volpianoIdx="volpianoIdx" let-forExport="forExport">
+  <div class="collapsed-chant">
+    @if (showHeaders) {
+      <div class="title-group">
+        @if (!forExport) {
+          <div class="alignment-options">
+            <button mat-button class="collapse-button" (click)="uncollapseAlignment(volpianoIdx)">
+              <mat-icon>keyboard_arrow_down</mat-icon>
+            </button>
+            @if (hasMultipleSequencesPresent) {
+              <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
+                <mat-icon>visibility_off</mat-icon>
+              </button>
+            }
+          </div>
+        }
+        @if (forExport) {
+          <span class="snapshot-title">{{ getSequenceName(alignment.ids[volpianoIdx]) }}</span>
+        } @else {
+          <button mat-button class="title-button"
+            (click)="showDetail(alignment.ids[volpianoIdx])">
+            {{ getSequenceName(alignment.ids[volpianoIdx]) }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+</ng-template>
 
 
 @if (alignment) {
@@ -103,81 +199,10 @@
       <!--           cdkDrag-->
       @if (alignmentUncollapsed[volpianoIdx]) {
         <div>
-          <div class="chant">
-            @if (showHeaders) {
-              <div class="title-group">
-                <div class="alignment-options">
-                  <button mat-button class="collapse-button" (click)="collapseAlignment(volpianoIdx)">
-                    <mat-icon>keyboard_arrow_up</mat-icon>
-                  </button>
-                  @if (hasMultipleSequencesPresent) {
-                    <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
-                      <mat-icon>visibility_off</mat-icon>
-                    </button>
-                  }
-                </div>
-                <button mat-button class="title-button"
-                  (click)="showDetail(alignment.ids[volpianoIdx])">
-                  {{ (volpianoIdx + 1) + ': ' + getSequenceName(alignment.ids[volpianoIdx]) }}
-                </button>
-              </div>
-            }
-            <br>
-              @for (word of alignment.parsedChants[volpianoIdx]; track word; let wordIdx = $index) {
-                <div class="word">
-                  @for (syllable of word; track syllable; let lastSyllable = $last; let sylIdx = $index) {
-                    <div [attr.class]="showHeaders ? 'syllable' : 'syllable-nomargin'">
-                      <div [attr.class]="displayMode">
-                        @for (neume of syllable.volpiano; track neume; let neumeIdx = $index) {
-                          <span class="neumes">
-                            @if (showColors) {
-                              <span [ngStyle]="getColor(neume)">{{ normalizeVolpianoCharacter(neume) }}</span>
-                            }
-                            @if (showConservation) {
-                              <span
-                              [ngStyle]="getConservationColor(volpianoIdx, wordIdx, sylIdx, neumeIdx)">{{ normalizeVolpianoCharacter(neume) }}</span>
-                            }
-                            @if (!showColors && !showConservation) {
-                              <span>{{ normalizeVolpianoCharacter(neume) }}</span>
-                            }
-                            @if (neume === '4') {
-                              <span>&nbsp;</span>
-                            }
-                          </span>
-                        }
-                      </div>
-                      @if (showText) {
-                        <div class="text">
-                          <span class="lyric">{{ syllable.text }}</span>
-                        </div>
-                      }
-                    </div>
-                  }
-                </div>
-              }
-            </div>
-          </div>
-        } @else {
-          <div class="collapsed-chant">
-            @if (showHeaders) {
-              <div class="title-group">
-                <div class="alignment-options">
-                  <button mat-button class="collapse-button" (click)="uncollapseAlignment(volpianoIdx)">
-                    <mat-icon>keyboard_arrow_down</mat-icon>
-                  </button>
-                  @if (hasMultipleSequencesPresent) {
-                    <button mat-button class="delete-button" (click)="deleteAlignment(volpianoIdx)">
-                      <mat-icon>visibility_off</mat-icon>
-                    </button>
-                  }
-                </div>
-                <button mat-button class="title-button"
-                  (click)="showDetail(alignment.ids[volpianoIdx])">
-                  {{ getSequenceName(alignment.ids[volpianoIdx]) }}
-                </button>
-              </div>
-            }
-          </div>
+          <ng-container *ngTemplateOutlet="alignedChantMelody; context: { volpianoIdx: volpianoIdx, forExport: false }"></ng-container>
+        </div>
+      } @else {
+          <ng-container *ngTemplateOutlet="alignedChantCollapsed; context: { volpianoIdx: volpianoIdx, forExport: false }"></ng-container>
         }
       </div>
       @if (visibleDetails[alignment.ids[volpianoIdx]]) {
@@ -187,6 +212,18 @@
       }
     <!--</div>--> <!-- of cdkDropList -->
   </cdk-virtual-scroll-viewport>
+
+  <div #alignmentCapture class="alignment-scroll-viewport alignment-capture" aria-hidden="true">
+    @for (volpianoIdx of visibleIndices; track volpianoIdx) {
+      <div class="card">
+        @if (alignmentUncollapsed[volpianoIdx]) {
+          <ng-container *ngTemplateOutlet="alignedChantMelody; context: { volpianoIdx: volpianoIdx, forExport: true }"></ng-container>
+        } @else {
+          <ng-container *ngTemplateOutlet="alignedChantCollapsed; context: { volpianoIdx: volpianoIdx, forExport: true }"></ng-container>
+        }
+      </div>
+    }
+  </div>
 } @else {
   <div class="spinner">
     <mat-spinner></mat-spinner>
@@ -221,5 +258,12 @@
   [distanceMatrix]="distanceMatrix"
   [chants]="chantsMapForNetworkGraphs">
 </app-network-graph-wrapper>
+
+@if (isDownloadingSnapshot) {
+  <div class="snapshot-loading-overlay">
+    <mat-spinner diameter="48"></mat-spinner>
+    <span>Generation in progress...</span>
+  </div>
+}
 
 </div>
