@@ -19,7 +19,6 @@ import { NameOnCreateDatasetComponent } from '../dialogs/name-on-create-dataset/
 import { NotEnoughToAlignDialogComponent } from '../dialogs/not-enough-to-aling-dialog/not-enough-to-aling-dialog.component';
 import {SearchFilterComponent} from '../search-filter/search-filter.component';
 import { ChantListService } from 'src/app/services/chant-list.service';
-import { DEFAULT_DATASET_NAMES } from 'src/app/constants/datasets';
 
 @Component({
     selector: 'app-chant-list',
@@ -338,7 +337,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe(
         data => {
-          dataSources = data.filter(source => !DEFAULT_DATASET_NAMES.includes(source[1]));
+          dataSources = data.filter(source => !this.dataSourceListService.isDefaultName(source[1]));
           if (dataSources.length < 1) {
             alert('Create one of your own datasets first. Default datasets cannot be changed.');
             return;

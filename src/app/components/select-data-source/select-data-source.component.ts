@@ -66,10 +66,11 @@ export class SelectDataSourceComponent implements OnInit {
           }
         });
 
-        // always include at least the default data source
-        if (allUnselected)
-        {
-          this.selectedDatasets[0] = true;
+        if (allUnselected) {
+          const defaultIndex = this.dataSources.findIndex(
+            source => this.dataSourceListService.isDefaultName(source[1])
+          );
+          this.selectedDatasets[defaultIndex >= 0 ? defaultIndex : 0] = true;
         }
 
         this.changeSelection(false);
