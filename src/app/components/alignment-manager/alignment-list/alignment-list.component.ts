@@ -11,17 +11,16 @@ import {AlignmentManagementService} from '../../../services/alignment-management
 export class AlignmentListComponent implements OnInit {
 
   public selectedAlignment: string;
+  availableAlignments: string[] = [];
 
   constructor(
     private alignmentManagementService: AlignmentManagementService
   ) { }
 
   ngOnInit(): void {
-
-  }
-
-  get availableAlignments(): string[] {
-    return Array.from(this.alignmentManagementService.availableAlignments.keys()).sort();
+    this.alignmentManagementService.alignmentsChanged$.subscribe(
+      names => this.availableAlignments = [...names].sort()
+    );
   }
 
   get selectedAlignmentName(): string {

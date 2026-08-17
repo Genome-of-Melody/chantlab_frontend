@@ -7,6 +7,7 @@ import { ChantService } from './chant.service';
 import { DataSourceListService } from './data-source-list.service';
 import {SelectedDataSourcesService} from './selected-data-sources.service';
 import { DefaultDatasetsNotDeletableDialogComponent } from '../components/dialogs/default-datasets-not-deletable-dialog/default-datasets-not-deletable-dialog.component';
+import { DEFAULT_DATASET_NAMES } from '../constants/datasets';
 
 @Injectable({
   providedIn: 'root'
@@ -63,7 +64,7 @@ export class DatasetManagementService {
     const results = [];
     let dialogOpened = false;
     for (const name of datasetNames) {
-      if (name === 'CantusCorpus v0.2' || name === 'netvor-0.3') {
+      if (DEFAULT_DATASET_NAMES.includes(name)) {
         if (!dialogOpened) {
           this.dialog.open(DefaultDatasetsNotDeletableDialogComponent);
         }

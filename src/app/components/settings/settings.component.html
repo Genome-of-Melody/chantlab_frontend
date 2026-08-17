@@ -19,7 +19,8 @@
   @if (alignmentSettingsVisible) {
     <mat-card-content class="settings-group">
       <mat-checkbox class="settings-item-active-element"
-        [(ngModel)]="settingsService.alignmentSettingsService.distanceMatrixUseAbsoluteDistances">
+        [(ngModel)]="settingsService.alignmentSettingsService.distanceMatrixUseAbsoluteDistances"
+        (ngModelChange)="persist()">
         Use absolute distances in distance matrix computation (not recommended for most uses)
       </mat-checkbox>
     </mat-card-content>
@@ -47,7 +48,8 @@
   @if (networkGraphSettingsVisible) {
     <mat-card-content class="settings-group">
       <mat-checkbox class="settings-item-active-element"
-        [(ngModel)]="settingsService.networkGraphSettingsService.closestNeighborLinkOnly">
+        [(ngModel)]="settingsService.networkGraphSettingsService.closestNeighborLinkOnly"
+        (ngModelChange)="persist()">
         Only display edges to closest neighbor
       </mat-checkbox>
     </mat-card-content>
@@ -75,7 +77,8 @@
   @if (dashboardSettingsVisible) {
     <mat-card-content class="settings-group">
       <mat-checkbox class="settings-item-active-element"
-        [(ngModel)]="settingsService.dashboardSettingsService.useGrayscale">
+        [(ngModel)]="settingsService.dashboardSettingsService.useGrayscale"
+        (ngModelChange)="persist()">
         Use only grayscale colors (mock setting value)
       </mat-checkbox>
     </mat-card-content>
@@ -105,7 +108,7 @@
     <mat-card-content class="settings-group">
       <mat-form-field appearance="fill" class="settings-item" style="width: 300px;">
         <mat-label>MrBayes - Number of Generations</mat-label>
-        <input matInput type="number" [(ngModel)]="settingsService.phylogenySettingsService.mrbayesGenerations" min="1000" placeholder="Enter number of generations">
+        <input matInput type="number" [(ngModel)]="settingsService.phylogenySettingsService.mrbayesGenerations" min="1000" placeholder="Enter number of generations" (ngModelChange)="persist()">
       </mat-form-field>
     </mat-card-content>
   }

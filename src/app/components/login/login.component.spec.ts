@@ -1,43 +1,38 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AlignmentManagerComponent } from './alignment-manager.component';
-import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
-import { AlignmentListComponent } from './alignment-list/alignment-list.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { LoginComponent } from './login.component';
 
-describe('AlignmentManagerComponent', () => {
-  let component: AlignmentManagerComponent;
-  let fixture: ComponentFixture<AlignmentManagerComponent>;
+describe('LoginComponent', () => {
+  let component: LoginComponent;
+  let fixture: ComponentFixture<LoginComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterModule.forRoot([]),
-        MatCardModule,
-        MatInputModule,
-        MatFormFieldModule,
         FormsModule,
-        BrowserAnimationsModule
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        RouterTestingModule
       ],
-      declarations: [
-        AlignmentManagerComponent,
-        AlignmentListComponent
-      ],
+      declarations: [LoginComponent],
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting()
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AlignmentManagerComponent);
+    fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

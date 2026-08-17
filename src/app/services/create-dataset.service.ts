@@ -19,16 +19,18 @@ export class CreateDatasetService {
     const formData = new FormData();
     formData.append('idsToExport', JSON.stringify(ids));
     formData.append('name', dataset_name);
-    this.chantService.createDataset(formData).subscribe(
-      response => {
+    this.chantService.createDataset(formData).subscribe({
+      next: response => {
         const name = response['name'];
-        const index = response['index'];
         this.dataSourceListService.refreshSources();
 
         const dialogRef = this.dialog.open(DatasetCreatedDialogComponent);
         const instance = dialogRef.componentInstance;
         instance.name = name;
+      },
+      error: err => {
+        alert(err?.error?.message || 'Could not create the dataset.');
       }
-    )
+    });
   }
 }

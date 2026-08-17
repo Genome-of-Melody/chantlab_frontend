@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('NavigationComponent', () => {
   let component: NavigationComponent;
@@ -19,7 +21,11 @@ describe('NavigationComponent', () => {
         MatFormFieldModule,
         BrowserAnimationsModule
       ],
-      declarations: [ NavigationComponent ]
+      declarations: [ NavigationComponent ],
+      providers: [
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     })
     .compileComponents();
   });

@@ -1,113 +1,93 @@
 import { Injectable } from '@angular/core';
-import {Alignment} from '../models/alignment';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { Alignment } from '../models/alignment';
+import { AuthService } from './auth.service';
+import { backendApiRoot } from '../utils/api-root';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlignmentManagementService {
-  private storage = window.localStorage;
-  private alignmentStorageKey = '__alignment_storage__';
+  private readonly alignmentsUrl = `${backendApiRoot()}/api/alignments/`;
+  private readonly namesSubject = new BehaviorSubject<string[]>([]);
+  private readonly cache = new Map<string, Alignment>();
 
-  private overwriteOnNameCollision = false;
-
-  constructor() {
-    console.log('AlignmentManagementService: Constructor called.');
-    // this.availableAlignments = new Set<string>();
-  }
-
-  get alignmentsInStorage(): Set<string> {
-    const alignmentsInStorage: string[] = [];
-    Object.keys(this.storage).forEach(key => {
-      if (key.startsWith(this.alignmentStorageKey)) {
-        alignmentsInStorage.push(key.substr(this.alignmentStorageKey.length));
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.refresh().subscribe();
+      } else {
+        this.cache.clear();
+        this.namesSubject.next([]);
       }
     });
-    return new Set<string>(alignmentsInStorage);
   }
 
   get availableAlignments(): Set<string> {
-    return this.alignmentsInStorage;
+    return new Set<string>(this.namesSubject.value);
   }
 
-  /**
-   * Check whether an alignment under a given name is in the storage.
-   * @param name Name of the alignment.
-   */
+  get alignmentsChanged$(): Observable<string[]> {
+    return this.namesSubject.asObservable();
+  }
+
   hasAlignment(name: string): boolean {
-    return this.availableAlignments.has(name);
+    return this.namesSubject.value.includes(name);
   }
 
-  /**
-   * Add the given Alignment to the storage, to be retrieved via
-   * the given name. In case the name already exists, checks against
-   * `overwriteNameOnCollision` property: if true, overwrites the
-   * stored alignment, if false, does nothing.
-   *
-   * @param name        The name under which the given alignment should be accessible.
-   * @param alignment   An Alignment object that should be stored.
-   */
+  refresh(): Observable<string[]> {
+    if (!this.authService.isLoggedIn()) {
+      this.cache.clear();
+      this.namesSubject.next([]);
+      return of([]);
+    }
+    return this.http.get<{ alignments: { name: string }[] }>(this.alignmentsUrl).pipe(
+      map(response => (response.alignments || []).map(item => item.name)),
+      tap(names => this.namesSubject.next(names))
+    );
+  }
+
   storeAlignment(name: string, alignment: Alignment): void {
-    if (this.availableAlignments.has(name)) {
-      if (!this.overwriteOnNameCollision) {
-        return;
-      }
-    }
-
-    const internalAlignmentName = this.createInternalName(name);
-    this.storage.setItem(internalAlignmentName, JSON.stringify(alignment));
-  }
-
-  /**
-   * Retrieves the alignment available under the given `name` from storage.
-   * If no such alignment exists, returns `undefined`.
-   *
-   * @param name Name of an alignment.
-   */
-  retrieveAlignment(name: string): Alignment {
-    if (!this.availableAlignments.has(name)) {
-      return undefined;
-    }
-
-    const internalAlignmentName = this.createInternalName(name);
-    const alignmentJson = this.storage.getItem(internalAlignmentName);
-    // console.log('AlignmentManagementService.retrieveAlignment JSON:');
-    // console.log(alignmentJson);
-    const alignment = Alignment.fromJson(JSON.parse(alignmentJson));
-    // console.log('AlignmentManagementService.retrieveAlignment: ');
-    // console.log(alignment);
-    return alignment;
-  }
-
-  /**
-   * Remove the alignment available under the given `name` from storage.
-   * If no such alignment exists, does nothing.
-   *
-   * @param name Name of an alignment.
-   */
-  deleteAlignment(name: string): void {
-    if (!this.availableAlignments.has(name)) {
+    if (!this.authService.isLoggedIn() || !name) {
       return;
     }
-    const internalAlignmentName = this.createInternalName(name);
-    this.storage.removeItem(internalAlignmentName);
-    this.availableAlignments.delete(name);
+    const payload = JSON.parse(alignment.toJson());
+    this.http.post(this.alignmentsUrl, { name, data: payload }).subscribe(() => {
+      this.cache.set(name, alignment);
+      if (!this.namesSubject.value.includes(name)) {
+        this.namesSubject.next([...this.namesSubject.value, name].sort());
+      }
+    });
   }
 
-  /**
-   * Builds the key used to access the storage in order to manipulate
-   * an alignment that is exposed under the given `name`.
-   *
-   * @param name Name of an alignment. Does not have to exist yet.
-   * @private
-   */
-  private createInternalName(name: string): string {
-    return this.alignmentStorageKey + name;
+  retrieveAlignment(name: string): Observable<Alignment> {
+    if (this.cache.has(name)) {
+      return of(this.cache.get(name));
+    }
+    return this.http.get<{ name: string, data: any }>(
+      `${this.alignmentsUrl}${encodeURIComponent(name)}/`
+    ).pipe(
+      map(response => Alignment.fromJson(response.data)),
+      tap(alignment => this.cache.set(name, alignment))
+    );
   }
 
-  /**
-   * Returns how many alignments are currently available.
-   */
+  deleteAlignment(name: string): void {
+    if (!this.authService.isLoggedIn()) {
+      return;
+    }
+    this.http.delete(`${this.alignmentsUrl}${encodeURIComponent(name)}/`).subscribe(() => {
+      this.cache.delete(name);
+      this.namesSubject.next(this.namesSubject.value.filter(item => item !== name));
+    });
+  }
+
   get nAlignmentsAvailable(): number {
-    return this.availableAlignments.size;
+    return this.namesSubject.value.length;
   }
 }

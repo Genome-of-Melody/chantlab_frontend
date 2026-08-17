@@ -4,6 +4,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('AlignmentSettingsComponent', () => {
   let component: SettingsComponent;
@@ -17,7 +19,11 @@ describe('AlignmentSettingsComponent', () => {
         MatCheckboxModule,
         FormsModule
       ],
-      declarations: [ SettingsComponent ]
+      declarations: [ SettingsComponent ],
+      providers: [
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     })
     .compileComponents();
   });

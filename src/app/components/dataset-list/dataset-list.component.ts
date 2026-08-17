@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {DataSourceListService} from '../../services/data-source-list.service';
+import { DEFAULT_DATASET_NAMES } from '../../constants/datasets';
 
 @Component({
     selector: 'app-dataset-list',
@@ -55,6 +56,10 @@ export class DatasetListComponent implements OnInit {
 
   get selectedSourceNames(): string[] {
     return this.selectedSources.map((item) => item[1]);
+  }
+
+  isDefaultDataset(name: string): boolean {
+    return DEFAULT_DATASET_NAMES.includes(name);
   }
 
 }

@@ -21,6 +21,7 @@ import { NotEnoughToRemoveDialogComponent } from '../dialogs/not-enough-to-remov
 import { ContrafactReductionResultDialogComponent } from '../dialogs/contrafact-reduction-result-dialog/contrafact-reduction-result-dialog.component';
 import { PhylogenyNotSupportedDialogComponent } from '../dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
 import { AlignmentSnapshotService } from '../../services/alignment-snapshot.service';
+import { AuthService } from '../../services/auth.service';
 import {
   AlignmentExportFormat,
   ALIGNMENT_EXPORT_EXTENSION,
@@ -106,7 +107,8 @@ export class AlignedComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private router: Router,
     private alignmentSnapshotService: AlignmentSnapshotService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {

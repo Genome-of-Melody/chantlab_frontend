@@ -22,4 +22,8 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  persist(): void {
+    this.settingsService.saveToServer();
+  }
+
 }

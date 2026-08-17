@@ -3,6 +3,17 @@
     justify-content: space-between;
 }
 
+.auth-and-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.username {
+    font-size: 14px;
+    margin-right: 4px;
+}
+
 .searchBar {
     font-size: 15px;
     align-self: flex-end;

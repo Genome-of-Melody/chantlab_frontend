@@ -12,12 +12,14 @@ import { CreateDatasetService } from 'src/app/services/create-dataset.service';
 import { CsvTranslateService } from 'src/app/services/csv-translate.service';
 import { DataSourceListService } from 'src/app/services/data-source-list.service';
 import { DatasetManagementService } from 'src/app/services/dataset-management.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { DownloadService } from 'src/app/services/download.service';
 import { IdxOnAddToDatasetComponent } from '../dialogs/idx-on-add-to-dataset/idx-on-add-to-dataset.component';
 import { NameOnCreateDatasetComponent } from '../dialogs/name-on-create-dataset/name-on-create-dataset.component';
 import { NotEnoughToAlignDialogComponent } from '../dialogs/not-enough-to-aling-dialog/not-enough-to-aling-dialog.component';
 import {SearchFilterComponent} from '../search-filter/search-filter.component';
 import { ChantListService } from 'src/app/services/chant-list.service';
+import { DEFAULT_DATASET_NAMES } from 'src/app/constants/datasets';
 
 @Component({
     selector: 'app-chant-list',
@@ -65,6 +67,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
     private chantListService: ChantListService,
     private dataSourceListService: DataSourceListService,
     private datasetManagementService: DatasetManagementService,
+    public authService: AuthService,
     public dialog: MatDialog
   ) { }
 
@@ -318,8 +321,10 @@ export class ChantListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(
         result => {
-          datasetName = result;
-          this.createDatasetService.createDataset(selected, datasetName);
+          if (!result) {
+            return;
+          }
+          this.createDatasetService.createDataset(selected, result);
         }
       );
   }
@@ -333,7 +338,11 @@ export class ChantListComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe(
         data => {
-          dataSources = data;
+          dataSources = data.filter(source => !DEFAULT_DATASET_NAMES.includes(source[1]));
+          if (dataSources.length < 1) {
+            alert('Create one of your own datasets first. Default datasets cannot be changed.');
+            return;
+          }
 
           const dialogRef = this.dialog.open(
             IdxOnAddToDatasetComponent,

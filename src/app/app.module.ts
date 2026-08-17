@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FormsModule } from '@angular/forms';
-import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -72,6 +72,9 @@ import { ContrafactReductionResultDialogComponent } from './components/dialogs/c
 import { PhylogenyNotSupportedDialogComponent } from './components/dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { DefaultDatasetsNotDeletableDialogComponent } from './components/dialogs/default-datasets-not-deletable-dialog/default-datasets-not-deletable-dialog.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -120,7 +123,9 @@ import { DefaultDatasetsNotDeletableDialogComponent } from './components/dialogs
         ZoomableSvgViewComponent,
         GuideTreeComponent,
         PhylogenyPageComponent,
-        PhylogenyComponent
+        PhylogenyComponent,
+        LoginComponent,
+        RegisterComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         BrowserAnimationsModule,
@@ -142,5 +147,8 @@ import { DefaultDatasetsNotDeletableDialogComponent } from './components/dialogs
         MatButtonToggleModule,
         RouterModule,
         ScrollingModule,
-        MatExpansionModule], providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())] })
+        MatExpansionModule], providers: [
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    ] })
 export class AppModule { }

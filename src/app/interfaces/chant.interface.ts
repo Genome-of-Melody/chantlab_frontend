@@ -22,5 +22,8 @@ export interface IChant {
     full_text?: string;
     full_text_manuscript?: string;
     volpiano?: string;
+    dataset_name?: string;
+    dataset_idx?: number;
+    is_owned?: boolean;
     notes?: string;
 }

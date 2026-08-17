@@ -9,6 +9,9 @@ import {AlignedPageComponent} from './components/aligned-page/aligned-page.compo
 import {AlignmentManagerComponent} from './components/alignment-manager/alignment-manager.component';
 import { AboutPageComponent } from './components/about-page/about-page.component';
 import { PhylogenyPageComponent } from './components/phylogeny-page/phylogeny-page.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { authGuard } from './guards/auth.guard';
 
 
 const routes: Routes = [
@@ -19,11 +22,13 @@ const routes: Routes = [
   { path: 'align/:name', component: AlignedPageComponent },
   { path: 'align', component: AlignedPageComponent },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'upload', component: DataUploadComponent },
-  { path: 'settings', component: SettingsComponent },
-  { path: 'alignment-manager', component: AlignmentManagerComponent },
+  { path: 'upload', component: DataUploadComponent, canActivate: [authGuard] },
+  { path: 'settings', component: SettingsComponent, canActivate: [authGuard] },
+  { path: 'alignment-manager', component: AlignmentManagerComponent, canActivate: [authGuard] },
   { path: 'about', component: AboutPageComponent },
   { path: 'phylogeny', component: PhylogenyPageComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
 ];
 
 @NgModule({

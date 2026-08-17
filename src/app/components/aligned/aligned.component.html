@@ -53,7 +53,10 @@
         <div class="widget-control-wrapper">
           <div class="widget-control">
             <ul class="widget-control">
-              <li><button mat-raised-button (click)="saveAlignment()" color="primary" class="widget-control-button">Save</button>
+              <li>
+              @if (authService.isLoggedIn()) {
+                <button mat-raised-button (click)="saveAlignment()" color="primary" class="widget-control-button">Save</button>
+              }
               <button mat-raised-button (click)="downloadAlignedJson()" color="primary" class="widget-control-button">Download Alignment JSON</button>
               <button mat-raised-button (click)="downloadAlignedFasta()" color="primary" class="widget-control-button">Download FASTA</button>
               <button mat-raised-button (click)="downloadPhyloNewick()" color="primary" class="widget-control-button">Download Newick</button>

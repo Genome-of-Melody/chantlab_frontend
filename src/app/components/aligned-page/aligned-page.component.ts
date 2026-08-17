@@ -50,14 +50,16 @@ export class AlignedPageComponent implements OnInit {
     if (this.requestedAlignmentName === undefined) {
       this.initFromServer();
     } else {
-      if (!this.alignmentManagementService.hasAlignment(this.requestedAlignmentName)) {
-        console.log('Available alignments:');
-        console.log(this.alignmentManagementService.availableAlignments);
-        console.error('Requested non-existent alignment: ' + this.requestedAlignmentName);
-        throw new RuntimeError();
-      }
-      this.inputAlignment = this.alignmentManagementService.retrieveAlignment(this.requestedAlignmentName);
-      this.initFromAlignment();
+      this.alignmentManagementService.retrieveAlignment(this.requestedAlignmentName).subscribe(
+        alignment => {
+          this.inputAlignment = alignment;
+          this.initFromAlignment();
+        },
+        error => {
+          console.error('Requested non-existent alignment: ' + this.requestedAlignmentName, error);
+          throw new RuntimeError();
+        }
+      );
     }
   }
 
