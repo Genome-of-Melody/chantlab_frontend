@@ -3,8 +3,9 @@
     @if (chant) {
       <mat-card>
         <mat-card-title>{{ chant.db_source.siglum }}, {{ chant.db_source.position }}, {{ chant.db_source.folio }}</mat-card-title>
-        <mat-card-content>
+        <mat-card-content class="melody-content">
           @if (chant.json_volpiano) {
+            <div class="volpiano-scroll">
             <div class="chant">
               @for (section of chant.json_volpiano.elements; track section) {
                 <div class="section">
@@ -72,8 +73,11 @@
                 </div>
               }
             </div>
+            </div>
           } @else {
-            <div class="volpiano">{{ chant.db_source.volpiano }}</div>
+            <div class="volpiano-scroll">
+              <div class="volpiano volpiano-raw">{{ chant.db_source.volpiano }}</div>
+            </div>
           }
         </mat-card-content>
         <mat-card-subtitle>Raw volpiano</mat-card-subtitle>
@@ -99,7 +103,9 @@
           <a href="{{ chant.db_source.drupal_path }}">{{ chant.db_source.drupal_path }}</a>
         </mat-card-content>
         @if (chant.db_source.is_owned) {
-          <button mat-raised-button color="primary" (click)="updateVolpiano()">Update volpiano</button>
+          <div class="update-volpiano">
+            <button mat-raised-button color="primary" (click)="updateVolpiano()">Update volpiano</button>
+          </div>
         }
       </mat-card>
     }
