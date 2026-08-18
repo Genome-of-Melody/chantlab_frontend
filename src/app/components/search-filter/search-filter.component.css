@@ -9,6 +9,11 @@
     flex-wrap: wrap;
 }
 
+.fontes-selector {
+    max-height: 280px;
+    overflow-y: auto;
+}
+
 .genre-checkbox, .office-checkbox, .fontes-checkbox {
     margin-left: 10px;
 }

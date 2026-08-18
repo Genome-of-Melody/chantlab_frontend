@@ -23,7 +23,7 @@
           class="margin-right"
           style="margin-right: 30px;"
           [(ngModel)]="sortedByCountusIDFrequency"
-          (ngModelChange)="retrieveChants()">
+          (ngModelChange)="onSortModeChange()">
           Sort by Cantus ID frequency
         </mat-checkbox>
         <mat-checkbox
@@ -38,19 +38,25 @@
           Keep liquescents
         </mat-checkbox>
 
-        <table>
-          <tr>
-            <th></th>
-            <th>Incipit</th>
-            <th>Cantus ID</th>
-            <th>Source</th>
-            <th>Genre</th>
-            <th>Office</th>
-            <th>Mode</th>
-            <th>Dataset name</th>
-          </tr>
-          @for (chant of chants; track chant; let i = $index) {
-            @if (!hideIncompleteChants || isChantComplete(chant)) {
+        <div class="chant-list-table">
+          @if (isLoading) {
+            <div class="chant-list-loading-overlay">
+              <mat-spinner diameter="48"></mat-spinner>
+              <span>Generation in progress...</span>
+            </div>
+          }
+          <table>
+            <tr>
+              <th></th>
+              <th>Incipit</th>
+              <th>Cantus ID</th>
+              <th>Source</th>
+              <th>Genre</th>
+              <th>Office</th>
+              <th>Mode</th>
+              <th>Dataset name</th>
+            </tr>
+            @for (chant of chants; track chant.id; let i = $index) {
               <tr mat-cell
                 class="list-group-item"
                 >
@@ -74,15 +80,15 @@
                 <td>{{ chant.dataset_name }}</td>
               </tr>
             }
-          }
-        </table>
-        <mat-paginator #paginator
-          [length]="dataLength"
-          [pageSize]="pageSize"
-          [pageIndex]="pageIndex"
-          [pageSizeOptions]="[20, 50, 100, 200]"
-          (page)="changePage($event)">
-        </mat-paginator>
+          </table>
+          <mat-paginator #paginator
+            [length]="dataLength"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex"
+            [pageSizeOptions]="[20, 50, 100, 200]"
+            (page)="changePage($event)">
+          </mat-paginator>
+        </div>
       </ng-container>
       <button mat-raised-button color="primary" (click)="export()">Export to CSV</button>
       @if (authService.isLoggedIn()) {

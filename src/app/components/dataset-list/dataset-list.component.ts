@@ -30,6 +30,9 @@ export class DatasetListComponent implements OnInit {
     // to refresh when datasets are added or removed.
     this.dataSourceListService.getAllSources().subscribe(
       data => {
+        if (!data) {
+          return;
+        }
         this.selectedDatasets = [];
         this.dataSources = data;
         this.dataSources.forEach(element => {

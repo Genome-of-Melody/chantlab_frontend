@@ -24,7 +24,23 @@ import {SelectedDataSourcesService} from './selected-data-sources.service';
     formData.append('dataSources', dataSources ? JSON.stringify(dataSources) : '[]');
 
     return this.chantService.getFontes(formData).pipe(
-      tap(data => this._allFontes.next(data.fontes))
+      tap(data => this._allFontes.next(this.normalizeFontes(data?.fontes)))
     );
+  }
+
+  private normalizeFontes(fontes: unknown): string[] {
+    if (!Array.isArray(fontes)) {
+      return [];
+    }
+    const seen = new Set<string>();
+    const normalized: string[] = [];
+    for (const item of fontes) {
+      const siglum = Array.isArray(item) ? item[0] : item;
+      if (typeof siglum === 'string' && siglum.length > 0 && !seen.has(siglum)) {
+        seen.add(siglum);
+        normalized.push(siglum);
+      }
+    }
+    return normalized;
   }
 }

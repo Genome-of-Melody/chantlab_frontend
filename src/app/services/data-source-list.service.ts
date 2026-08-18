@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ChantService } from './chant.service';
 import { DEFAULT_DATASET_NAMES } from '../constants/datasets';
 
@@ -12,10 +12,11 @@ export class DataSourceListService {
     private chantService: ChantService
   ) { }
 
-  private _allSources: Subject<[number, string][]> = new Subject<[number, string][]>();
+  private _allSources = new BehaviorSubject<[number, string][] | null>(null);
   private _defaultNames: string[] = DEFAULT_DATASET_NAMES;
+  private inFlight = false;
 
-  getAllSources(): Subject<[number, string][]> {
+  getAllSources(): BehaviorSubject<[number, string][] | null> {
     return this._allSources;
   }
 
@@ -24,13 +25,21 @@ export class DataSourceListService {
   }
 
   refreshSources(): void {
-    this.chantService.getDataSources().subscribe(
-      data => {
+    if (this.inFlight) {
+      return;
+    }
+    this.inFlight = true;
+    this.chantService.getDataSources().subscribe({
+      next: data => {
         if (Array.isArray(data.defaultDatasetNames)) {
           this._defaultNames = data.defaultDatasetNames;
         }
         this._allSources.next(data.dataSources);
+        this.inFlight = false;
+      },
+      error: () => {
+        this.inFlight = false;
       }
-    );
+    });
   }
 }

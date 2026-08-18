@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil, filter } from 'rxjs/operators';
 import { IChant } from 'src/app/interfaces/chant.interface';
 import { AlignmentService } from 'src/app/services/alignment.service';
 import { ChantExportService } from 'src/app/services/chant-export.service';
@@ -32,8 +32,8 @@ export class ChantListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(SearchFilterComponent, {static: true}) searchFilterComponent: SearchFilterComponent;
 
-  allChants: IChant[];
-  chants: IChant[];
+  allChants: IChant[] = [];
+  chants: IChant[] = [];
   currentChant?: IChant;
   currentIndex = -1;
   selected: boolean[] = [];
@@ -46,9 +46,11 @@ export class ChantListComponent implements OnInit, OnDestroy {
   hideChantsWithoutVolpiano: boolean;
 
   pageEvent = new BehaviorSubject<PageEvent>(null);
-  pageIndex: number;
-  pageSize: number;
-  dataLength: number;
+  pageIndex = 0;
+  pageSize = 50;
+  dataLength = 0;
+  isLoading = true;
+  private lastListData: IChant[] = null;
 
   allGenres: object;
   allOffices: object;
@@ -71,6 +73,9 @@ export class ChantListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.chantService.isLoading()
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(loading => this.isLoading = loading);
     this.retrieveChants();
   }
 
@@ -84,66 +89,87 @@ export class ChantListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(
       ([data, event]) => {
-        this.paginator.firstPage();
-
         const filters = this.chantListService.filterSettings;
         this.hideIncompleteChants = filters?.hideIncomplete ?? true;
         this.hideChantsWithoutVolpiano = filters?.hideChantsWithoutVolpiano ?? true;
 
-
-        if (this.allChants !== data) {
+        const listChanged = data !== this.lastListData;
+        if (listChanged) {
+          this.lastListData = data;
           this.selectedChants = new Set(this.chantListService.selectedChants);
           this.selected = [];
           if (data) {
-            this.allChants = data.filter(chant => (!this.hideIncompleteChants || this.isChantComplete(chant)) && (!this.hideChantsWithoutVolpiano || this.doesChantContainVolpiano(chant)));
+            this.allChants = data.filter(chant =>
+              (!this.hideIncompleteChants || this.isChantComplete(chant))
+              && (!this.hideChantsWithoutVolpiano || this.doesChantContainVolpiano(chant))
+            );
             this.dataLength = this.allChants.length;
             for (let i = 0; i < this.allChants.length; i++) {
               this.selected.push(this.selectedChants.has(this.allChants[i].id));
             }
+          } else {
+            this.allChants = [];
+            this.dataLength = 0;
           }
+          this.applySort();
           this.updateSelectedAll();
-        }
-
-        if (this.sortedByCountusIDFrequency) {
-          this.sortByCantusIdFrequency();
+          this.pageIndex = 0;
+          this.pageSize = event ? event.pageSize : (this.pageSize || 50);
+          if (this.paginator) {
+            this.paginator.pageIndex = 0;
+          }
         } else {
-          this.sortByIncipit();
+          this.pageIndex = event ? event.pageIndex : 0;
+          this.pageSize = event ? event.pageSize : 50;
         }
 
-        this.pageIndex = event ? event.pageIndex : 0;
-        this.pageSize = event ? event.pageSize : 50;
-        const start = this.pageIndex * this.pageSize;
-        const end = (this.pageIndex + 1) * this.pageSize;
-        if (this.allChants) {
-          this.chants = this.allChants
-          .filter(chant => {
-            return (!this.hideIncompleteChants || this.isChantComplete(chant)) && (!this.hideChantsWithoutVolpiano || this.doesChantContainVolpiano(chant));
-          })
-          .slice(start, end);        
-        }
+        this.applyPageSlice();
       }
     );
+  }
+
+  onSortModeChange(): void {
+    this.applySort();
+    this.pageIndex = 0;
+    if (this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
+    this.applyPageSlice();
+  }
+
+  private applyPageSlice(): void {
+    if (!this.allChants) {
+      this.chants = [];
+      return;
+    }
+    const start = this.pageIndex * this.pageSize;
+    const end = start + this.pageSize;
+    this.chants = this.allChants.slice(start, end);
+  }
+
+  private applySort(): void {
+    if (this.sortedByCountusIDFrequency) {
+      this.sortByCantusIdFrequency();
+    } else {
+      this.sortByIncipit();
+    }
   }
 
   sortByCantusIdFrequency(): void {
     if (this.allChants && this.selected) {
       const cantusIdFrequency = new Map<string, number>();
-  
+
       this.allChants.forEach(chant => {
         const cantusId = chant.cantus_id;
-        if ((!this.hideIncompleteChants || this.isChantComplete(chant)) && (!this.hideChantsWithoutVolpiano || this.doesChantContainVolpiano(chant))) {
-          cantusIdFrequency.set(cantusId, (cantusIdFrequency.get(cantusId) || 0) + 1);
-        } else {
-          cantusIdFrequency.set(cantusId, (cantusIdFrequency.get(cantusId) || 0));
-        }
+        cantusIdFrequency.set(cantusId, (cantusIdFrequency.get(cantusId) || 0) + 1);
       });
-    
+
       const zippedList = this.allChants.map((chant, index) => ({
         chant,
         selected: this.selected[index],
         frequency: cantusIdFrequency.get(chant.cantus_id),
       }));
-    
+
       zippedList.sort((a, b) => b.frequency - a.frequency);
       for (let i = 0; i < zippedList.length; i++) {
         this.allChants[i] = zippedList[i].chant;
@@ -152,17 +178,14 @@ export class ChantListComponent implements OnInit, OnDestroy {
     }
   }
 
-
-  
   sortByIncipit(): void {
     if (this.allChants && this.selected) {
-          
       const zippedList = this.allChants.map((chant, index) => ({
         chant,
         selected: this.selected[index],
         incipit: chant.incipit || '',
       }));
-    
+
       zippedList.sort((a, b) => a.incipit.localeCompare(b.incipit));
       for (let i = 0; i < zippedList.length; i++) {
         this.allChants[i] = zippedList[i].chant;
@@ -188,16 +211,9 @@ export class ChantListComponent implements OnInit, OnDestroy {
 
   updateSelectedAll(): void {
     if (this.allChants && this.allChants.length > 0) {
-      const consideredChantsIndices = this.allChants.map((chant, index) => ({
-        chant,index
-      })).filter(item => 
-        (!this.hideIncompleteChants || this.isChantComplete(item.chant)) && (!this.hideChantsWithoutVolpiano || this.doesChantContainVolpiano(item.chant))
-      ).map(item => item.index);
-      if (consideredChantsIndices.length === 0) {
-        this.selectedAll = false;
-      } else{
-        this.selectedAll = consideredChantsIndices.every(index => this.selected[index]);
-      }
+      this.selectedAll = this.selected.every(isSelected => isSelected);
+    } else {
+      this.selectedAll = false;
     }
   }
 
@@ -334,7 +350,10 @@ export class ChantListComponent implements OnInit, OnDestroy {
     let dataSources: [number, string][];
     this.dataSourceListService.refreshSources();
     this.dataSourceListService.getAllSources()
-      .pipe(take(1))
+      .pipe(
+        filter((data): data is [number, string][] => !!data),
+        take(1)
+      )
       .subscribe(
         data => {
           dataSources = data.filter(source => !this.dataSourceListService.isDefaultName(source[1]));
@@ -369,10 +388,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
 
   isChantComplete(chant: IChant): boolean {
     // This condition might get more complex later.
-    if (chant.incipit.endsWith('*')) {
-      return false;
-    }
-    return true;
+    return !chant.incipit?.endsWith('*');
   }
 
 

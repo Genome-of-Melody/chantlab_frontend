@@ -89,6 +89,9 @@ export class DatasetManagementService {
     const names = this.dataSourceListService.refreshSources();
     const sourceNamesToIdxs = new Map<string, number>();
     this.dataSourceListService.getAllSources().subscribe(data => {
+      if (!data) {
+        return;
+      }
       data.forEach(s => sourceNamesToIdxs.set(s[1], s[0]));
     });
     if (!sourceNamesToIdxs.has(datasetName)) {

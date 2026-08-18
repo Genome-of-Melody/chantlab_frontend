@@ -24,15 +24,15 @@
           [(ngModel)]="checkedAllGenres">
           All
         </mat-checkbox>
-        @if (allGenres) {
+        @if (genres.length) {
           <div class="genre-selector">
-            @for (item of allGenres | keyvalue; track item; let i = $index) {
+            @for (genre of genres; track genre.id) {
               <div>
                 <mat-checkbox
                   class="genre-checkbox"
-                  [(ngModel)]="checkedGenres[i]"
+                  [(ngModel)]="genre.checked"
                   (ngModelChange)="onSelectionChange()">
-                  {{ item.value.name }}
+                  {{ genre.name }}
                 </mat-checkbox>
               </div>
             }
@@ -46,15 +46,15 @@
             [(ngModel)]="checkedAllOffices">
             All
           </mat-checkbox>
-          @if (allOffices) {
+          @if (offices.length) {
             <div class="office-selector">
-              @for (item of allOffices | keyvalue; track item; let i = $index) {
+              @for (office of offices; track office.id) {
                 <div>
                   <mat-checkbox
                     class="office-checkbox"
-                    [(ngModel)]="checkedOffices[i]"
+                    [(ngModel)]="office.checked"
                     (ngModelChange)="onSelectionChange()">
-                    {{ item.value.name }}
+                    {{ office.name }}
                   </mat-checkbox>
                 </div>
               }
@@ -68,15 +68,15 @@
               [(ngModel)]="checkedAllFontes">
               All
             </mat-checkbox>
-            @if (allFontes) {
+            @if (fontes.length) {
               <div class="fontes-selector">
-                @for (item of allFontes; track item; let i = $index) {
+                @for (fonte of fontes; track fonte.id) {
                   <div>
                     <mat-checkbox
                       class="fontes-checkbox"
-                      [(ngModel)]="checkedFontes[i]"
+                      [(ngModel)]="fonte.checked"
                       (ngModelChange)="onSelectionChange()">
-                      {{ item }}
+                      {{ fonte.name }}
                     </mat-checkbox>
                   </div>
                 }

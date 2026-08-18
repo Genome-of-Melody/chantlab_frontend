@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 import { ChantService } from './services/chant.service';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from './services/auth.service';
@@ -28,7 +28,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(this.title);
     this.authService.restoreSession().subscribe();
     this.authService.currentUser$
-      .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(
+        map(user => user?.id ?? null),
+        distinctUntilChanged(),
+        takeUntil(this.componentDestroyed$)
+      )
       .subscribe(() => this.dataSourceListService.refreshSources());
     this.chantService.loadData().subscribe();
   }

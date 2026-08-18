@@ -8,6 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
@@ -26,6 +27,7 @@ describe('ChantListComponent', () => {
         MatPaginatorModule,
         BrowserAnimationsModule,
         MatIconModule,
+        MatProgressSpinnerModule,
         FormsModule],
     providers: [
         { provide: MatDialog, useValue: {} },

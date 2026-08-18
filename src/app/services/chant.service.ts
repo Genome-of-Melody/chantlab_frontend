@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { of, EMPTY, BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, tap, catchError } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
 import CONFIG from '../config.json';
 import { IChantPrecomputed } from '../interfaces/chant-precomputed.interface';
 import { IChant } from '../interfaces/chant.interface';
+import { IFilterSettings } from '../interfaces/filter-settings.interface';
 import { SelectedDataSourcesService } from './selected-data-sources.service';
 import { IncipitService } from './incipit.service';
 import { SearchFilterService } from './search-filter.service';
@@ -23,6 +24,7 @@ export class ChantService {
   ) { }
 
   private readonly _chantList = new BehaviorSubject<IChant[]>(null);
+  private readonly _loading = new BehaviorSubject<boolean>(true);
   private readonly _baseUrl = CONFIG['BACKEND_URL'];
 
   getChant(id: number): Observable<IChantPrecomputed> {
@@ -30,49 +32,62 @@ export class ChantService {
   }
 
   loadData(): Observable<IChant[]> {
-    console.log('chantService.loadData(): filter settings');
-    console.log(this.searchFilterService.getFilterSettings());
     return combineLatest([
       this.dataSourceService.getSourceList(),
       this.searchFilterService.getFilterSettings(),
       this.incipitService.getIncipit(),
     ]).pipe(
       debounceTime(300),
+      distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
       switchMap(
         ([dataSources, filterSettings, incipit]) => {
-          const one_of_filters_empty =
-            !dataSources?.length ||
-            (!filterSettings ||
-              !filterSettings['genres']?.length ||
-              !filterSettings['offices']?.length ||
-              !filterSettings['fontes']?.length);
-
-          if (one_of_filters_empty) {
-            this._chantList.next([]); 
+          if (!dataSources?.length) {
+            this._loading.next(false);
             return of([]);
           }
+          // Filters are rebuilt after a dataset switch; keep the current list
+          // instead of querying with stale or missing filter options.
+          if (!filterSettings) {
+            this._loading.next(true);
+            return EMPTY;
+          }
+          if (this.hasEmptyExclusiveFilter(filterSettings)) {
+            this._loading.next(false);
+            return of([]);
+          }
+          this._loading.next(true);
           const formData = new FormData();
-          formData.append('dataSources', dataSources ? JSON.stringify(dataSources) : "[]");
+          formData.append('dataSources', JSON.stringify(dataSources));
           formData.append('incipit', incipit ? incipit : '');
           // Using null means that the back-end will *not* filter results based on this field,
           // while if the filterSettings do contain an empty list, the back-end *will* filter
           // (and thus the query result will be empty).
-          formData.append('genres', filterSettings ? JSON.stringify(filterSettings['genres']) : "null");
-          formData.append('offices', filterSettings ? JSON.stringify(filterSettings['offices']) : "null");
-          formData.append('fontes', filterSettings ? JSON.stringify(filterSettings['fontes']) : "null");
-          return this.http.post(this._baseUrl + '/', formData);
+          formData.append('genres', JSON.stringify(filterSettings.genres));
+          formData.append('offices', JSON.stringify(filterSettings.offices));
+          formData.append('fontes', JSON.stringify(filterSettings.fontes));
+          formData.append('hideIncomplete', JSON.stringify(!!filterSettings.hideIncomplete));
+          formData.append('hideChantsWithoutVolpiano', JSON.stringify(!!filterSettings.hideChantsWithoutVolpiano));
+          return this.http.post<IChant[]>(this._baseUrl + '/', formData).pipe(
+            catchError((err) => {
+              console.error('Error loading chants:', err);
+              return of([]);
+            })
+          );
         }
       ),
-      tap((data: IChant[]) => this._chantList.next(data)),
-      catchError((err) => {
-        console.error('Error loading chants:', err);
-        return EMPTY;
+      tap((data: IChant[]) => {
+        this._chantList.next(data);
+        this._loading.next(false);
       })
     );
   }
 
   getList(): BehaviorSubject<IChant[]> {
     return this._chantList;
+  }
+
+  isLoading(): BehaviorSubject<boolean> {
+    return this._loading;
   }
 
   getAlignment(formData: FormData): Observable<any> {
@@ -113,5 +128,11 @@ export class ChantService {
 
   mrbayesVolpiano(data: FormData): Observable<any> {
     return this.http.post(`${this._baseUrl}/mrbayes-volpiano/`, data);
+  }
+
+  private hasEmptyExclusiveFilter(filterSettings: IFilterSettings): boolean {
+    return (filterSettings.genres !== null && filterSettings.genres.length === 0)
+      || (filterSettings.offices !== null && filterSettings.offices.length === 0)
+      || (filterSettings.fontes !== null && filterSettings.fontes.length === 0);
   }
 }
