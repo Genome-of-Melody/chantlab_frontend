@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { AlignmentListComponent } from './alignment-list/alignment-list.component';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('AlignmentManagerComponent', () => {
   let component: AlignmentManagerComponent;
@@ -25,6 +27,10 @@ describe('AlignmentManagerComponent', () => {
       declarations: [
         AlignmentManagerComponent,
         AlignmentListComponent
+      ],
+      providers: [
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     })
     .compileComponents();

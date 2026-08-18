@@ -1,4 +1,4 @@
-FROM node:20-slim AS builder
+FROM node:24-slim AS builder
 
 # Set working directory
 WORKDIR /opt/chantlab_frontend
@@ -21,11 +21,11 @@ RUN cd /opt/chantlab_frontend && npm install
 
 
 # Build production files
-RUN npm run build --prod
+RUN npm run build -- --configuration production
 
 
 # Runtime image
-FROM node:20-slim
+FROM node:24-slim
 
 # Install only the necessary runtime dependencies (e.g., jq and supervisor)
 RUN apt-get update && apt-get install -y supervisor jq && apt-get clean && rm -rf /var/lib/apt/lists/*

@@ -1,40 +1,44 @@
 <div class="network-wrapper">
-    <div class="network chant-network">
-        <mat-card *ngIf="showChantNetwork"
-                  cdkDrag
-                  class="single-network-container-div">
-          <h3 align="center">Chant network</h3>
-          <div class="network-graph-chants network-graph-svg-entry-point"></div>
-          <app-network-graph
-              [distanceMatrix]="distanceMatrix"
-              [chants]="chants"
-              [colorScheme]="colorScheme"
-              [linkMaximumDistanceThreshold]="settingService.networkGraphSettingsService.linkMaximumDistanceThreshold"
-              [networkType]="'chants'">
-          </app-network-graph>
-        </mat-card>
-<!--        <button-->
-<!--        mat-raised-button-->
-<!--        (click)="showChantNetwork = !showChantNetwork"-->
-<!--        color="primary">Chant network</button>-->
-    </div>
-    <div class="network manuscript-network">
-        <mat-card *ngIf="showManuscriptNetwork"
-                  cdkDrag
-                  class="single-network-container-div">
-          <h3 align="center">Manuscript network</h3>
-          <div class="network-graph-manuscripts network-graph-svg-entry-point"></div>
-          <app-network-graph
-              [distanceMatrix]="distanceMatrix"
-              [chants]="chants"
-              [colorScheme]="colorScheme"
-              [linkMaximumDistanceThreshold]="settingService.networkGraphSettingsService.linkMaximumDistanceThreshold"
-              [networkType]="'manuscripts'">
-          </app-network-graph>
-        </mat-card>
-<!--        <button-->
-<!--        mat-raised-button-->
-<!--        (click)="showManuscriptNetwork = !showManuscriptNetwork"-->
+  <div class="network chant-network">
+    @if (showChantNetwork) {
+      <mat-card
+        cdkDrag
+        class="single-network-container-div">
+        <h3 align="center">Chant network</h3>
+        <div class="network-graph-chants network-graph-svg-entry-point"></div>
+        <app-network-graph
+          [distanceMatrix]="distanceMatrix"
+          [chants]="chants"
+          [colorScheme]="colorScheme"
+          [linkMaximumDistanceThreshold]="settingService.networkGraphSettingsService.linkMaximumDistanceThreshold"
+          [networkType]="'chants'">
+        </app-network-graph>
+      </mat-card>
+    }
+    <!--        <button-->
+    <!--        mat-raised-button-->
+    <!--        (click)="showChantNetwork = !showChantNetwork"-->
+  <!--        color="primary">Chant network</button>-->
+</div>
+<div class="network manuscript-network">
+  @if (showManuscriptNetwork) {
+    <mat-card
+      cdkDrag
+      class="single-network-container-div">
+      <h3 align="center">Manuscript network</h3>
+      <div class="network-graph-manuscripts network-graph-svg-entry-point"></div>
+      <app-network-graph
+        [distanceMatrix]="distanceMatrix"
+        [chants]="chants"
+        [colorScheme]="colorScheme"
+        [linkMaximumDistanceThreshold]="settingService.networkGraphSettingsService.linkMaximumDistanceThreshold"
+        [networkType]="'manuscripts'">
+      </app-network-graph>
+    </mat-card>
+  }
+  <!--        <button-->
+  <!--        mat-raised-button-->
+  <!--        (click)="showManuscriptNetwork = !showManuscriptNetwork"-->
 <!--        color="primary">Manuscript network</button>-->
-    </div>
+</div>
 </div>

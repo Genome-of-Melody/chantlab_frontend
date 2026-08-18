@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -11,9 +11,11 @@ import { NoChantTextDialogComponent } from '../dialogs/no-chant-text-dialog/no-c
 import { VolpianoUpdatedDialogComponent } from '../dialogs/volpiano-updated-dialog/volpiano-updated-dialog.component';
 
 @Component({
-  selector: 'app-chant-details',
-  templateUrl: './chant-details.component.html',
-  styleUrls: ['./chant-details.component.css']
+    selector: 'app-chant-details',
+    templateUrl: './chant-details.component.html',
+    styleUrls: ['./chant-details.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ChantDetailsComponent implements OnInit, OnDestroy {
 
@@ -26,7 +28,7 @@ export class ChantDetailsComponent implements OnInit, OnDestroy {
   volpiano: string;
   humanReadableCentury: string;
 
-  private readonly componentDestroyed$ = new Subject();
+  private readonly componentDestroyed$ = new Subject<void>();
 
   constructor(
     private chantService: ChantService,
@@ -73,7 +75,7 @@ export class ChantDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.componentDestroyed$.next();
+    this.componentDestroyed$.next(undefined);
     this.componentDestroyed$.complete();
   }
 

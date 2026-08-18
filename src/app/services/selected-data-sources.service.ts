@@ -27,17 +27,29 @@ export class SelectedDataSourcesService {
     return this._sourceList;
   }
 
-  setSourceList(list: number[]): void {
+  setSourceList(list: number[]): boolean {
     this.storage.setItem('sourceList', JSON.stringify(list));
+    if (this.sameList(this._sourceList.value, list)) {
+      return false;
+    }
     this._sourceList.next(list);
     this.selectedDataSourcesChange.emit();
+    return true;
   }
 
   ensureDatasetNotSelected(datasetIdx: number): void {
     const names = this.getStoredSourceList();
     if (names.find(n => n === datasetIdx)) {
       const filteredIdxs = names.filter(n => n !== datasetIdx);
-      this.setSourceList(filteredIdxs); // maybe this emits unnecessarily?
+      this.setSourceList(filteredIdxs);
     }
+  }
+
+  sameSourceList(list: number[]): boolean {
+    return this.sameList(this._sourceList.value, list);
+  }
+
+  private sameList(a: number[], b: number[]): boolean {
+    return a.length === b.length && a.every((value, index) => value === b[index]);
   }
 }

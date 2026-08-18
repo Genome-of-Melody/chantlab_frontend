@@ -1,25 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {AlignmentManagementService} from '../../../services/alignment-management.service';
 
 @Component({
-  selector: 'app-alignment-list',
-  templateUrl: './alignment-list.component.html',
-  styleUrls: ['./alignment-list.component.css']
+    selector: 'app-alignment-list',
+    templateUrl: './alignment-list.component.html',
+    styleUrls: ['./alignment-list.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AlignmentListComponent implements OnInit {
 
   public selectedAlignment: string;
+  availableAlignments: string[] = [];
 
   constructor(
     private alignmentManagementService: AlignmentManagementService
   ) { }
 
   ngOnInit(): void {
-
-  }
-
-  get availableAlignments(): string[] {
-    return Array.from(this.alignmentManagementService.availableAlignments.keys()).sort();
+    this.alignmentManagementService.alignmentsChanged$.subscribe(
+      names => this.availableAlignments = [...names].sort()
+    );
   }
 
   get selectedAlignmentName(): string {

@@ -1,10 +1,14 @@
 <h2 mat-dialog-title>Reduction to Contrafacts</h2>
 <mat-dialog-content>
   <h4>Process Completed Successfully:</h4>
-  <p *ngIf="reducedSequenceIds?.length === 0"> no contrafacts were found</p>
-  <p *ngIf="reducedSequenceIds?.length > 0">
-    {{ reducedSequenceIds.length }} sequences were reduced and made invisible
-  </p>
+  @if (reducedSequenceIds?.length === 0) {
+    <p> no contrafacts were found</p>
+  }
+  @if (reducedSequenceIds?.length > 0) {
+    <p>
+      {{ reducedSequenceIds.length }} sequences were reduced and made invisible
+    </p>
+  }
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

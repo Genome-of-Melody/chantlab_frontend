@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { RouterEvent } from '@angular/router';
 
 // Copied over from:
@@ -6,13 +6,15 @@ import { RouterEvent } from '@angular/router';
 // because its installation/README did not work.
 
 @Component({
-  selector: 'app-zoomable-canvas',
-  template: `<canvas #canvas
+    selector: 'app-zoomable-canvas',
+    template: `<canvas #canvas
         (mousedown)="mousedown($event)" (mousemove)="mousemove($event);"
         (mousewheel)="mousewheel($event)"
         (window:resize)="onresize()"
         style="width: 100%; height: 100%; object-fit: cover;"
-        ></canvas>`
+        ></canvas>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ZoomableCanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasRef: ElementRef;

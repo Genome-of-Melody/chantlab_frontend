@@ -6,10 +6,11 @@ import { DownloadService } from 'src/app/services/download.service';
 import { PhylogenyService } from 'src/app/services/phylogeny.service';
 
 @Component({
-  selector: 'app-phylogeny',
-  templateUrl: './phylogeny.component.html',
-  styleUrls: ['./phylogeny.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-phylogeny',
+    templateUrl: './phylogeny.component.html',
+    styleUrls: ['./phylogeny.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PhylogenyComponent implements OnInit, OnDestroy {
 
@@ -19,7 +20,7 @@ export class PhylogenyComponent implements OnInit, OnDestroy {
 
   @Input() phylogeny: PhylogenyResponse;
 
-  private readonly componentDestroyed$ = new Subject();
+  private readonly componentDestroyed$ = new Subject<void>();
 
   constructor(
     private phylogenyService: PhylogenyService,
@@ -31,7 +32,7 @@ export class PhylogenyComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.componentDestroyed$.next();
+    this.componentDestroyed$.next(undefined);
     this.componentDestroyed$.complete();
   }
 

@@ -1,12 +1,14 @@
 <div class="alignment-page">
-  <app-aligned *ngIf="alignedResponse; else progressSpinner"
-               [alignment]="alignedResponse.alignment">
-  </app-aligned>
-
-  <ng-template #progressSpinner>
-    <div class="spinner">
-      <mat-spinner></mat-spinner>
+  @if (alignedResponse) {
+    <app-aligned
+      [alignment]="alignedResponse.alignment">
+    </app-aligned>
+  } @else {
+    <div class="app-loading">
+      <mat-spinner diameter="48"></mat-spinner>
+      <span>Generation in progress...</span>
     </div>
-  </ng-template>
+  }
+
 
 </div>

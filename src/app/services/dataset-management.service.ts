@@ -63,7 +63,7 @@ export class DatasetManagementService {
     const results = [];
     let dialogOpened = false;
     for (const name of datasetNames) {
-      if (name === 'CantusCorpus v0.2' || name === 'netvor-0.3') {
+      if (this.dataSourceListService.isDefaultName(name)) {
         if (!dialogOpened) {
           this.dialog.open(DefaultDatasetsNotDeletableDialogComponent);
         }
@@ -89,6 +89,9 @@ export class DatasetManagementService {
     const names = this.dataSourceListService.refreshSources();
     const sourceNamesToIdxs = new Map<string, number>();
     this.dataSourceListService.getAllSources().subscribe(data => {
+      if (!data) {
+        return;
+      }
       data.forEach(s => sourceNamesToIdxs.set(s[1], s[0]));
     });
     if (!sourceNamesToIdxs.has(datasetName)) {

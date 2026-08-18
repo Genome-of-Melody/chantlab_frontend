@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {AlignmentManagementService} from '../../services/alignment-management.service';
 import {ActivatedRoute} from '@angular/router';
@@ -15,9 +15,11 @@ import { PhylogenyErrorDialogComponent } from '../dialogs/phylogeny-error-dialog
 
 
 @Component({
-  selector: 'app-phylogeny-page',
-  templateUrl: './phylogeny-page.component.html',
-  styleUrls: ['./phylogeny-page.component.css']
+    selector: 'app-phylogeny-page',
+    templateUrl: './phylogeny-page.component.html',
+    styleUrls: ['./phylogeny-page.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class PhylogenyPageComponent implements OnInit {
 

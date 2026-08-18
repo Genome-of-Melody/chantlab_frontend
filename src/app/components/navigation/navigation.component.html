@@ -1,17 +1,28 @@
-<div class=flexbox-container>
-    <div>
-        <button mat-fab color="accent" aria-label="home" [routerLink]="''">
-            <mat-icon >home</mat-icon>
-        </button>
-        <a mat-button [routerLink]="'/chants'"> Chant list </a>
-        <a mat-button [routerLink]="'/upload'"> Manage data </a>
-        <a mat-button [routerLink]="'/alignment-manager'"> Manage alignments </a>
-        <a mat-button [routerLink]="'/dashboard'"> Dashboard </a>
-        <a mat-button [routerLink]="'/settings'"> Settings </a>
-        <a mat-button [routerLink]="'/about'"> About </a>
+<div class="flexbox-container">
+    <div class="nav-links">
+        <a mat-icon-button class="home-button" routerLink="" aria-label="home">
+            <mat-icon>home</mat-icon>
+        </a>
+        <a mat-button class="nav-link" routerLink="/chants" [class.nav-link-active]="isChantListActive">Chant list</a>
+        @if (authService.isLoggedIn()) {
+          <a mat-button class="nav-link" routerLink="/upload" routerLinkActive="nav-link-active">Manage data</a>
+          <a mat-button class="nav-link" routerLink="/alignment-manager" routerLinkActive="nav-link-active">Manage alignments</a>
+        }
+        <a mat-button class="nav-link" routerLink="/dashboard" routerLinkActive="nav-link-active">Dashboard</a>
+        @if (authService.isLoggedIn()) {
+          <a mat-button class="nav-link" routerLink="/settings" routerLinkActive="nav-link-active">Settings</a>
+        }
+        <a mat-button class="nav-link" routerLink="/about" routerLinkActive="nav-link-active">About</a>
     </div>
-    <div>
-        <mat-form-field floatLabel=never class="searchBar">
+    <div class="auth-and-search">
+        @if (authService.isLoggedIn()) {
+          <span class="username">{{ authService.username }}</span>
+          <a mat-button class="nav-link" (click)="logout()">Logout</a>
+        } @else {
+          <a mat-button class="nav-link" routerLink="/login" routerLinkActive="nav-link-active">Login</a>
+          <a mat-button class="nav-link nav-link-emphasis" routerLink="/register" routerLinkActive="nav-link-active">Register</a>
+        }
+        <mat-form-field floatLabel=never class="searchBar" appearance="fill" subscriptSizing="dynamic">
             <mat-icon matPrefix>search</mat-icon>
             <input type="search"
                 (keyup.enter)="search($event)"

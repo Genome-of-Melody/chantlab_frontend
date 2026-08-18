@@ -47,10 +47,6 @@
     margin-left: 20px;
 }
 
-.spinner {
-    margin: auto;
-}
-
 .raw {
     font-family: 'Courier New', Courier, monospace;
 }
@@ -124,6 +120,40 @@ ul.widget-control {
   height: 600px;
   border: 1px solid #3F51B5;
   margin-left: 10px;
+}
+
+.alignment-capture {
+  position: fixed;
+  left: -100000px;
+  top: 0;
+  height: auto !important;
+  overflow: visible;
+  background: #ffffff;
+}
+
+.alignment-capture .text {
+  margin-top: 1.25em;
+}
+
+.snapshot-loading-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.75);
+  z-index: 1000;
+}
+
+.export-title,
+.snapshot-title {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 36px;
+  margin-left: 8px;
 }
 
 

@@ -1,16 +1,20 @@
 <div class="floating-panel">
-    <div class="toggle-panel" (click)="displaySelection = !displaySelection">
-        <div class="toggle-text">
-            <h3>Data sources</h3>
-        </div>
+  <div class="toggle-panel" (click)="displaySelection = !displaySelection">
+    <div class="toggle-text">
+      <h3>Data sources</h3>
     </div>
-    <div class="source-selection" *ngIf="dataSources && displaySelection">
-        <mat-card>
-            <div *ngFor="let source of dataSources; let i = index">
-                <mat-checkbox [(ngModel)]="selectedDatasets[i]">{{ source[1] }}</mat-checkbox>
-            </div>
-            <br>
-            <button mat-stroked-button id="select-button" (click)="changeSelection()">Save</button>
+  </div>
+  @if (dataSources && displaySelection) {
+    <div class="source-selection">
+      <mat-card>
+        @for (source of dataSources; track source; let i = $index) {
+          <div>
+            <mat-checkbox [(ngModel)]="selectedDatasets[i]">{{ source[1] }}</mat-checkbox>
+          </div>
+        }
+        <br>
+          <button mat-stroked-button id="select-button" (click)="changeSelection()">Save</button>
         </mat-card>
-    </div>
-</div>
+      </div>
+    }
+  </div>

@@ -18,44 +18,46 @@
     </div>
 
 
-    
+
     <div class="widget-control-wrapper">
       <div class="widget-control">
         <ul class="widget-control">
           <li>
-              <button mat-raised-button (click)="downloadNewick()" color="primary" class="widget-control-button">Download Newick</button>
-              <button mat-raised-button (click)="downloadNexusConTre()" color="primary" class="widget-control-button">Download nexus.con.tre</button>
+            <button mat-raised-button (click)="downloadNewick()" color="primary" class="widget-control-button">Download Newick</button>
+            <button mat-raised-button (click)="downloadNexusConTre()" color="primary" class="widget-control-button">Download nexus.con.tre</button>
           </li>
           <li><button mat-raised-button (click)="downloadMBScript()" color="primary" class="widget-control-button">Download MrBayes script</button>
-              <button mat-raised-button (click)="downloadNexusAlignment()" color="primary" class="widget-control-button">Download nexus alignment</button>
-          </li>
-        </ul>
-      </div>
+          <button mat-raised-button (click)="downloadNexusAlignment()" color="primary" class="widget-control-button">Download nexus alignment</button>
+        </li>
+      </ul>
     </div>
-
   </div>
 
+</div>
 
-  <div class="icytree-container">
-    <iframe id="icytree-iframe"
-      src="https://icytree.org/" 
-      width="100%" 
-      height="600px" 
-      frameborder="0" 
-      allowfullscreen>
-    </iframe>
+
+<div class="icytree-container">
+  <iframe id="icytree-iframe"
+    src="https://icytree.org/"
+    width="100%"
+    height="600px"
+    frameborder="0"
+    allowfullscreen>
+  </iframe>
+</div>
+
+
+<ng-template #progressSpinner>
+  <div class="app-loading">
+    <mat-spinner diameter="48"></mat-spinner>
+    <span>Generation in progress...</span>
   </div>
+</ng-template>
 
-
-  <ng-template #progressSpinner>
-      <div class="spinner">
-          <mat-spinner></mat-spinner>
-      </div>
-  </ng-template>
-
-  <div *ngIf="uploadInstructions"
-       class="newick-help-upload-instructions-wrapper"
-       (keyup)="onKeyUp($event)">
+@if (uploadInstructions) {
+  <div
+    class="newick-help-upload-instructions-wrapper"
+    (keyup)="onKeyUp($event)">
     <mat-card cdkDrag class="newick-help-card">
       <div class="instructions">
         <h3>Instructions to Upload Tree Data:</h3>
@@ -68,4 +70,5 @@
       </div>
     </mat-card>
   </div>
+}
 </div>

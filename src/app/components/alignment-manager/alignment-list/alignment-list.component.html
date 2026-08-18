@@ -1,7 +1,9 @@
 <div class="alignment-list">
-  <div *ngFor="let alignment of availableAlignments; let i = index">
-    <mat-radio-group [(ngModel)]="selectedAlignment">
-      <mat-radio-button class="alignment-radio" [value]="alignment">{{ alignment }}</mat-radio-button>
-    </mat-radio-group>
-  </div>
+  @for (alignment of availableAlignments; track alignment; let i = $index) {
+    <div>
+      <mat-radio-group [(ngModel)]="selectedAlignment">
+        <mat-radio-button class="alignment-radio" [value]="alignment">{{ alignment }}</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  }
 </div>

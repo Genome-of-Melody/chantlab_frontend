@@ -1,88 +1,115 @@
 <!-- Alignment settings -->
 <mat-card class="settings-group">
   <mat-card-header class="settings-group">
-    <button *ngIf="alignmentSettingsVisible" mat-button class="collapse-button"
-            (click)="alignmentSettingsVisible = !alignmentSettingsVisible">
-      <mat-icon>keyboard_arrow_up</mat-icon>
-    </button>
-    <button *ngIf="!alignmentSettingsVisible" mat-button class="collapse-button"
-            (click)="alignmentSettingsVisible = !alignmentSettingsVisible">
-      <mat-icon>keyboard_arrow_down</mat-icon>
-    </button>
+    @if (alignmentSettingsVisible) {
+      <button mat-button class="collapse-button"
+        (click)="alignmentSettingsVisible = !alignmentSettingsVisible">
+        <mat-icon>keyboard_arrow_up</mat-icon>
+      </button>
+    }
+    @if (!alignmentSettingsVisible) {
+      <button mat-button class="collapse-button"
+        (click)="alignmentSettingsVisible = !alignmentSettingsVisible">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+    }
     <span class="settings-group-name">Alignment settings</span>
   </mat-card-header>
 
-  <mat-card-content *ngIf="alignmentSettingsVisible" class="settings-group">
-    <mat-checkbox class="settings-item-active-element"
-                  [(ngModel)]="settingsService.alignmentSettingsService.distanceMatrixUseAbsoluteDistances">
-      Use absolute distances in distance matrix computation (not recommended for most uses)
-    </mat-checkbox>
-  </mat-card-content>
+  @if (alignmentSettingsVisible) {
+    <mat-card-content class="settings-group">
+      <mat-checkbox class="settings-item-active-element"
+        [(ngModel)]="settingsService.alignmentSettingsService.distanceMatrixUseAbsoluteDistances"
+        (ngModelChange)="persist()">
+        Use absolute distances in distance matrix computation (not recommended for most uses)
+      </mat-checkbox>
+    </mat-card-content>
+  }
 </mat-card>
 
 <!-- Network graph settings -->
 <mat-card class="settings-group">
   <mat-card-header class="settings-group">
-    <button *ngIf="networkGraphSettingsVisible" mat-button class="collapse-button"
-            (click)="networkGraphSettingsVisible = !networkGraphSettingsVisible">
-      <mat-icon>keyboard_arrow_up</mat-icon>
-    </button>
-    <button *ngIf="!networkGraphSettingsVisible" mat-button class="collapse-button"
-            (click)="networkGraphSettingsVisible = !networkGraphSettingsVisible">
-      <mat-icon>keyboard_arrow_down</mat-icon>
-    </button>
+    @if (networkGraphSettingsVisible) {
+      <button mat-button class="collapse-button"
+        (click)="networkGraphSettingsVisible = !networkGraphSettingsVisible">
+        <mat-icon>keyboard_arrow_up</mat-icon>
+      </button>
+    }
+    @if (!networkGraphSettingsVisible) {
+      <button mat-button class="collapse-button"
+        (click)="networkGraphSettingsVisible = !networkGraphSettingsVisible">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+    }
     <span class="settings-group-name">Network graph settings</span>
   </mat-card-header>
 
-  <mat-card-content *ngIf="networkGraphSettingsVisible" class="settings-group">
-    <mat-checkbox class="settings-item-active-element"
-                  [(ngModel)]="settingsService.networkGraphSettingsService.closestNeighborLinkOnly">
-      Only display edges to closest neighbor
-    </mat-checkbox>
-  </mat-card-content>
+  @if (networkGraphSettingsVisible) {
+    <mat-card-content class="settings-group">
+      <mat-checkbox class="settings-item-active-element"
+        [(ngModel)]="settingsService.networkGraphSettingsService.closestNeighborLinkOnly"
+        (ngModelChange)="persist()">
+        Only display edges to closest neighbor
+      </mat-checkbox>
+    </mat-card-content>
+  }
 </mat-card>
 
 <!-- Dashboard settings -->
 <mat-card class="settings-group">
   <mat-card-header class="settings-group">
-    <button *ngIf="dashboardSettingsVisible" mat-button class="collapse-button"
-            (click)="dashboardSettingsVisible = !dashboardSettingsVisible">
-      <mat-icon>keyboard_arrow_up</mat-icon>
-    </button>
-    <button *ngIf="!dashboardSettingsVisible" mat-button class="collapse-button"
-            (click)="dashboardSettingsVisible = !dashboardSettingsVisible">
-      <mat-icon>keyboard_arrow_down</mat-icon>
-    </button>
+    @if (dashboardSettingsVisible) {
+      <button mat-button class="collapse-button"
+        (click)="dashboardSettingsVisible = !dashboardSettingsVisible">
+        <mat-icon>keyboard_arrow_up</mat-icon>
+      </button>
+    }
+    @if (!dashboardSettingsVisible) {
+      <button mat-button class="collapse-button"
+        (click)="dashboardSettingsVisible = !dashboardSettingsVisible">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+    }
     <span class="settings-group-name">Dashboard settings</span>
   </mat-card-header>
 
-  <mat-card-content *ngIf="dashboardSettingsVisible" class="settings-group">
-    <mat-checkbox class="settings-item-active-element"
-      [(ngModel)]="settingsService.dashboardSettingsService.useGrayscale">
-      Use only grayscale colors (mock setting value)
-    </mat-checkbox>
-  </mat-card-content>
+  @if (dashboardSettingsVisible) {
+    <mat-card-content class="settings-group">
+      <mat-checkbox class="settings-item-active-element"
+        [(ngModel)]="settingsService.dashboardSettingsService.useGrayscale"
+        (ngModelChange)="persist()">
+        Use only grayscale colors (mock setting value)
+      </mat-checkbox>
+    </mat-card-content>
+  }
 </mat-card>
 
 
 <!-- Phylogeny settings -->
 <mat-card class="settings-group">
   <mat-card-header class="settings-group">
-    <button *ngIf="phylogenySettingsVisible" mat-button class="collapse-button"
-            (click)="phylogenySettingsVisible = !phylogenySettingsVisible">
-      <mat-icon>keyboard_arrow_up</mat-icon>
-    </button>
-    <button *ngIf="!phylogenySettingsVisible" mat-button class="collapse-button"
-            (click)="phylogenySettingsVisible = !phylogenySettingsVisible">
-      <mat-icon>keyboard_arrow_down</mat-icon>
-    </button>
+    @if (phylogenySettingsVisible) {
+      <button mat-button class="collapse-button"
+        (click)="phylogenySettingsVisible = !phylogenySettingsVisible">
+        <mat-icon>keyboard_arrow_up</mat-icon>
+      </button>
+    }
+    @if (!phylogenySettingsVisible) {
+      <button mat-button class="collapse-button"
+        (click)="phylogenySettingsVisible = !phylogenySettingsVisible">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+    }
     <span class="settings-group-name">Phylogeny settings</span>
   </mat-card-header>
 
-  <mat-card-content *ngIf="phylogenySettingsVisible" class="settings-group">
-    <mat-form-field appearance="fill" class="settings-item" style="width: 300px;">
-      <mat-label>MrBayes - Number of Generations</mat-label>
-      <input matInput type="number" [(ngModel)]="settingsService.phylogenySettingsService.mrbayesGenerations" min="1000" placeholder="Enter number of generations">
-    </mat-form-field>
-  </mat-card-content>
+  @if (phylogenySettingsVisible) {
+    <mat-card-content class="settings-group">
+      <mat-form-field appearance="fill" class="settings-item" style="width: 300px;">
+        <mat-label>MrBayes - Number of Generations</mat-label>
+        <input matInput type="number" [(ngModel)]="settingsService.phylogenySettingsService.mrbayesGenerations" min="1000" placeholder="Enter number of generations" (ngModelChange)="persist()">
+      </mat-form-field>
+    </mat-card-content>
+  }
 </mat-card>

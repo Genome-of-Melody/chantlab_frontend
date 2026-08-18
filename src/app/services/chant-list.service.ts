@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IFilterSettings } from '../interfaces/filter-settings.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class ChantListService {
     this.storage.setItem('chantList_selectedChants', JSON.stringify(selectedChants));
   }
 
-  get filterSettings(): { genres: string[]; offices: string[]; fontes: string[]; hideIncomplete: boolean, hideChantsWithoutVolpiano: boolean } {
+  get filterSettings(): IFilterSettings | undefined {
     const storedFilterSettings = this.storage.getItem('chantList_filterSettings');
     if (storedFilterSettings === null || storedFilterSettings === undefined || storedFilterSettings === "undefined") {
       return undefined;
@@ -29,9 +30,9 @@ export class ChantListService {
     return JSON.parse(storedFilterSettings);
   }
   
-  set filterSettings(filterSettings: { genres: string[]; offices: string[]; fontes: string[]; hideIncomplete: boolean, hideChantsWithoutVolpiano: boolean }) {
-    if (filterSettings === undefined || null) {
-      this.storage.setItem('chantList_filterSettings', undefined);
+  set filterSettings(filterSettings: IFilterSettings | undefined | null) {
+    if (filterSettings == null) {
+      this.storage.removeItem('chantList_filterSettings');
     } else {
       this.storage.setItem('chantList_filterSettings', JSON.stringify(filterSettings));
     }

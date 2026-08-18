@@ -1,10 +1,12 @@
-import {AfterContentChecked, Component, Input, OnInit} from '@angular/core';
+import {AfterContentChecked, Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {DistanceService} from '../../services/distance.service';
 
 @Component({
-  selector: 'app-distance-matrix',
-  templateUrl: './distance-matrix.component.html',
-  styleUrls: ['./distance-matrix.component.css']
+    selector: 'app-distance-matrix',
+    templateUrl: './distance-matrix.component.html',
+    styleUrls: ['./distance-matrix.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DistanceMatrixComponent implements OnInit, AfterContentChecked {
 

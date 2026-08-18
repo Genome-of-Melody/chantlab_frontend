@@ -1,0 +1,25 @@
+<div class="auth-page">
+  <mat-card>
+    <mat-card-content class="auth-card">
+      <h2>Register</h2>
+      <p>Create an account to keep your datasets, alignments, and settings.</p>
+      <mat-form-field appearance="fill" class="auth-field">
+        <mat-label>Username</mat-label>
+        <input matInput [(ngModel)]="username" autocomplete="username">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="auth-field">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [(ngModel)]="password" autocomplete="new-password">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="auth-field">
+        <mat-label>Confirm password</mat-label>
+        <input matInput type="password" [(ngModel)]="passwordConfirm" autocomplete="new-password" (keyup.enter)="submit()">
+      </mat-form-field>
+      @if (errorMessage) {
+        <p class="auth-error">{{ errorMessage }}</p>
+      }
+      <button mat-raised-button color="primary" (click)="submit()" [disabled]="submitting">Register</button>
+      <p class="auth-switch">Already have an account? <a routerLink="/login">Login</a></p>
+    </mat-card-content>
+  </mat-card>
+</div>

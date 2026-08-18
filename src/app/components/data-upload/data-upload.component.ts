@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DatasetManagementService } from 'src/app/services/dataset-management.service';
 import { MissingDatasetNameDialogComponent } from '../dialogs/missing-dataset-name-dialog/missing-dataset-name-dialog.component';
@@ -6,9 +6,11 @@ import { UploadSuccessfulDialogComponent } from '../dialogs/upload-successful-di
 import {DatasetListComponent} from '../dataset-list/dataset-list.component';
 
 @Component({
-  selector: 'app-data-upload',
-  templateUrl: './data-upload.component.html',
-  styleUrls: ['./data-upload.component.css']
+    selector: 'app-data-upload',
+    templateUrl: './data-upload.component.html',
+    styleUrls: ['./data-upload.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DataUploadComponent implements OnInit {
 

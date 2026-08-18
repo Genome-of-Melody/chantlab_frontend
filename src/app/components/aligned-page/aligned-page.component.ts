@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ChantService} from '../../services/chant.service';
 import {AlignmentService} from '../../services/alignment.service';
 import {Alignment, AlignmentResponse} from '../../models/alignment';
@@ -20,9 +20,11 @@ import RuntimeError = WebAssembly.RuntimeError;
  * into the AlignedComponent as an Input() variable.
  */
 @Component({
-  selector: 'app-aligned-page',
-  templateUrl: './aligned-page.component.html',
-  styleUrls: ['./aligned-page.component.css']
+    selector: 'app-aligned-page',
+    templateUrl: './aligned-page.component.html',
+    styleUrls: ['./aligned-page.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AlignedPageComponent implements OnInit {
 
@@ -48,14 +50,16 @@ export class AlignedPageComponent implements OnInit {
     if (this.requestedAlignmentName === undefined) {
       this.initFromServer();
     } else {
-      if (!this.alignmentManagementService.hasAlignment(this.requestedAlignmentName)) {
-        console.log('Available alignments:');
-        console.log(this.alignmentManagementService.availableAlignments);
-        console.error('Requested non-existent alignment: ' + this.requestedAlignmentName);
-        throw new RuntimeError();
-      }
-      this.inputAlignment = this.alignmentManagementService.retrieveAlignment(this.requestedAlignmentName);
-      this.initFromAlignment();
+      this.alignmentManagementService.retrieveAlignment(this.requestedAlignmentName).subscribe(
+        alignment => {
+          this.inputAlignment = alignment;
+          this.initFromAlignment();
+        },
+        error => {
+          console.error('Requested non-existent alignment: ' + this.requestedAlignmentName, error);
+          throw new RuntimeError();
+        }
+      );
     }
   }
 

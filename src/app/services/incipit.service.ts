@@ -14,7 +14,11 @@ export class IncipitService {
     return this._incipit;
   }
 
-  setIncipit(string): void {
-    this._incipit.next(string);
+  setIncipit(value: string | undefined): void {
+    const next = value ?? '';
+    if (this._incipit.value === next) {
+      return;
+    }
+    this._incipit.next(next);
   }
 }

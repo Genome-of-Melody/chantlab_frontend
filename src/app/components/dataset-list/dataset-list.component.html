@@ -1,5 +1,17 @@
 <div class="dataset-list">
-  <div *ngFor="let source of dataSources; let i = index">
-    <mat-checkbox [(ngModel)]="selectedDatasets[i]">{{ source[1] }}</mat-checkbox>
-  </div>
+  @for (source of dataSources; track source; let i = $index) {
+    @if (isDefaultDataset(source[1])) {
+      <div class="shared-dataset">
+        <mat-icon class="shared-icon" aria-hidden="true">lock_outline</mat-icon>
+        <span>{{ source[1] }}</span>
+        <span class="shared-label">shared</span>
+      </div>
+    } @else {
+      <div>
+        <mat-checkbox [(ngModel)]="selectedDatasets[i]">
+          {{ source[1] }}
+        </mat-checkbox>
+      </div>
+    }
+  }
 </div>

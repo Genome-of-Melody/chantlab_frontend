@@ -1,13 +1,15 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {AlignmentListComponent} from './alignment-list/alignment-list.component';
 import {AlignmentManagementService} from '../../services/alignment-management.service';
 import {Router} from '@angular/router';
 import { Alignment } from 'src/app/models/alignment';
 
 @Component({
-  selector: 'app-alignment-manager',
-  templateUrl: './alignment-manager.component.html',
-  styleUrls: ['./alignment-manager.component.css']
+    selector: 'app-alignment-manager',
+    templateUrl: './alignment-manager.component.html',
+    styleUrls: ['./alignment-manager.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class AlignmentManagerComponent implements OnInit {
 

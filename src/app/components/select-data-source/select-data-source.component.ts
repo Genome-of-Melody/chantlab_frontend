@@ -1,25 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { DataSourceListService } from 'src/app/services/data-source-list.service';
 import { SelectedDataSourcesService } from 'src/app/services/selected-data-sources.service';
 import { SourceSelectionSavedDialogComponent } from '../dialogs/source-selection-saved-dialog/source-selection-saved-dialog.component';
 import { ChantListService } from 'src/app/services/chant-list.service';
+import { SearchFilterService } from 'src/app/services/search-filter.service';
 
 @Component({
-  selector: 'app-select-data-source',
-  templateUrl: './select-data-source.component.html',
-  styleUrls: ['./select-data-source.component.css']
+    selector: 'app-select-data-source',
+    templateUrl: './select-data-source.component.html',
+    styleUrls: ['./select-data-source.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class SelectDataSourceComponent implements OnInit {
+export class SelectDataSourceComponent implements OnInit, OnDestroy {
 
   dataSources: [number, string][];
   selectedDatasets = new Array<boolean>();
   displaySelection = true;
+  private readonly componentDestroyed$ = new Subject<void>();
 
   constructor(
     private dataSourceListService: DataSourceListService,
     private selectedDataSourceService: SelectedDataSourcesService,
     private chantListService: ChantListService,
+    private searchFilterService: SearchFilterService,
     public dialog: MatDialog
   ) { }
 
@@ -28,16 +35,26 @@ export class SelectDataSourceComponent implements OnInit {
     this.getDataSources();
   }
 
-  changeSelection(manuallySelected: boolean = true): void {
-    if (manuallySelected) {
-      this.chantListService.selectedChants = [];
-      this.chantListService.filterSettings = undefined;
-    }
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.complete();
+  }
 
+  changeSelection(manuallySelected: boolean = true): void {
     const selected: number[] = [];
     for (let i = 0; i < this.selectedDatasets.length; i++) {
       if (this.selectedDatasets[i]) { selected.push(this.dataSources[i][0]); }
     }
+
+    const sourcesChanged = !this.selectedDataSourceService.sameSourceList(selected);
+    if (manuallySelected && sourcesChanged) {
+      this.chantListService.selectedChants = [];
+      this.chantListService.filterSettings = undefined;
+      // Keep unfiltered settings (not null) so dashboard and other pages
+      // still reload instead of waiting for the chant-list filter UI.
+      this.searchFilterService.resetToUnfiltered();
+    }
+
     this.selectedDataSourceService.setSourceList(selected);
 
     if (manuallySelected) {
@@ -46,8 +63,13 @@ export class SelectDataSourceComponent implements OnInit {
   }
 
   getDataSources(): void {
-    this.dataSourceListService.getAllSources().subscribe(
+    this.dataSourceListService.getAllSources()
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(
       data => {
+        if (!data) {
+          return;
+        }
         this.selectedDatasets = [];
         this.dataSources = data;
 
@@ -64,10 +86,11 @@ export class SelectDataSourceComponent implements OnInit {
           }
         });
 
-        // always include at least the default data source
-        if (allUnselected)
-        {
-          this.selectedDatasets[0] = true;
+        if (allUnselected) {
+          const defaultIndex = this.dataSources.findIndex(
+            source => this.dataSourceListService.isDefaultName(source[1])
+          );
+          this.selectedDatasets[defaultIndex >= 0 ? defaultIndex : 0] = true;
         }
 
         this.changeSelection(false);

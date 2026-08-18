@@ -1,60 +1,90 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IScatterData } from 'src/app/interfaces/scatter-data.interface';
 import { Router } from '@angular/router';
 
 import * as d3 from 'd3';
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-multiple-series-scatterplot',
-  templateUrl: './multiple-series-scatterplot.component.html',
-  styleUrls: ['./multiple-series-scatterplot.component.css']
+    selector: 'app-multiple-series-scatterplot',
+    templateUrl: './multiple-series-scatterplot.component.html',
+    styleUrls: ['./multiple-series-scatterplot.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
-export class MultipleSeriesScatterplotComponent implements OnInit {
+export class MultipleSeriesScatterplotComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() set data(data: IScatterData[]) {
-    d3.select('figure#multi-scatter').select('svg').remove();
-    this.createSvg();
-    this.drawPlot(data);
+    this.dataReceived.next(data);
   }
   @Input() chartTitle: string;
   @Input() valueXName: string;
   @Input() valueYName: string;
+
+  @ViewChild('chart') chartElement: ElementRef<HTMLElement>;
 
   private width = 700;
   private height = 500;
   private margin = {
     top: 30,
     bottom: 50,
-    left: 50,
+    left: 80,
     right: 10
   };
 
   private svg;
+  private DOMRendered = new Subject<void>();
+  private dataReceived = new BehaviorSubject<IScatterData[]>([]);
+  private readonly componentDestroyed$ = new Subject<void>();
 
   constructor(
     private router: Router
   ) { }
 
   ngOnInit(): void {
+    combineLatest([this.DOMRendered, this.dataReceived]).pipe(
+      takeUntil(this.componentDestroyed$)
+    ).subscribe(([_, data]) => {
+      if (!data || data.length === 0 || !this.chartElement) {
+        return;
+      }
+      d3.select(this.chartElement.nativeElement).select('svg').remove();
+      this.createSvg();
+      this.drawPlot(data);
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.DOMRendered.next(undefined);
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next(undefined);
+    this.componentDestroyed$.complete();
   }
 
   createSvg(): void {
-    this.svg = d3.select('figure#multi-scatter')
+    this.svg = d3.select(this.chartElement.nativeElement)
                  .append('svg')
                  .attr('width', this.width + 200)
                  .attr('height', this.height);
   }
 
   drawPlot(data: IScatterData[]): void {
+    if (!this.svg) {
+      return;
+    }
+
     // create scales
-    const minX = Math.min(d3.min(data, d => d.x));
-    const maxX = Math.max(d3.max(data, d => d.x));
+    const minX = d3.min(data, d => d.x) ?? 0;
+    const maxX = d3.max(data, d => d.x) ?? 0;
     const x = d3.scaleLinear()
               .domain([Math.min(0, minX), maxX])
               .range([this.margin.left, this.width - this.margin.right]);
 
-    const minY = Math.min(d3.min(data, d => d.y));
-    const maxY = Math.max(d3.max(data, d => d.y));
+    const minY = d3.min(data, d => d.y) ?? 0;
+    const maxY = d3.max(data, d => d.y) ?? 0;
     const y = d3.scaleLinear()
               .domain([Math.min(0, minY), maxY])
               .range([this.height - this.margin.bottom, this.margin.top]);
@@ -153,7 +183,7 @@ export class MultipleSeriesScatterplotComponent implements OnInit {
 
     this.svg.append('text')
             .attr('transform', 'rotate(-90)')
-            .attr('y', this.margin.left - 45)
+            .attr('y', 15)
             .attr('x', 0 - (this.height / 2))
             .attr('dy', '1em')
             .style('text-anchor', 'middle')

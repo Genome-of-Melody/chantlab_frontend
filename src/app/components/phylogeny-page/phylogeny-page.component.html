@@ -1,12 +1,14 @@
 <div class="phylogeny-page">
-  <app-phylogeny *ngIf="phylogenyResponse; else progressSpinner"
-               [phylogeny]="phylogenyResponse">
-  </app-phylogeny>
-
-  <ng-template #progressSpinner>
-    <div class="spinner">
-      <mat-spinner></mat-spinner>
+  @if (phylogenyResponse) {
+    <app-phylogeny
+      [phylogeny]="phylogenyResponse">
+    </app-phylogeny>
+  } @else {
+    <div class="app-loading">
+      <mat-spinner diameter="48"></mat-spinner>
+      <span>Generation in progress...</span>
     </div>
-  </ng-template>
+  }
+
 
 </div>

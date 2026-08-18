@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchFilterComponent } from './search-filter.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('SearchFilterComponent', () => {
   let component: SearchFilterComponent;
@@ -10,13 +11,10 @@ describe('SearchFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        MatIconModule
-      ],
-      declarations: [ SearchFilterComponent ],
-      providers: [{provide: MatDialog, useValue: {}}]
-    })
+    declarations: [SearchFilterComponent],
+    imports: [MatIconModule],
+    providers: [{ provide: MatDialog, useValue: {} }, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   });
 

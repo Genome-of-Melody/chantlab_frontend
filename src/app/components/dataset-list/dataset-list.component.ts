@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {DataSourceListService} from '../../services/data-source-list.service';
 
 @Component({
-  selector: 'app-dataset-list',
-  templateUrl: './dataset-list.component.html',
-  styleUrls: ['./dataset-list.component.css']
+    selector: 'app-dataset-list',
+    templateUrl: './dataset-list.component.html',
+    styleUrls: ['./dataset-list.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DatasetListComponent implements OnInit {
 
@@ -28,6 +30,9 @@ export class DatasetListComponent implements OnInit {
     // to refresh when datasets are added or removed.
     this.dataSourceListService.getAllSources().subscribe(
       data => {
+        if (!data) {
+          return;
+        }
         this.selectedDatasets = [];
         this.dataSources = data;
         this.dataSources.forEach(element => {
@@ -53,6 +58,10 @@ export class DatasetListComponent implements OnInit {
 
   get selectedSourceNames(): string[] {
     return this.selectedSources.map((item) => item[1]);
+  }
+
+  isDefaultDataset(name: string): boolean {
+    return this.dataSourceListService.isDefaultName(name);
   }
 
 }
