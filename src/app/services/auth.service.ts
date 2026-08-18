@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import CONFIG from '../config.json';
 import { AUTH_TOKEN_KEY } from '../constants/datasets';
-import { backendApiRoot } from '../utils/api-root';
 
 export interface AuthUser {
   id: number;
@@ -20,7 +20,7 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly authUrl = `${backendApiRoot()}/api/auth`;
+  private readonly authUrl = `${CONFIG['BACKEND_URL']}/auth`;
   private readonly currentUserSubject = new BehaviorSubject<AuthUser | null>(null);
   readonly currentUser$ = this.currentUserSubject.asObservable();
 
