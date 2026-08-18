@@ -46,8 +46,8 @@ RUN echo '#!/bin/bash\n' \
     '    echo "Chantlab frontend down; restarting run_chantlab_frontend.sh"\n' \
     '\n' \
     '    # Set the current BACKEND_URL\n' \
-    '    jq ".BACKEND_URL = \"${BACKEND_URL}\"" /chantlab_frontend/src/app/config.json > /chantlab_frontend/src/app/config_tmp.json\n' \
-    '    mv "/chantlab_frontend/src/app/config_tmp.json" "/chantlab_frontend/src/app/config.json"\n' \
+    '    jq ".BACKEND_URL = \"${BACKEND_URL}\"" /opt/chantlab_frontend/src/app/config.json > /opt/chantlab_frontend/src/app/config_tmp.json\n' \
+    '    mv "/opt/chantlab_frontend/src/app/config_tmp.json" "/opt/chantlab_frontend/src/app/config.json"\n' \
     '\n' \
     '    # Run angular project\n' \
     '    # Check if DEBUG_MODE environment variable is set to "False"\n'\
@@ -73,7 +73,7 @@ RUN echo '[program:chantlab_frontend]\n' \
 
 # Set default ENV variables if not set yet
 ENV PUBLIC_HOST="localhost"
-ENV BACKEND_URL="localhost:8000/api/chants"
+ENV BACKEND_URL="http://localhost:8000/api/chants"
 ENV DEBUG_MODE="True"
 
 # Expose port 4200
