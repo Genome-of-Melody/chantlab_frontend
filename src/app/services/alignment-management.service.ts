@@ -3,14 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Alignment } from '../models/alignment';
+import CONFIG from '../config.json';
 import { AuthService } from './auth.service';
-import { backendApiRoot } from '../utils/api-root';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlignmentManagementService {
-  private readonly alignmentsUrl = `${backendApiRoot()}/api/alignments/`;
+  private readonly alignmentsUrl = `${CONFIG['BACKEND_URL']}/alignments/`;
   private readonly namesSubject = new BehaviorSubject<string[]>([]);
   private readonly cache = new Map<string, Alignment>();
 

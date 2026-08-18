@@ -1,7 +1,7 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import CONFIG from '../config.json';
 import { AuthService } from './auth.service';
-import { backendApiRoot } from '../utils/api-root';
 
 export interface PersistedSettings {
   alignment?: { distanceMatrixUseAbsoluteDistances?: boolean };
@@ -95,7 +95,7 @@ export class SettingsService {
     if (!this.authService.isLoggedIn()) {
       return;
     }
-    this.http.get<{ settings: PersistedSettings }>(`${backendApiRoot()}/api/settings/`)
+    this.http.get<{ settings: PersistedSettings }>(`${CONFIG['BACKEND_URL']}/settings/`)
       .subscribe(response => this.applyPayload(response.settings || {}));
   }
 
@@ -103,7 +103,7 @@ export class SettingsService {
     if (!this.authService.isLoggedIn()) {
       return;
     }
-    this.http.put(`${backendApiRoot()}/api/settings/`, { settings: this.toPayload() })
+    this.http.put(`${CONFIG['BACKEND_URL']}/settings/`, { settings: this.toPayload() })
       .subscribe();
   }
 }
