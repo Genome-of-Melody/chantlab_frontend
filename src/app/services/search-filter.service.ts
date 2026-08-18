@@ -21,4 +21,15 @@ export class SearchFilterService {
     }
     this._filterSettings.next(settings);
   }
+
+  /** Drop exclusive filters so a dataset switch can reload immediately. */
+  resetToUnfiltered(): void {
+    this.setFilterSettings({
+      genres: null,
+      offices: null,
+      fontes: null,
+      hideIncomplete: true,
+      hideChantsWithoutVolpiano: true
+    });
+  }
 }

@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IStackedHistogram } from 'src/app/interfaces/stacked-histogram.interface';
 
 import * as d3 from 'd3';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-stacked-histogram',
@@ -11,7 +12,7 @@ import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class StackedHistogramComponent implements OnInit, AfterViewInit {
+export class StackedHistogramComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() set data(data: IStackedHistogram[]) {
     this.dataReceived.next(data);
@@ -21,33 +22,36 @@ export class StackedHistogramComponent implements OnInit, AfterViewInit {
   @Input() valueXName: string;
   @Input() valueYName: string;
 
+  @ViewChild('chart') chartElement: ElementRef<HTMLElement>;
+
   private svg;
   private margin = {
-    top: 10,
+    top: 30,
     right: 30,
-    bottom: 30,
-    left: 50
+    bottom: 50,
+    left: 80
   }
   private width = 700;
   private height = 500;
   private maxValue: number;
 
-  figureID = "f" + Math.floor(Math.random() * 10000).toString();
-
   private DOMRendered = new Subject<void>();
   private dataReceived = new BehaviorSubject<IStackedHistogram[]>([]);
+  private readonly componentDestroyed$ = new Subject<void>();
 
   constructor() { }
 
   ngOnInit(): void {
-    combineLatest([this.DOMRendered, this.dataReceived]).subscribe(
+    combineLatest([this.DOMRendered, this.dataReceived]).pipe(
+      takeUntil(this.componentDestroyed$)
+    ).subscribe(
     ([_, data]) => {
-      if (!data || data.length === 0) {
+      if (!data || data.length === 0 || !this.chartElement) {
         return;
       }
-      d3.select("figure." + this.figureID).select("svg").remove();
-      this.maxValue = d3.max(data, (d: any) => d.value as number);
-      this.createSvg(); 
+      d3.select(this.chartElement.nativeElement).select('svg').remove();
+      this.maxValue = d3.max(data, (d: any) => d.value as number) ?? 0;
+      this.createSvg();
       this.drawHist(data)
       }
     )
@@ -57,8 +61,13 @@ export class StackedHistogramComponent implements OnInit, AfterViewInit {
     this.DOMRendered.next(undefined);
   }
 
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next(undefined);
+    this.componentDestroyed$.complete();
+  }
+
   createSvg(): void {
-    this.svg = d3.select("figure." + this.figureID)
+    this.svg = d3.select(this.chartElement.nativeElement)
                  .append("svg")
                  .attr("width", this.width)
                  .attr("height", this.height + 50)
@@ -67,9 +76,12 @@ export class StackedHistogramComponent implements OnInit, AfterViewInit {
   }
 
   drawHist(data: IStackedHistogram[]): void {
+    if (!this.svg) {
+      return;
+    }
 
     // create the bin function
-    const bins = d3.bin().domain([0, this.maxValue]).thresholds(100);
+    const bins = d3.bin().domain([0, Math.max(this.maxValue, 1)]).thresholds(100);
 
     // group data
     const groupedData = d3.group(data, d => d.group);
@@ -88,6 +100,10 @@ export class StackedHistogramComponent implements OnInit, AfterViewInit {
       });
     });
 
+    if (!groups.length || !histDataByGroup.length) {
+      return;
+    }
+
     // stack data by group
     // the stacked data looks like this:
     // [ [group1_value1, group1_value2, group1_value3, ... ],
@@ -95,11 +111,15 @@ export class StackedHistogramComponent implements OnInit, AfterViewInit {
     var stackedHistData = d3.stack()
                             .keys(groups)(histDataByGroup)
                             .slice(0, 10);
+
+    if (!stackedHistData.length) {
+      return;
+    }
     
     // create scales
     const xScale = d3.scaleLinear()
                      .domain([0, stackedHistData[0].length])
-                     .range([0, this.width - this.margin.right]);
+                     .range([0, this.width - this.margin.left - this.margin.right]);
 
     var upperLimit = d3.max(stackedHistData[stackedHistData.length - 1], d => d[1]);
     const yScale = d3.scaleLinear()
@@ -147,7 +167,7 @@ export class StackedHistogramComponent implements OnInit, AfterViewInit {
     this.svg.append("g").call(xAxis);
 
     // legend
-    const legendX = this.width - 200;
+    const legendX = this.width - this.margin.left - 200;
     const legendY = 100;
     groups.forEach((value, idx) => {
       // color marker
@@ -165,28 +185,28 @@ export class StackedHistogramComponent implements OnInit, AfterViewInit {
 
     // add title
     this.svg.append("text")
-            .attr("x", (this.width / 2))             
-            .attr("y", this.margin.top / 2)
-            .attr("text-anchor", "middle")  
-            .style("font-size", "16px") 
-            .style("text-decoration", "underline")  
+            .attr("x", ((this.width - this.margin.left) / 2))
+            .attr("y", 0)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("text-decoration", "underline")
             .text(this.chartTitle);
 
     // axis labels
-    this.svg.append("text")             
+    this.svg.append("text")
             .attr("transform",
-                  "translate(" + (this.width/2) + " ," + 
-                                (this.height - this.margin.bottom + 30) + ")")
+                  "translate(" + ((this.width - this.margin.left) / 2) + " ," +
+                                (this.height - this.margin.bottom + 40) + ")")
             .style("text-anchor", "middle")
             .text(this.valueXName);
 
     this.svg.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", this.margin.left - 45)
+            .attr("y", 15 - this.margin.left)
             .attr("x", 0 - (this.height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text(this.valueYName);  
+            .text(this.valueYName);
   }
 
 }

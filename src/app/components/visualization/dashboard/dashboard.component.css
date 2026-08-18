@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+.dashboard-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2em 0;
+}

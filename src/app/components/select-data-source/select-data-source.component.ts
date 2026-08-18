@@ -50,9 +50,9 @@ export class SelectDataSourceComponent implements OnInit, OnDestroy {
     if (manuallySelected && sourcesChanged) {
       this.chantListService.selectedChants = [];
       this.chantListService.filterSettings = undefined;
-      // Drop in-memory filters before the dataset change emits, so loadData
-      // does not query the new dataset with the previous fontes/genres.
-      this.searchFilterService.setFilterSettings(null);
+      // Keep unfiltered settings (not null) so dashboard and other pages
+      // still reload instead of waiting for the chant-list filter UI.
+      this.searchFilterService.resetToUnfiltered();
     }
 
     this.selectedDataSourceService.setSourceList(selected);

@@ -1,6 +1,12 @@
 <app-select-data-source></app-select-data-source>
 
-@if (multiScatterData) {
+@if (isLoading) {
+  <div class="dashboard-loading">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+}
+
+@if (!isLoading && multiScatterData?.length) {
   <app-multiple-series-scatterplot
     [chartTitle]="multiScatterTitle"
     [valueXName]="multiScatterXName"
@@ -10,7 +16,7 @@
   </app-multiple-series-scatterplot>
 }
 
-@if (melodyStackedHistData) {
+@if (!isLoading && melodyStackedHistData?.length) {
   <app-stacked-histogram
     [chartTitle]="melodyStackedHistTitle"
     [groupName]="melodyStackedHistGroupName"
@@ -20,7 +26,7 @@
   </app-stacked-histogram>
 }
 
-@if (textStackedHistData) {
+@if (!isLoading && textStackedHistData?.length) {
   <app-stacked-histogram
     [chartTitle]="textStackedHistTitle"
     [groupName]="textStackedHistGroupName"
