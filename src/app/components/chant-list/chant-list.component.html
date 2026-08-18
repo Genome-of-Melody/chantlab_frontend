@@ -1,98 +1,89 @@
 <app-search-filter></app-search-filter>
 <app-select-data-source></app-select-data-source>
-<div class="list row">
-  <div class="col-md-8">
-    <div class="input-group mb-3">
-    </div>
-  </div>
-  <div class="col-md-6">
+<div class="list">
+  <div class="list-toolbar">
     <button mat-raised-button color="accent" (click)="align('syllables')">Align word-based</button>
     <button mat-raised-button color="accent" (click)="align('full')">Align pitches</button>
     <button mat-raised-button color="accent" (click)="align('intervals')">Align intervals</button>
-    <br>
-      <ng-container>
-        <mat-checkbox
-          class="margin-right"
-          style="margin-right: 30px;"
-          (change)="selectAllVisible()"
-          [(ngModel)]="selectedAll">
-          Select/deselect all
-          <span style="float: right; margin-left: 20px">(Selected: {{ nChantsSelected }})</span>
-        </mat-checkbox>
-        <mat-checkbox
-          class="margin-right"
-          style="margin-right: 30px;"
-          [(ngModel)]="sortedByCountusIDFrequency"
-          (ngModelChange)="onSortModeChange()">
-          Sort by Cantus ID frequency
-        </mat-checkbox>
-        <mat-checkbox
-          class="margin-right"
-          style="margin-right: 30px;"
-          [(ngModel)]="concatenatedMode">
-          Concatenated alignment
-        </mat-checkbox>
-        <mat-checkbox
-          class="margin-right"
-          [(ngModel)]="keepLiquescents">
-          Keep liquescents
-        </mat-checkbox>
+  </div>
+  <div class="list-toolbar">
+    <mat-checkbox
+      (change)="selectAllVisible()"
+      [(ngModel)]="selectedAll">
+      Select/deselect all
+    </mat-checkbox>
+    <span class="selected-count">(Selected: {{ nChantsSelected }})</span>
+    <mat-checkbox
+      [(ngModel)]="sortedByCountusIDFrequency"
+      (ngModelChange)="onSortModeChange()">
+      Sort by Cantus ID frequency
+    </mat-checkbox>
+    <mat-checkbox
+      [(ngModel)]="concatenatedMode">
+      Concatenated alignment
+    </mat-checkbox>
+    <mat-checkbox
+      [(ngModel)]="keepLiquescents">
+      Keep liquescents
+    </mat-checkbox>
+  </div>
 
-        <div class="chant-list-table">
-          @if (isLoading) {
-            <div class="chant-list-loading-overlay">
-              <mat-spinner diameter="48"></mat-spinner>
-              <span>Generation in progress...</span>
-            </div>
-          }
-          <table>
-            <tr>
-              <th></th>
-              <th>Incipit</th>
-              <th>Cantus ID</th>
-              <th>Source</th>
-              <th>Genre</th>
-              <th>Office</th>
-              <th>Mode</th>
-              <th>Dataset name</th>
-            </tr>
-            @for (chant of chants; track chant.id; let i = $index) {
-              <tr mat-cell
-                class="list-group-item"
-                >
-                <td>
-                  <mat-checkbox
-                    class="margin-right"
-                    [(ngModel)]="selected[pageIndex * pageSize + i]"
-                    (ngModelChange)="onSelectionChange(pageIndex * pageSize + i)">
-                  </mat-checkbox>
-                </td>
-                <td>
-                  <a [routerLink]="['/chants', chant.id]">
-                    {{ chant.incipit }}
-                  </a>
-                </td>
-                <td>{{ chant.cantus_id }}</td>
-                <td>{{ chant.siglum }}, {{ chant.folio }}, {{ chant.position }}</td>
-                <td>{{ getGenreName(chant.genre_id) }}</td>
-                <td>{{ getOfficeName(chant.office_id) }}</td>
-                <td>{{ chant.mode }}</td>
-                <td>{{ chant.dataset_name }}</td>
-              </tr>
-            }
-          </table>
-          <mat-paginator #paginator
-            [length]="dataLength"
-            [pageSize]="pageSize"
-            [pageIndex]="pageIndex"
-            [pageSizeOptions]="[20, 50, 100, 200]"
-            (page)="changePage($event)">
-          </mat-paginator>
-        </div>
-      </ng-container>
-      <button mat-raised-button color="primary" (click)="export()">Export to CSV</button>
-      @if (authService.isLoggedIn()) {
-        <button mat-raised-button color="primary" (click)="createDataset()">Create Dataset</button>
-        <button mat-raised-button color="primary" (click)="addToDataset()">Add to dataset</button>
+  <div class="chant-list-table">
+    @if (isLoading) {
+      <div class="chant-list-loading-overlay">
+        <mat-spinner diameter="48"></mat-spinner>
+        <span>Generation in progress...</span>
+      </div>
+    }
+    <table>
+      <tr>
+        <th></th>
+        <th>Incipit</th>
+        <th>Cantus ID</th>
+        <th>Source</th>
+        <th>Genre</th>
+        <th>Office</th>
+        <th>Mode</th>
+        <th>Dataset name</th>
+      </tr>
+      @for (chant of chants; track chant.id; let i = $index) {
+        <tr mat-cell
+          class="list-group-item"
+          >
+          <td>
+            <mat-checkbox
+              class="margin-right"
+              [(ngModel)]="selected[pageIndex * pageSize + i]"
+              (ngModelChange)="onSelectionChange(pageIndex * pageSize + i)">
+            </mat-checkbox>
+          </td>
+          <td>
+            <a [routerLink]="['/chants', chant.id]">
+              {{ chant.incipit }}
+            </a>
+          </td>
+          <td>{{ chant.cantus_id }}</td>
+          <td>{{ chant.siglum }}, {{ chant.folio }}, {{ chant.position }}</td>
+          <td>{{ getGenreName(chant.genre_id) }}</td>
+          <td>{{ getOfficeName(chant.office_id) }}</td>
+          <td>{{ chant.mode }}</td>
+          <td>{{ chant.dataset_name }}</td>
+        </tr>
       }
-    </div>
+    </table>
+    <mat-paginator #paginator
+      [length]="dataLength"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[20, 50, 100, 200]"
+      (page)="changePage($event)">
+    </mat-paginator>
+  </div>
+  <div class="list-toolbar">
+    <button mat-raised-button color="primary" (click)="export()">Export to CSV</button>
+    @if (authService.isLoggedIn()) {
+      <button mat-raised-button color="primary" (click)="createDataset()">Create Dataset</button>
+      <button mat-raised-button color="primary" (click)="addToDataset()">Add to dataset</button>
+    }
+  </div>
+</div>

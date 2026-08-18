@@ -1,11 +1,10 @@
 .navigation {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
 }
 
-.navigation * {
-    flex: 1;
+.navigation app-navigation {
+    display: block;
+    width: 100%;
 }
 
 .navbar {
@@ -15,6 +14,11 @@
     z-index: 1;
 }
 
+.navbar mat-toolbar {
+    min-height: 64px;
+    padding: 0 16px;
+}
+
 .body {
-    margin-top: 70px;
+    margin-top: 80px;
 }

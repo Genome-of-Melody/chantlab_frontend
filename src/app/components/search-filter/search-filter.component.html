@@ -1,101 +1,88 @@
 <div class="filter">
+  <div class="filter-header">
+    <button mat-icon-button class="collapse-button" (click)="visible = !visible" aria-label="Toggle filters">
+      <mat-icon>{{ visible ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+    </button>
+    <h2>Filter search</h2>
+    <button class="save-filter" mat-stroked-button (click)="saveFilter()">Apply filters and refresh</button>
+  </div>
   @if (visible) {
-    <div>
-      <div class="filter-header">
-        <button mat-button class="collapse-button" (click)="visible = !visible">
-          <mat-icon>keyboard_arrow_up</mat-icon>
-        </button>
-        <h2>Filter search</h2>
-        <button class="save-filter" mat-stroked-button (click)="saveFilter()">Apply filters and refresh</button>
-      </div>
-      <div class="filter-content">
-        <mat-checkbox class="genre-checkbox"
-          [(ngModel)]="hideIncompleteChants">
-          Hide incomplete chants
-        </mat-checkbox>
-        <mat-checkbox class="genre-checkbox"
-          [(ngModel)]="hideChantsWithoutVolpiano">
-          Hide chants without Volpiano
-        </mat-checkbox>
-        <h3>Genres</h3>
-        <mat-checkbox
-          class="all-genres-checkbox"
-          (change)="checkAllGenres()"
-          [(ngModel)]="checkedAllGenres">
-          All
-        </mat-checkbox>
-        @if (genres.length) {
-          <div class="genre-selector">
-            @for (genre of genres; track genre.id) {
-              <div>
-                <mat-checkbox
-                  class="genre-checkbox"
-                  [(ngModel)]="genre.checked"
-                  (ngModelChange)="onSelectionChange()">
-                  {{ genre.name }}
-                </mat-checkbox>
-              </div>
-            }
-          </div>
-        }
-        <br>
-          <h3>Offices</h3>
-          <mat-checkbox
-            class="all-offices-checkbox"
-            (change)="checkAllOffices()"
-            [(ngModel)]="checkedAllOffices">
-            All
-          </mat-checkbox>
-          @if (offices.length) {
-            <div class="office-selector">
-              @for (office of offices; track office.id) {
-                <div>
-                  <mat-checkbox
-                    class="office-checkbox"
-                    [(ngModel)]="office.checked"
-                    (ngModelChange)="onSelectionChange()">
-                    {{ office.name }}
-                  </mat-checkbox>
-                </div>
-              }
+    <div class="filter-content">
+      <mat-checkbox class="genre-checkbox"
+        [(ngModel)]="hideIncompleteChants">
+        Hide incomplete chants
+      </mat-checkbox>
+      <mat-checkbox class="genre-checkbox"
+        [(ngModel)]="hideChantsWithoutVolpiano">
+        Hide chants without Volpiano
+      </mat-checkbox>
+      <h3>Genres</h3>
+      <mat-checkbox
+        class="all-genres-checkbox"
+        (change)="checkAllGenres()"
+        [(ngModel)]="checkedAllGenres">
+        All
+      </mat-checkbox>
+      @if (genres.length) {
+        <div class="genre-selector">
+          @for (genre of genres; track genre.id) {
+            <div>
+              <mat-checkbox
+                class="genre-checkbox"
+                [(ngModel)]="genre.checked"
+                (ngModelChange)="onSelectionChange()">
+                {{ genre.name }}
+              </mat-checkbox>
             </div>
           }
-          <br>
-            <h3>Fontes</h3>
-            <mat-checkbox
-              class="all-fontes-checkbox"
-              (change)="checkAllFontes()"
-              [(ngModel)]="checkedAllFontes">
-              All
-            </mat-checkbox>
-            @if (fontes.length) {
-              <div class="fontes-selector">
-                @for (fonte of fontes; track fonte.id) {
-                  <div>
-                    <mat-checkbox
-                      class="fontes-checkbox"
-                      [(ngModel)]="fonte.checked"
-                      (ngModelChange)="onSelectionChange()">
-                      {{ fonte.name }}
-                    </mat-checkbox>
-                  </div>
-                }
-              </div>
-            }
-            <br>
-              <button mat-stroked-button (click)="saveFilter()">Apply filters and refresh</button>
+        </div>
+      }
+      <br>
+      <h3>Offices</h3>
+      <mat-checkbox
+        class="all-offices-checkbox"
+        (change)="checkAllOffices()"
+        [(ngModel)]="checkedAllOffices">
+        All
+      </mat-checkbox>
+      @if (offices.length) {
+        <div class="office-selector">
+          @for (office of offices; track office.id) {
+            <div>
+              <mat-checkbox
+                class="office-checkbox"
+                [(ngModel)]="office.checked"
+                (ngModelChange)="onSelectionChange()">
+                {{ office.name }}
+              </mat-checkbox>
             </div>
-          </div>
-        }
-        @if (!visible) {
-          <div>
-            <div class="filter-header">
-              <button mat-button class="collapse-button" (click)="visible = !visible">
-                <mat-icon>keyboard_arrow_down</mat-icon>
-              </button>
-              <h2>Filter search</h2>
-              <button class="save-filter" mat-stroked-button (click)="saveFilter()">Apply filters and refresh</button>
+          }
+        </div>
+      }
+      <br>
+      <h3>Fontes</h3>
+      <mat-checkbox
+        class="all-fontes-checkbox"
+        (change)="checkAllFontes()"
+        [(ngModel)]="checkedAllFontes">
+        All
+      </mat-checkbox>
+      @if (fontes.length) {
+        <div class="fontes-selector">
+          @for (fonte of fontes; track fonte.id) {
+            <div>
+              <mat-checkbox
+                class="fontes-checkbox"
+                [(ngModel)]="fonte.checked"
+                (ngModelChange)="onSelectionChange()">
+                {{ fonte.name }}
+              </mat-checkbox>
             </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
+      <br>
+      <button mat-stroked-button (click)="saveFilter()">Apply filters and refresh</button>
+    </div>
+  }
+</div>
