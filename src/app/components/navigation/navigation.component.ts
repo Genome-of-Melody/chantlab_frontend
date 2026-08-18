@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { IsActiveMatchOptions, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -13,10 +13,22 @@ export class NavigationComponent implements OnInit {
 
   searchValue = '';
 
+  private readonly activeLinkMatch: IsActiveMatchOptions = {
+    paths: 'subset',
+    queryParams: 'ignored',
+    fragment: 'ignored',
+    matrixParams: 'ignored'
+  };
+
   constructor(
     private router: Router,
     public authService: AuthService
   ) { }
+
+  get isChantListActive(): boolean {
+    return this.router.isActive('/chants', this.activeLinkMatch)
+      || this.router.isActive('/align', this.activeLinkMatch);
+  }
 
   ngOnInit(): void {
   }

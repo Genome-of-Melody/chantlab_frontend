@@ -3,7 +3,7 @@
         <a mat-icon-button class="home-button" routerLink="" aria-label="home">
             <mat-icon>home</mat-icon>
         </a>
-        <a mat-button class="nav-link" routerLink="/chants" routerLinkActive="nav-link-active">Chant list</a>
+        <a mat-button class="nav-link" routerLink="/chants" [class.nav-link-active]="isChantListActive">Chant list</a>
         @if (authService.isLoggedIn()) {
           <a mat-button class="nav-link" routerLink="/upload" routerLinkActive="nav-link-active">Manage data</a>
           <a mat-button class="nav-link" routerLink="/alignment-manager" routerLinkActive="nav-link-active">Manage alignments</a>
