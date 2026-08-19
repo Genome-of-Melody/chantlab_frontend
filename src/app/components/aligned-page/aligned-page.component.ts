@@ -108,7 +108,13 @@ export class AlignedPageComponent implements OnInit {
           // and response, I think I can afford to do this. But of course it is
           // not good software design to modify your response objects!
           response.iChants = alignedIChants;
-          this.alignmentService.alignment = Alignment.fromResponse(response)
+          try {
+            this.alignmentService.alignment = Alignment.fromResponse(response);
+          } catch (err) {
+            console.error('AlignedPage: failed to store alignment', err);
+            this.generationErrorService.handleFailure('/chants');
+            return;
+          }
 
           console.log(response);
           this.alignedResponse = new AlignmentResponse(
