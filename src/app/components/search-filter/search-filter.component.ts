@@ -31,6 +31,8 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
   genres: FilterOption[] = [];
   offices: FilterOption[] = [];
   fontes: FilterOption[] = [];
+  filteredFontes: FilterOption[] = [];
+  fonteQuery = '';
 
   checkedAllGenres = true;
   checkedAllOffices = true;
@@ -116,6 +118,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
         map(data => {
           const prevFilters = this.chantListService.filterSettings;
           this.fontes = this.buildFontesOptions(data, prevFilters?.fontes);
+          this.applyFonteFilter();
           this.onSelectionChange();
         })
       );
@@ -165,6 +168,17 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
   checkAllFontes(): void {
     this.fontes.forEach(fonte => fonte.checked = this.checkedAllFontes);
+  }
+
+  applyFonteFilter(): void {
+    const query = this.fonteQuery.trim().toLowerCase();
+    this.filteredFontes = query
+      ? this.fontes.filter(fonte => fonte.name.toLowerCase().includes(query))
+      : this.fontes;
+  }
+
+  trackFonte(_index: number, fonte: FilterOption): string {
+    return fonte.id;
   }
 
   private buildOptions(data: object, previousIds: string[] | null | undefined): FilterOption[] {

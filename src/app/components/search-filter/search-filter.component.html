@@ -60,7 +60,7 @@
         </div>
       }
       <br>
-      <h3>Fontes</h3>
+      <h3>Fontes <span class="fonte-count">({{ fontes.length }})</span></h3>
       <mat-checkbox
         class="all-fontes-checkbox"
         (change)="checkAllFontes()"
@@ -68,18 +68,29 @@
         All
       </mat-checkbox>
       @if (fontes.length) {
-        <div class="fontes-selector">
-          @for (fonte of fontes; track fonte.id) {
-            <div>
-              <mat-checkbox
-                class="fontes-checkbox"
-                [(ngModel)]="fonte.checked"
-                (ngModelChange)="onSelectionChange()">
-                {{ fonte.name }}
-              </mat-checkbox>
-            </div>
-          }
-        </div>
+        <input
+          class="fonte-search"
+          type="search"
+          placeholder="Search fontes"
+          [(ngModel)]="fonteQuery"
+          (ngModelChange)="applyFonteFilter()">
+        <cdk-virtual-scroll-viewport
+          itemSize="40"
+          minBufferPx="160"
+          maxBufferPx="320"
+          class="fontes-selector">
+          <div *cdkVirtualFor="let fonte of filteredFontes; trackBy: trackFonte" class="fonte-row">
+            <mat-checkbox
+              class="fontes-checkbox"
+              [(ngModel)]="fonte.checked"
+              (ngModelChange)="onSelectionChange()">
+              {{ fonte.name }}
+            </mat-checkbox>
+          </div>
+        </cdk-virtual-scroll-viewport>
+        @if (fonteQuery && filteredFontes.length === 0) {
+          <p class="fonte-empty">No fontes match “{{ fonteQuery }}”.</p>
+        }
       }
       <br>
       <button mat-stroked-button (click)="saveFilter()">Apply filters and refresh</button>
