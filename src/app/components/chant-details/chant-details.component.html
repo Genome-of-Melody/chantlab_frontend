@@ -100,7 +100,9 @@
         <mat-card-content><a href="http://cantusindex.org/id/{{ chant.db_source.cantus_id }}" target="_blank">{{ chant.db_source.cantus_id }}</a></mat-card-content>
         <mat-card-subtitle>Details</mat-card-subtitle>
         <mat-card-content>
-          <a href="{{ chant.db_source.drupal_path }}">{{ chant.db_source.drupal_path }}</a>
+          @if (chant.db_source.chantlink) {
+            <a href="{{ chant.db_source.chantlink }}" target="_blank" rel="noopener noreferrer">{{ chant.db_source.chantlink }}</a>
+          }
         </mat-card-content>
         @if (chant.db_source.is_owned) {
           <div class="update-volpiano">

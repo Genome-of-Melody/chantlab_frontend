@@ -1,25 +1,60 @@
 .filter {
-    width: min(92%, 1400px);
+    width: min(92%, 1100px);
     margin: 30px auto 0;
+    padding: 0 16px;
+    box-sizing: border-box;
 }
 
 .filter-header {
     display: flex;
     align-items: center;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 16px;
-    box-sizing: border-box;
 }
 
-.genre-selector, .office-selector, .fontes-selector {
+.genre-selector, .office-selector {
     display: flex;
     flex-wrap: wrap;
 }
 
+.fonte-count {
+    font-weight: normal;
+    font-size: 0.85em;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.fonte-search {
+    display: block;
+    width: min(100%, 420px);
+    margin: 8px 0 12px;
+    padding: 6px 10px;
+    box-sizing: border-box;
+}
+
 .fontes-selector {
-    max-height: 280px;
-    overflow-y: auto;
+    height: 280px;
+    width: 100%;
+}
+
+.fonte-row {
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.fonte-row .fontes-checkbox {
+    max-width: 100%;
+}
+
+:host ::ng-deep .fonte-row .fontes-checkbox .mdc-form-field,
+:host ::ng-deep .fonte-row .fontes-checkbox .mdc-form-field > label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fonte-empty {
+    margin: 8px 10px 0;
+    color: rgba(0, 0, 0, 0.6);
 }
 
 .genre-checkbox, .office-checkbox, .fontes-checkbox {

@@ -3,6 +3,7 @@ import { SettingsComponent } from './settings.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -17,6 +18,7 @@ describe('AlignmentSettingsComponent', () => {
         MatCardModule,
         MatIconModule,
         MatCheckboxModule,
+        MatButtonToggleModule,
         FormsModule
       ],
       declarations: [ SettingsComponent ],

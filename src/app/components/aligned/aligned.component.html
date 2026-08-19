@@ -74,7 +74,7 @@
         class="widget-control-button">Manuscript Network</button>-->
       </li>
       <li><button mat-raised-button (click)="downloadMelodiesSnapshot()" color="primary"
-        class="widget-control-button" [disabled]="isDownloadingSnapshot">Download Alignment Snapshot PDF</button>
+        class="widget-control-button" [disabled]="isDownloadingSnapshot">Download Alignment Snapshot {{ snapshotFormat.toUpperCase() }}</button>
       @if (!concatenated) {
         <button mat-raised-button (click)="restrictToContrafacts()" color="primary" class="widget-control-button">Reduce to Contrafacts</button>
       }

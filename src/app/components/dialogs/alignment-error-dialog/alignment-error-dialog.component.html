@@ -1,16 +1,38 @@
-<h2 mat-dialog-title>There have been some errors</h2>
+<h2 mat-dialog-title>Alignment warning</h2>
 <mat-dialog-content>
-  <p>Couldn't process the following chants:</p>
-  <ul>
-    @for (source of sources; track source; let i = $index) {
-      <li>
-        <a target="_blank" [routerLink]="['/chants', ids[i]]">
-          {{ source }}
-        </a>
-      </li>
-    }
-  </ul>
+  <p class="warning-lead">
+    The chant text and the melody do not have the same number of words or
+    syllables, so they cannot be underlaid correctly.
+  </p>
+  @if (included.length) {
+    <p class="issue-heading">Included in the alignment</p>
+    <p class="issue-note">Displayed with incomplete text underlay.</p>
+    <ul>
+      @for (chant of included; track chant.id) {
+        <li>
+          <a target="_blank" [routerLink]="['/chants', chant.id]">
+            {{ chant.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  }
+  @if (omitted.length) {
+    <p class="issue-heading">Excluded from the alignment</p>
+    <p class="issue-note">These chants could not be aligned.</p>
+    <ul>
+      @for (chant of omitted; track chant.id) {
+        <li>
+          <a target="_blank" [routerLink]="['/chants', chant.id]">
+            {{ chant.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="issue-note">All selected chants remain in the alignment.</p>
+  }
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>OK</button>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close class="dismiss-button">OK</button>
 </mat-dialog-actions>

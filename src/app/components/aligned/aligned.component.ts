@@ -22,8 +22,9 @@ import { ContrafactReductionResultDialogComponent } from '../dialogs/contrafact-
 import { PhylogenyNotSupportedDialogComponent } from '../dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
 import { AlignmentSnapshotService } from '../../services/alignment-snapshot.service';
 import { AuthService } from '../../services/auth.service';
+import { SnapshotExportFailedDialogComponent } from '../dialogs/snapshot-export-failed-dialog/snapshot-export-failed-dialog.component';
 import {
-  AlignmentExportFormat,
+  AlignmentSnapshotFormat,
   ALIGNMENT_EXPORT_EXTENSION,
 } from '../../models/alignment-export-format';
 
@@ -48,9 +49,6 @@ export class AlignedComponent implements OnInit, OnDestroy {
   @ViewChild('alignmentCapture') alignmentCapture: ElementRef<HTMLElement>;
 
   isDownloadingSnapshot = false;
-
-  /** Change to 'png' or 'jpeg' to export raster images instead of PDF. */
-  readonly alignmentExportFormat: AlignmentExportFormat = 'pdf';
 
   alignedChants: IChant[];
   blob: Blob;
@@ -172,6 +170,10 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return this.alignmentPresent.filter(a => a).length;
   }
 
+  get snapshotFormat(): AlignmentSnapshotFormat {
+    return this.settingsService.alignmentSettingsService.snapshotFormat;
+  }
+
   get hasMultipleSequencesPresent(): boolean {
     return this.alignmentPresent.filter(Boolean).length > 1;
   }
@@ -250,9 +252,13 @@ export class AlignedComponent implements OnInit, OnDestroy {
     try {
       const blob = await this.alignmentSnapshotService.exportFrame(
         this.alignmentCapture.nativeElement,
-        this.alignmentExportFormat,
+        this.snapshotFormat,
       );
       this.downloadService.download(blob, this.getSnapshotFilename());
+    } catch (error) {
+      console.error('Alignment snapshot export failed', error);
+      const dialogRef = this.dialog.open(SnapshotExportFailedDialogComponent);
+      dialogRef.componentInstance.detail = error instanceof Error ? error.message : String(error);
     } finally {
       this.isDownloadingSnapshot = false;
       this.changeDetectorRef.markForCheck();
@@ -265,7 +271,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     const melodyCount = this.nAlignmentsShown;
-    const extension = ALIGNMENT_EXPORT_EXTENSION[this.alignmentExportFormat];
+    const extension = ALIGNMENT_EXPORT_EXTENSION[this.snapshotFormat];
 
     return `alignment_snapshot_${yyyy}-${mm}-${dd}_${melodyCount}ch.${extension}`;
   }

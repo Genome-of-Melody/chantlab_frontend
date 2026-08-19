@@ -6,6 +6,10 @@ import { IFilterSettings } from '../interfaces/filter-settings.interface';
 })
 export class ChantListService {
 
+  // localStorage is typically ~5MB. 888k IDs as JSON is several MB and
+  // throws QuotaExceededError; keep only modest selections across reloads.
+  private static readonly MAX_STORED_SELECTION = 10000;
+
   constructor() { }
 
   private storage = window.localStorage;
@@ -15,11 +19,24 @@ export class ChantListService {
     if (selectedList === null || selectedList === undefined || selectedList === "undefined"){
       return [];
     }
-    return JSON.parse(selectedList);
+    try {
+      const parsed = JSON.parse(selectedList);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
   }
 
   set selectedChants(selectedChants: number[]){
-    this.storage.setItem('chantList_selectedChants', JSON.stringify(selectedChants));
+    if (!selectedChants?.length || selectedChants.length > ChantListService.MAX_STORED_SELECTION) {
+      this.storage.removeItem('chantList_selectedChants');
+      return;
+    }
+    try {
+      this.storage.setItem('chantList_selectedChants', JSON.stringify(selectedChants));
+    } catch {
+      this.storage.removeItem('chantList_selectedChants');
+    }
   }
 
   get filterSettings(): IFilterSettings | undefined {

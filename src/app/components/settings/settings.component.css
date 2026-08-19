@@ -17,3 +17,39 @@ mat-card-content.settings-group {
   margin-left: 20px;
   display: block;
 }
+
+.snapshot-format {
+  margin-top: 16px;
+}
+
+.snapshot-format-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+:host ::ng-deep .snapshot-format .mat-mdc-button-toggle-group {
+  height: auto;
+}
+
+:host ::ng-deep .snapshot-format .mat-mdc-button-toggle {
+  font-size: 14px;
+  height: auto;
+}
+
+:host ::ng-deep .snapshot-format .mat-mdc-button-toggle-button {
+  height: auto;
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: normal;
+}
+
+:host ::ng-deep .snapshot-format .mat-button-toggle-label-content,
+:host ::ng-deep .snapshot-format .mat-mdc-button-toggle-label-content {
+  line-height: 20px;
+  padding: 0 4px;
+  font-size: 14px;
+}

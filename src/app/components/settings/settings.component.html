@@ -23,6 +23,18 @@
         (ngModelChange)="persist()">
         Use absolute distances in distance matrix computation (not recommended for most uses)
       </mat-checkbox>
+      <div class="settings-item-active-element snapshot-format">
+        <span class="snapshot-format-label">Alignment snapshot format</span>
+        <mat-button-toggle-group
+          [(ngModel)]="settingsService.alignmentSettingsService.snapshotFormat"
+          (ngModelChange)="persist()"
+          hideSingleSelectionIndicator
+          aria-label="Alignment snapshot format">
+          <mat-button-toggle value="png">PNG</mat-button-toggle>
+          <mat-button-toggle value="jpeg">JPEG</mat-button-toggle>
+          <mat-button-toggle value="pdf">PDF</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
     </mat-card-content>
   }
 </mat-card>
