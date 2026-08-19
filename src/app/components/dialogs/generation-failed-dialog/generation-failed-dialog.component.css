@@ -1,0 +1,13 @@
+mat-dialog-content {
+  max-width: 28rem;
+}
+
+mat-dialog-content p {
+  margin: 0 0 0.75rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
+mat-dialog-content p:last-child {
+  margin-bottom: 0;
+}

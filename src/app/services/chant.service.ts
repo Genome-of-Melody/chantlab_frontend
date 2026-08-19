@@ -9,6 +9,7 @@ import { IFilterSettings } from '../interfaces/filter-settings.interface';
 import { SelectedDataSourcesService } from './selected-data-sources.service';
 import { IncipitService } from './incipit.service';
 import { SearchFilterService } from './search-filter.service';
+import { GenerationErrorService } from './generation-error.service';
 
 
 @Injectable({
@@ -21,6 +22,7 @@ export class ChantService {
     private dataSourceService: SelectedDataSourcesService,
     private searchFilterService: SearchFilterService,
     private incipitService: IncipitService,
+    private generationErrorService: GenerationErrorService,
   ) { }
 
   private readonly _chantList = new BehaviorSubject<IChant[]>(null);
@@ -70,6 +72,9 @@ export class ChantService {
           return this.http.post<IChant[]>(this._baseUrl + '/', formData).pipe(
             catchError((err) => {
               console.error('Error loading chants:', err);
+              // Clears the list/dashboard spinner via the following tap(), then
+              // returns the user to the chant list with a shared error popup.
+              this.generationErrorService.handleFailure('/chants');
               return of([]);
             })
           );
