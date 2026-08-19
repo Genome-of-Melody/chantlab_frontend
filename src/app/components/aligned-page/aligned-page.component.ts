@@ -7,7 +7,7 @@ import {IChant} from '../../interfaces/chant.interface';
 import { MatDialog } from '@angular/material/dialog';
 import {AlignmentManagementService} from '../../services/alignment-management.service';
 import {ActivatedRoute} from '@angular/router';
-import RuntimeError = WebAssembly.RuntimeError;
+import {GenerationErrorService} from '../../services/generation-error.service';
 
 /**
  * The AlignedPageComponent is a level of indirection between the app's
@@ -42,6 +42,7 @@ export class AlignedPageComponent implements OnInit {
     private alignmentService: AlignmentService,
     private alignmentManagementService: AlignmentManagementService,
     private route: ActivatedRoute,
+    private generationErrorService: GenerationErrorService,
     public dialog: MatDialog
   ) { }
 
@@ -57,7 +58,7 @@ export class AlignedPageComponent implements OnInit {
         },
         error => {
           console.error('Requested non-existent alignment: ' + this.requestedAlignmentName, error);
-          throw new RuntimeError();
+          this.generationErrorService.handleFailure('/chants');
         }
       );
     }
@@ -86,8 +87,8 @@ export class AlignedPageComponent implements OnInit {
       formData.append('concatenated', JSON.stringify(this.alignmentService.concatenatedMode))
       formData.append('keepLiquescents', JSON.stringify(this.alignmentService.keepLiquescents))
 
-      this.chantService.getAlignment(formData).subscribe(
-        response => {
+      this.chantService.getAlignment(formData).subscribe({
+        next: response => {
   
           console.log('AlignedPage: got response:');
           console.log(response);
@@ -130,8 +131,12 @@ export class AlignedPageComponent implements OnInit {
           }
   
           console.log('AlignedPage: finished subscribe()');
+        },
+        error: err => {
+          console.error('AlignedPage: alignment request failed', err);
+          this.generationErrorService.handleFailure('/chants');
         }
-      );
+      });
     } else {
       const alignment = this.alignmentService.alignment;
       this.idsToAlign = alignment.ids;

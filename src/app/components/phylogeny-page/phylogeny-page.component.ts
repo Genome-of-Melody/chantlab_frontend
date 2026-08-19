@@ -1,15 +1,12 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {AlignmentManagementService} from '../../services/alignment-management.service';
-import {ActivatedRoute} from '@angular/router';
-import RuntimeError = WebAssembly.RuntimeError;
 import { PhylogenyResponse } from 'src/app/models/phylogeny';
 import { PhylogenyService } from 'src/app/services/phylogeny.service';
 import { Alignment } from 'src/app/models/alignment';
 import { ChantService } from 'src/app/services/chant.service';
 import { SettingsService } from 'src/app/services/settings.service';
-import { AlignmentErrorDialogComponent } from '../dialogs/alignment-error-dialog/alignment-error-dialog.component';
 import { PhylogenyErrorDialogComponent } from '../dialogs/phylogeny-error-dialog/phylogeny-error-dialog.component';
+import { GenerationErrorService } from 'src/app/services/generation-error.service';
 
 
 
@@ -35,6 +32,7 @@ export class PhylogenyPageComponent implements OnInit {
     private phylogenyService: PhylogenyService,
     private chantService: ChantService,
     private settingsService: SettingsService,
+    private generationErrorService: GenerationErrorService,
     public dialog: MatDialog
   ) { }
 
@@ -49,8 +47,8 @@ export class PhylogenyPageComponent implements OnInit {
       formData.append('alignment_names', JSON.stringify(this.phylogenyService.sequenceNames));
       formData.append('numberOfGenerations', JSON.stringify(this.settingsService.phylogenySettingsService.mrbayesGenerations));
 
-      this.chantService.mrbayesVolpiano(formData).subscribe(
-        response => {
+      this.chantService.mrbayesVolpiano(formData).subscribe({
+        next: response => {
   
           console.log('PhylogenyPage: got response:');
           console.log(response);
@@ -79,8 +77,14 @@ export class PhylogenyPageComponent implements OnInit {
           }
 
           console.log('PhylogenyPage: finished subscribe()');
+        },
+        error: err => {
+          console.error('PhylogenyPage: phylogeny request failed', err);
+          // Clear so a later retry actually re-requests instead of using a half-state.
+          this.phylogenyService.newick = undefined;
+          this.generationErrorService.handleFailure('/align');
         }
-      );
+      });
     } else {
       this.newick = this.phylogenyService.newick
       this.mb_script = this.phylogenyService.mrBayesScript
