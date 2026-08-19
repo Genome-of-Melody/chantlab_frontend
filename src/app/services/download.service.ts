@@ -8,10 +8,21 @@ export class DownloadService {
   constructor() { }
 
   download(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
     const anchor = document.createElement('a');
-    anchor.href = window.URL.createObjectURL(blob);
-    anchor.setAttribute('download', filename);
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.rel = 'noopener';
+    anchor.style.display = 'none';
     document.body.appendChild(anchor);
     anchor.click();
+
+    // Keep the blob URL alive until the browser has started the download.
+    window.setTimeout(() => {
+      if (anchor.parentNode) {
+        document.body.removeChild(anchor);
+      }
+      window.URL.revokeObjectURL(url);
+    }, 60_000);
   }
 }

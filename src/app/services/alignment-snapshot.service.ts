@@ -32,6 +32,13 @@ interface MeasuredExportFrame {
   providedIn: 'root'
 })
 export class AlignmentSnapshotService {
+  // Use Chrome's usual hard caps. rasterizeFrame() retries at half scale if
+  // the GPU rejects the canvas or toBlob() returns null.
+  private readonly preferredScale = 2;
+  private readonly minScale = 0.05;
+  private readonly maxCanvasDimension = 32767;
+  private readonly maxCanvasArea = 268_435_456;
+  private readonly maxPdfPageUnits = 14400;
 
   async exportFrame(element: HTMLElement, format: AlignmentExportFormat): Promise<Blob> {
     await this.ensureExportFontsReady();
@@ -107,24 +114,69 @@ export class AlignmentSnapshotService {
     const pngBlob = await this.buildImageFromMeasurements(measured, 'image/png');
     const pngBytes = new Uint8Array(await pngBlob.arrayBuffer());
     const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([measured.width, measured.height]);
     const image = await pdfDoc.embedPng(pngBytes);
+    const pageScale = Math.min(
+      1,
+      this.maxPdfPageUnits / measured.width,
+      this.maxPdfPageUnits / measured.height,
+    );
+    const pageWidth = measured.width * pageScale;
+    const pageHeight = measured.height * pageScale;
+    const page = pdfDoc.addPage([pageWidth, pageHeight]);
 
     page.drawImage(image, {
       x: 0,
       y: 0,
-      width: measured.width,
-      height: measured.height,
+      width: pageWidth,
+      height: pageHeight,
     });
 
     return pdfDoc.save();
   }
 
   private async buildImageFromMeasurements(measured: MeasuredExportFrame, mimeType: string): Promise<Blob> {
-    const scale = 2;
+    let scale = this.computeExportScale(measured.width, measured.height);
+    let lastError: Error | null = null;
+
+    while (scale >= this.minScale) {
+      try {
+        return await this.rasterizeFrame(measured, mimeType, scale);
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        scale *= 0.5;
+      }
+    }
+
+    throw lastError ?? new Error('Could not create image from alignment export.');
+  }
+
+  private computeExportScale(width: number, height: number): number {
+    const maxScaleByWidth = this.maxCanvasDimension / width;
+    const maxScaleByHeight = this.maxCanvasDimension / height;
+    const maxScaleByArea = Math.sqrt(this.maxCanvasArea / (width * height));
+    const scale = Math.min(this.preferredScale, maxScaleByWidth, maxScaleByHeight, maxScaleByArea);
+
+    if (!Number.isFinite(scale) || scale <= 0) {
+      throw new Error('Alignment snapshot is too large to export in this browser.');
+    }
+
+    return scale;
+  }
+
+  private rasterizeFrame(
+    measured: MeasuredExportFrame,
+    mimeType: string,
+    scale: number,
+  ): Promise<Blob> {
+    const width = Math.max(1, Math.ceil(measured.width * scale));
+    const height = Math.max(1, Math.ceil(measured.height * scale));
     const canvas = document.createElement('canvas');
-    canvas.width = measured.width * scale;
-    canvas.height = measured.height * scale;
+    canvas.width = width;
+    canvas.height = height;
+
+    if (canvas.width !== width || canvas.height !== height) {
+      throw new Error('Alignment snapshot is too large to export in this browser.');
+    }
 
     const ctx = canvas.getContext('2d');
     if (!ctx) {
@@ -162,14 +214,19 @@ export class AlignmentSnapshotService {
       ctx.fillText(element.text, element.x, element.y);
     }
 
+    const quality = mimeType === 'image/jpeg' ? 0.92 : undefined;
+
     return new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
-        if (blob) {
+        canvas.width = 0;
+        canvas.height = 0;
+
+        if (blob && blob.size > 0) {
           resolve(blob);
         } else {
           reject(new Error('Could not create image from alignment export.'));
         }
-      }, mimeType);
+      }, mimeType, quality);
     });
   }
 

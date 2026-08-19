@@ -68,6 +68,7 @@ import { PhylogenyComponent } from './components/phylogeny/phylogeny.component';
 import { PhylogenyPageComponent } from './components/phylogeny-page/phylogeny-page.component';
 import { PhylogenyErrorDialogComponent } from './components/dialogs/phylogeny-error-dialog/phylogeny-error-dialog.component';
 import { GenerationFailedDialogComponent } from './components/dialogs/generation-failed-dialog/generation-failed-dialog.component';
+import { SnapshotExportFailedDialogComponent } from './components/dialogs/snapshot-export-failed-dialog/snapshot-export-failed-dialog.component';
 import { NotEnoughToRemoveDialogComponent } from './components/dialogs/not-enough-to-remove-dialog/not-enough-to-remove-dialog.component';
 import { ContrafactReductionResultDialogComponent } from './components/dialogs/contrafact-reduction-result-dialog/contrafact-reduction-result-dialog.component';
 import { PhylogenyNotSupportedDialogComponent } from './components/dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
@@ -93,6 +94,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
         AlignmentErrorDialogComponent,
         PhylogenyErrorDialogComponent,
         GenerationFailedDialogComponent,
+        SnapshotExportFailedDialogComponent,
         ChantDetailDialogComponent,
         MultipleSeriesScatterplotComponent,
         DataUploadComponent,

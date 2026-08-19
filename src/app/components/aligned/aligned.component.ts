@@ -22,6 +22,7 @@ import { ContrafactReductionResultDialogComponent } from '../dialogs/contrafact-
 import { PhylogenyNotSupportedDialogComponent } from '../dialogs/phylogeny-not-supported-dialog/phylogeny-not-supported-dialog.component';
 import { AlignmentSnapshotService } from '../../services/alignment-snapshot.service';
 import { AuthService } from '../../services/auth.service';
+import { SnapshotExportFailedDialogComponent } from '../dialogs/snapshot-export-failed-dialog/snapshot-export-failed-dialog.component';
 import {
   AlignmentSnapshotFormat,
   ALIGNMENT_EXPORT_EXTENSION,
@@ -254,6 +255,10 @@ export class AlignedComponent implements OnInit, OnDestroy {
         this.snapshotFormat,
       );
       this.downloadService.download(blob, this.getSnapshotFilename());
+    } catch (error) {
+      console.error('Alignment snapshot export failed', error);
+      const dialogRef = this.dialog.open(SnapshotExportFailedDialogComponent);
+      dialogRef.componentInstance.detail = error instanceof Error ? error.message : String(error);
     } finally {
       this.isDownloadingSnapshot = false;
       this.changeDetectorRef.markForCheck();

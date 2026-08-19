@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Snapshot export failed</h2>
+<mat-dialog-content>
+  <p>
+    The alignment snapshot could not be downloaded. This often happens when the
+    alignment is too large for the browser to turn into a PDF, PNG, or JPEG.
+  </p>
+  <p>
+    Try exporting fewer chants, hiding lyrics, or switching the snapshot format
+    to JPEG.
+  </p>
+  @if (detail) {
+    <p class="snapshot-export-detail">{{ detail }}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>OK</button>
+</mat-dialog-actions>
