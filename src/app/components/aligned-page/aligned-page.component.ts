@@ -129,11 +129,26 @@ export class AlignedPageComponent implements OnInit {
           // The errors are also handled here -- the AlignedComponent is meant
           // to display the alignment, not to deal with what was *not* aligned.
           console.log(this.alignedResponse);
-          if (this.alignedResponse.errorShortNames.length > 0) {
+          const visualizedIds = new Set(this.flattenIds(this.alignmentService.alignment.ids));
+          const selectedIds = this.flattenIds(this.idsToAlign);
+          const issueById = new Map(
+            this.alignedResponse.errorShortNames.map((_, i) => {
+              const id = this.alignedResponse.errorIds[i];
+              return [id, { id, label: this.chantIssueLabel(id) }] as const;
+            })
+          );
+          const included = selectedIds
+            .filter(id => visualizedIds.has(id) && issueById.has(id))
+            .map(id => issueById.get(id));
+          const omitted = selectedIds
+            .filter(id => !visualizedIds.has(id))
+            .map(id => issueById.get(id) ?? { id, label: this.chantIssueLabel(id) });
+
+          if (included.length || omitted.length) {
             const dialogRef = this.dialog.open(AlignmentErrorDialogComponent);
             const instance = dialogRef.componentInstance;
-            instance.sources = this.alignedResponse.errorShortNames;
-            instance.ids = this.alignedResponse.errorIds;
+            instance.included = included;
+            instance.omitted = omitted;
           }
   
           console.log('AlignedPage: finished subscribe()');
@@ -157,6 +172,35 @@ export class AlignedPageComponent implements OnInit {
 
 
     console.log('AlignedPage: onInit() done.');
+  }
+
+  private flattenIds(ids: unknown): number[] {
+    if (typeof ids === 'number') {
+      return [ids];
+    }
+    if (!Array.isArray(ids)) {
+      return [];
+    }
+    return ids.flat(Infinity).filter((id): id is number => typeof id === 'number');
+  }
+
+  private chantIssueLabel(id: number): string {
+    const chant = this.chantsToAlign?.find(ch => ch.id === id);
+    const incipit = chant?.incipit?.trim();
+    if (incipit) {
+      return this.shortIncipit(incipit);
+    }
+    return chant?.cantus_id || String(id);
+  }
+
+  private shortIncipit(incipit: string, maxLength = 42): string {
+    if (incipit.length <= maxLength) {
+      return incipit;
+    }
+    const slice = incipit.slice(0, maxLength - 1);
+    const lastSpace = slice.lastIndexOf(' ');
+    const shortened = lastSpace > 20 ? slice.slice(0, lastSpace) : slice;
+    return shortened.trimEnd() + '…';
   }
 
 }

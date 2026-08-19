@@ -1,5 +1,10 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
+export interface AlignmentIssueChant {
+  id: number;
+  label: string;
+}
+
 @Component({
     selector: 'app-alignment-error-dialog',
     templateUrl: './alignment-error-dialog.component.html',
@@ -8,8 +13,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     standalone: false
 })
 export class AlignmentErrorDialogComponent {
-
-  sources: string[];
-  ids: number[];
-
+  included: AlignmentIssueChant[] = [];
+  omitted: AlignmentIssueChant[] = [];
 }
