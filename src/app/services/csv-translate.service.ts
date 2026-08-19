@@ -20,35 +20,21 @@ export class CsvTranslateService {
 
   getGenre(genre_id: string): string {
     if (!this.genres) {
-      this.loadCSV('genres')
-        .pipe(take(1))
-        .subscribe(
-          data => {
-            this.genres = data;
-            return this.genres[genre_id].description;
-          }
-        );
-    } else {
-      return this.genres[genre_id].description;
+      this.loadCSV('genres').pipe(take(1)).subscribe(data => this.genres = data);
+      return '';
     }
+    return this.genres[genre_id]?.description ?? '';
   }
 
   getOffice(office_id: string): string {
-    if (null === office_id) {
+    if (!office_id) {
       return 'Unknown';
     }
     if (!this.offices) {
-      this.loadCSV('offices')
-        .pipe(take(1))
-        .subscribe(
-          data => {
-            this.offices = data;
-            return this.offices[office_id].description;
-          }
-        );
-    } else {
-      return this.offices[office_id].description;
+      this.loadCSV('offices').pipe(take(1)).subscribe(data => this.offices = data);
+      return 'Unknown';
     }
+    return this.offices[office_id]?.description ?? 'Unknown';
   }
 
   getAllValues(type: string): Observable<object> {
