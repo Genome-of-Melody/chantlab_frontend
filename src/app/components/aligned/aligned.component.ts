@@ -23,7 +23,7 @@ import { PhylogenyNotSupportedDialogComponent } from '../dialogs/phylogeny-not-s
 import { AlignmentSnapshotService } from '../../services/alignment-snapshot.service';
 import { AuthService } from '../../services/auth.service';
 import {
-  AlignmentExportFormat,
+  AlignmentSnapshotFormat,
   ALIGNMENT_EXPORT_EXTENSION,
 } from '../../models/alignment-export-format';
 
@@ -48,9 +48,6 @@ export class AlignedComponent implements OnInit, OnDestroy {
   @ViewChild('alignmentCapture') alignmentCapture: ElementRef<HTMLElement>;
 
   isDownloadingSnapshot = false;
-
-  /** Change to 'png' or 'jpeg' to export raster images instead of PDF. */
-  readonly alignmentExportFormat: AlignmentExportFormat = 'pdf';
 
   alignedChants: IChant[];
   blob: Blob;
@@ -172,6 +169,10 @@ export class AlignedComponent implements OnInit, OnDestroy {
     return this.alignmentPresent.filter(a => a).length;
   }
 
+  get snapshotFormat(): AlignmentSnapshotFormat {
+    return this.settingsService.alignmentSettingsService.snapshotFormat;
+  }
+
   get hasMultipleSequencesPresent(): boolean {
     return this.alignmentPresent.filter(Boolean).length > 1;
   }
@@ -250,7 +251,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     try {
       const blob = await this.alignmentSnapshotService.exportFrame(
         this.alignmentCapture.nativeElement,
-        this.alignmentExportFormat,
+        this.snapshotFormat,
       );
       this.downloadService.download(blob, this.getSnapshotFilename());
     } finally {
@@ -265,7 +266,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     const melodyCount = this.nAlignmentsShown;
-    const extension = ALIGNMENT_EXPORT_EXTENSION[this.alignmentExportFormat];
+    const extension = ALIGNMENT_EXPORT_EXTENSION[this.snapshotFormat];
 
     return `alignment_snapshot_${yyyy}-${mm}-${dd}_${melodyCount}ch.${extension}`;
   }

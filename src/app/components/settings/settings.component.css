@@ -17,3 +17,12 @@ mat-card-content.settings-group {
   margin-left: 20px;
   display: block;
 }
+
+.snapshot-format {
+  margin-top: 16px;
+}
+
+.snapshot-format-label {
+  display: block;
+  margin-bottom: 8px;
+}

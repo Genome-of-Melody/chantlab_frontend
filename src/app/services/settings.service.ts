@@ -2,9 +2,16 @@ import {EventEmitter, Injectable, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import CONFIG from '../config.json';
 import { AuthService } from './auth.service';
+import {
+  AlignmentSnapshotFormat,
+  normalizeAlignmentSnapshotFormat,
+} from '../models/alignment-export-format';
 
 export interface PersistedSettings {
-  alignment?: { distanceMatrixUseAbsoluteDistances?: boolean };
+  alignment?: {
+    distanceMatrixUseAbsoluteDistances?: boolean;
+    snapshotFormat?: AlignmentSnapshotFormat;
+  };
   dashboard?: { useGrayscale?: boolean };
   networkGraph?: {
     closestNeighborLinkOnly?: boolean;
@@ -42,7 +49,8 @@ export class SettingsService {
     return {
       alignment: {
         distanceMatrixUseAbsoluteDistances:
-          this.alignmentSettingsService.distanceMatrixUseAbsoluteDistances
+          this.alignmentSettingsService.distanceMatrixUseAbsoluteDistances,
+        snapshotFormat: this.alignmentSettingsService.snapshotFormat
       },
       dashboard: {
         useGrayscale: this.dashboardSettingsService.useGrayscale
@@ -65,6 +73,10 @@ export class SettingsService {
       this.alignmentSettingsService.distanceMatrixUseAbsoluteDistances =
         payload.alignment.distanceMatrixUseAbsoluteDistances;
     }
+    if (payload.alignment?.snapshotFormat !== undefined) {
+      this.alignmentSettingsService.snapshotFormat =
+        normalizeAlignmentSnapshotFormat(payload.alignment.snapshotFormat);
+    }
     if (payload.dashboard?.useGrayscale !== undefined) {
       this.dashboardSettingsService.useGrayscale = payload.dashboard.useGrayscale;
     }
@@ -85,6 +97,7 @@ export class SettingsService {
 
   resetToDefaults(): void {
     this.alignmentSettingsService.distanceMatrixUseAbsoluteDistances = false;
+    this.alignmentSettingsService.snapshotFormat = 'png';
     this.dashboardSettingsService.useGrayscale = false;
     this.networkGraphSettingsService.closestNeighborLinkOnly = false;
     this.networkGraphSettingsService.linkMaximumDistanceThreshold = 0.5;
@@ -116,6 +129,7 @@ export class AlignmentSettingsService {
   constructor() { }
 
   distanceMatrixUseAbsoluteDistances = false;
+  snapshotFormat: AlignmentSnapshotFormat = 'png';
 }
 
 
