@@ -14,6 +14,7 @@ import { DataSourceListService } from 'src/app/services/data-source-list.service
 import { DatasetManagementService } from 'src/app/services/dataset-management.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DownloadService } from 'src/app/services/download.service';
+import { GenerationErrorService } from 'src/app/services/generation-error.service';
 import { IdxOnAddToDatasetComponent } from '../dialogs/idx-on-add-to-dataset/idx-on-add-to-dataset.component';
 import { NameOnCreateDatasetComponent } from '../dialogs/name-on-create-dataset/name-on-create-dataset.component';
 import { NotEnoughToAlignDialogComponent } from '../dialogs/not-enough-to-aling-dialog/not-enough-to-aling-dialog.component';
@@ -68,6 +69,7 @@ export class ChantListComponent implements OnInit, OnDestroy {
     private chantListService: ChantListService,
     private dataSourceListService: DataSourceListService,
     private datasetManagementService: DatasetManagementService,
+    private generationErrorService: GenerationErrorService,
     public authService: AuthService,
     public dialog: MatDialog
   ) { }
@@ -284,11 +286,17 @@ export class ChantListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.alignmentService.idsToAlign = selected;
-    this.alignmentService.chantsToAlign = selectedChants;
-    this.alignmentService.concatenatedMode = this.concatenatedMode;
-    this.alignmentService.keepLiquescents = this.keepLiquescents;
-    this.alignmentService.alignment = undefined;
+    try {
+      this.alignmentService.idsToAlign = selected;
+      this.alignmentService.chantsToAlign = selectedChants;
+      this.alignmentService.concatenatedMode = this.concatenatedMode;
+      this.alignmentService.keepLiquescents = this.keepLiquescents;
+      this.alignmentService.alignment = undefined;
+    } catch (err) {
+      console.error('ChantList: failed to store alignment selection', err);
+      this.generationErrorService.showFailure();
+      return;
+    }
     this.router.navigate(['/align']);
   }
 

@@ -53,10 +53,16 @@ export class PhylogenyPageComponent implements OnInit {
           console.log('PhylogenyPage: got response:');
           console.log(response);
 
-          this.phylogenyService.newick = response.newick
-          this.phylogenyService.mrBayesScript = response.mbScript
-          this.phylogenyService.nexusAlignment = response.nexusAlignment
-          this.phylogenyService.nexusConTre = response.nexusConTre
+          try {
+            this.phylogenyService.newick = response.newick
+            this.phylogenyService.mrBayesScript = response.mbScript
+            this.phylogenyService.nexusAlignment = response.nexusAlignment
+            this.phylogenyService.nexusConTre = response.nexusConTre
+          } catch (err) {
+            console.error('PhylogenyPage: failed to store phylogeny', err);
+            this.generationErrorService.handleFailure('/align');
+            return;
+          }
 
 
           this.newick = this.phylogenyService.newick

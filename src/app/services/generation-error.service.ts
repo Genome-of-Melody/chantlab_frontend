@@ -18,10 +18,14 @@ export class GenerationErrorService {
     private router: Router
   ) { }
 
+  showFailure(): void {
+    this.dialog.open(GenerationFailedDialogComponent);
+  }
+
   handleFailure(navigateTo: string | any[]): void {
     const commands = Array.isArray(navigateTo) ? navigateTo : [navigateTo];
     this.router.navigate(commands).then(() => {
-      this.dialog.open(GenerationFailedDialogComponent);
+      this.showFailure();
     });
   }
 }
