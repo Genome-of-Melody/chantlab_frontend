@@ -28,6 +28,7 @@
         <mat-button-toggle-group
           [(ngModel)]="settingsService.alignmentSettingsService.snapshotFormat"
           (ngModelChange)="persist()"
+          hideSingleSelectionIndicator
           aria-label="Alignment snapshot format">
           <mat-button-toggle value="png">PNG</mat-button-toggle>
           <mat-button-toggle value="jpeg">JPEG</mat-button-toggle>

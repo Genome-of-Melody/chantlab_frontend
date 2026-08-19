@@ -61,6 +61,11 @@
       }
       <br>
       <h3>Fontes <span class="fonte-count">({{ fontes.length }})</span></h3>
+      @if (!fontes.length) {
+        <p class="fonte-empty">
+          No manuscript sigla in the selected datasets. Chants with a blank siglum are still listed; they are not hidden by this filter.
+        </p>
+      }
       <mat-checkbox
         class="all-fontes-checkbox"
         (change)="checkAllFontes()"

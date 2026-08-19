@@ -212,7 +212,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
   private selectedIds(options: FilterOption[]): string[] | null {
     if (options.length === 0) {
-      return [];
+      return null;
     }
     if (options.every(option => option.checked)) {
       return null;

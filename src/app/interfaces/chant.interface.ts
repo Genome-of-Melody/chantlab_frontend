@@ -15,15 +15,16 @@ export interface IChant {
     feast_id?: string;
     genre_id?: string;
     office_id?: string;
-    source_id?: string;
+    srclink?: string;
     century_code?: string;
     melody_id?: string;
-    drupal_path?: string;
+    chantlink?: string;
+    db?: string;
     full_text?: string;
     full_text_manuscript?: string;
     volpiano?: string;
     dataset_name?: string;
     dataset_idx?: number;
     is_owned?: boolean;
-    notes?: string;
+    image?: string;
 }
