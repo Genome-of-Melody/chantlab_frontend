@@ -54,6 +54,7 @@ table td, table th {
 
 .chant-list-table {
   position: relative;
+  isolation: isolate;
   min-height: 180px;
 }
 
@@ -63,8 +64,9 @@ table td, table th {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 16px;
+  padding: 2em 0;
   background: rgba(255, 255, 255, 0.75);
-  z-index: 2;
+  z-index: 1;
 }
