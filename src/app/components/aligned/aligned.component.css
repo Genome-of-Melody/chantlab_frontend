@@ -33,9 +33,12 @@
 
 .alignment {
     width: 100%;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .color-checkbox,
@@ -63,6 +66,8 @@
 
 div.controls-wrapper {
   display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
 }
 
 div.display-controls {
@@ -116,19 +121,26 @@ ul.widget-control {
 }
 
 .alignment-scroll-viewport {
-  /*width: 100%;*/
+  width: 100%;
+  max-width: 100%;
   height: 600px;
   border: 1px solid #3F51B5;
   margin-left: 10px;
+  box-sizing: border-box;
 }
 
 .alignment-capture {
+  /* Keep the full-size export clone entirely off-screen, even when a
+     concatenated melody is wider than the old -100000px offset. */
   position: fixed;
-  left: -100000px;
+  right: 100%;
   top: 0;
+  width: max-content;
+  max-width: none;
   height: auto !important;
   overflow: visible;
   background: #ffffff;
+  pointer-events: none;
 }
 
 .alignment-capture .text {

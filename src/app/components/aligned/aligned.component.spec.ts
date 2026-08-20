@@ -124,4 +124,11 @@ describe('AlignedComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('does not render the full snapshot clone until a download is requested', () => {
+    const compiled: HTMLElement = fixture.nativeElement;
+    expect(compiled.querySelector('.alignment-capture')).toBeNull();
+    expect(compiled.querySelector('.display-controls')).not.toBeNull();
+    expect(compiled.querySelector('cdk-virtual-scroll-viewport')).not.toBeNull();
+  });
 });

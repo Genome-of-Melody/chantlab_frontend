@@ -45,7 +45,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
 
   @Input() alignment: Alignment;
 
-  @ViewChild(NetworkGraphWrapperComponent, {static: true}) networkGraphWrapper: NetworkGraphWrapperComponent;
+  @ViewChild(NetworkGraphWrapperComponent) networkGraphWrapper: NetworkGraphWrapperComponent;
   @ViewChild('alignmentCapture') alignmentCapture: ElementRef<HTMLElement>;
 
   isDownloadingSnapshot = false;
@@ -55,6 +55,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
   visibleDetails: {[id: number]: boolean} = {};
   alignmentPresent: boolean[] = [];
   alignmentUncollapsed: boolean[] = [];
+  visibleIndices: number[] = [];
   sequenceNamesByIds: Map<string, string>
 
   showColors = false;
@@ -126,6 +127,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
 
     this.sequenceNamesByIds = this.getSerializedReversedNamesDict();
     this.concatenated = this.alignment.ids.some(id => Array.isArray(id));
+    this.refreshVisibleIndices();
 
     console.log('AlignedComponent.onInit() done.');
     console.log('AlignedChants:');
@@ -137,8 +139,8 @@ export class AlignedComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.complete();
   }
 
-  get visibleIndices(): number[] {
-    return this.alignmentPresent
+  private refreshVisibleIndices(): void {
+    this.visibleIndices = this.alignmentPresent
       .map((present, idx) => (present ? idx : -1))
       .filter(idx => idx !== -1);
   }
@@ -183,7 +185,8 @@ export class AlignedComponent implements OnInit, OnDestroy {
       this.alignmentPresent[i] = false;
       this.alignmentUncollapsed[i] = false;
       this.visibleDetails[this.alignment.ids[i]] = false;
-  
+      this.refreshVisibleIndices();
+
       this.conservationChanged = true;
       this.alignmentChanged();
     } else {
@@ -214,6 +217,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
 
     moveItemInArray(this.alignmentPresent, event.previousIndex, event.currentIndex);
     moveItemInArray(this.alignmentUncollapsed, event.previousIndex, event.currentIndex);
+    this.refreshVisibleIndices();
 
     this.conservationChanged = true;
   }
@@ -242,7 +246,7 @@ export class AlignedComponent implements OnInit, OnDestroy {
   }
 
   async downloadMelodiesSnapshot(): Promise<void> {
-    if (!this.alignment || !this.alignmentCapture || this.isDownloadingSnapshot) {
+    if (!this.alignment || this.isDownloadingSnapshot) {
       return;
     }
 
@@ -250,8 +254,12 @@ export class AlignedComponent implements OnInit, OnDestroy {
     this.changeDetectorRef.detectChanges();
 
     try {
+      const capture = this.alignmentCapture?.nativeElement;
+      if (!capture) {
+        throw new Error('Alignment snapshot could not be prepared.');
+      }
       const blob = await this.alignmentSnapshotService.exportFrame(
-        this.alignmentCapture.nativeElement,
+        capture,
         this.snapshotFormat,
       );
       this.downloadService.download(blob, this.getSnapshotFilename());
@@ -496,7 +504,10 @@ export class AlignedComponent implements OnInit, OnDestroy {
   doShowChantNetwork(): void {
     if (this.alignment) {
       this.showChantNetwork = !this.showChantNetwork;
-      this.networkGraphWrapper.showChantNetwork = this.showChantNetwork;
+      this.changeDetectorRef.detectChanges();
+      if (this.networkGraphWrapper) {
+        this.networkGraphWrapper.showChantNetwork = this.showChantNetwork;
+      }
     }
   }
   get showChantNetworkColor(): string {
@@ -511,7 +522,10 @@ export class AlignedComponent implements OnInit, OnDestroy {
   doShowManuscriptNetwork(): void {
     if (this.alignment) {
       this.showManuscriptNetwork = !this.showManuscriptNetwork;
-      this.networkGraphWrapper.showManuscriptNetwork = this.showManuscriptNetwork;
+      this.changeDetectorRef.detectChanges();
+      if (this.networkGraphWrapper) {
+        this.networkGraphWrapper.showManuscriptNetwork = this.showManuscriptNetwork;
+      }
     }
   }
   get showManuscriptNetworkColor(): string {

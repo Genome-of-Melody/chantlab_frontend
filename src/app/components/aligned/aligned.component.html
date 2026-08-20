@@ -215,17 +215,19 @@
     <!--</div>--> <!-- of cdkDropList -->
   </cdk-virtual-scroll-viewport>
 
-  <div #alignmentCapture class="alignment-scroll-viewport alignment-capture" aria-hidden="true">
-    @for (volpianoIdx of visibleIndices; track volpianoIdx) {
-      <div class="card">
-        @if (alignmentUncollapsed[volpianoIdx]) {
-          <ng-container *ngTemplateOutlet="alignedChantMelody; context: { volpianoIdx: volpianoIdx, forExport: true }"></ng-container>
-        } @else {
-          <ng-container *ngTemplateOutlet="alignedChantCollapsed; context: { volpianoIdx: volpianoIdx, forExport: true }"></ng-container>
-        }
-      </div>
-    }
-  </div>
+  @if (isDownloadingSnapshot) {
+    <div #alignmentCapture class="alignment-scroll-viewport alignment-capture" aria-hidden="true">
+      @for (volpianoIdx of visibleIndices; track volpianoIdx) {
+        <div class="card">
+          @if (alignmentUncollapsed[volpianoIdx]) {
+            <ng-container *ngTemplateOutlet="alignedChantMelody; context: { volpianoIdx: volpianoIdx, forExport: true }"></ng-container>
+          } @else {
+            <ng-container *ngTemplateOutlet="alignedChantCollapsed; context: { volpianoIdx: volpianoIdx, forExport: true }"></ng-container>
+          }
+        </div>
+      }
+    </div>
+  }
 } @else {
   <div class="app-loading">
     <mat-spinner diameter="48"></mat-spinner>
@@ -257,10 +259,12 @@
   </div>
 }
 
-<app-network-graph-wrapper
-  [distanceMatrix]="distanceMatrix"
-  [chants]="chantsMapForNetworkGraphs">
-</app-network-graph-wrapper>
+@if (showChantNetwork || showManuscriptNetwork) {
+  <app-network-graph-wrapper
+    [distanceMatrix]="distanceMatrix"
+    [chants]="chantsMapForNetworkGraphs">
+  </app-network-graph-wrapper>
+}
 
 @if (isDownloadingSnapshot) {
   <div class="snapshot-loading-overlay">

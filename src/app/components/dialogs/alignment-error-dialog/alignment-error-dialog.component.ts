@@ -9,7 +9,7 @@ export interface AlignmentIssueChant {
     selector: 'app-alignment-error-dialog',
     templateUrl: './alignment-error-dialog.component.html',
     styleUrls: ['./alignment-error-dialog.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
 })
 export class AlignmentErrorDialogComponent {
