@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -15,12 +15,14 @@ import { SearchFilterService } from 'src/app/services/search-filter.service';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class SelectDataSourceComponent implements OnInit, OnDestroy {
+export class SelectDataSourceComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   dataSources: [number, string][];
   selectedDatasets = new Array<boolean>();
   displaySelection = true;
   private readonly componentDestroyed$ = new Subject<void>();
+
+  @ViewChild('sourceList') sourceList?: ElementRef<HTMLElement>;
 
   constructor(
     private dataSourceListService: DataSourceListService,
@@ -35,9 +37,27 @@ export class SelectDataSourceComponent implements OnInit, OnDestroy {
     this.getDataSources();
   }
 
+  ngAfterViewChecked(): void {
+    this.updateSourceListScroll();
+  }
+
   ngOnDestroy(): void {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.updateSourceListScroll();
+  }
+
+  private updateSourceListScroll(): void {
+    const el = this.sourceList?.nativeElement;
+    if (!el) {
+      return;
+    }
+    const canScroll = el.scrollHeight > el.clientHeight + 4;
+    el.classList.toggle('can-scroll', canScroll);
   }
 
   changeSelection(manuallySelected: boolean = true): void {
