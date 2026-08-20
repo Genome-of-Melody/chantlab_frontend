@@ -7,14 +7,16 @@
   @if (dataSources && displaySelection) {
     <div class="source-selection">
       <mat-card>
-        @for (source of dataSources; track source; let i = $index) {
-          <div>
-            <mat-checkbox [(ngModel)]="selectedDatasets[i]">{{ source[1] }}</mat-checkbox>
-          </div>
-        }
+        <div class="source-list" #sourceList>
+          @for (source of dataSources; track source; let i = $index) {
+            <div>
+              <mat-checkbox [(ngModel)]="selectedDatasets[i]">{{ source[1] }}</mat-checkbox>
+            </div>
+          }
+        </div>
         <br>
-          <button mat-stroked-button id="select-button" (click)="changeSelection()">Save</button>
-        </mat-card>
-      </div>
-    }
-  </div>
+        <button mat-stroked-button id="select-button" (click)="changeSelection()">Save</button>
+      </mat-card>
+    </div>
+  }
+</div>

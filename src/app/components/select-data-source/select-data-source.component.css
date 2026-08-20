@@ -10,6 +10,19 @@
     margin-right: 50px;
 }
 
+.source-list {
+    max-height: calc(100vh - 220px);
+    overflow-y: hidden;
+}
+
+.source-list.can-scroll {
+    overflow-y: auto;
+}
+
+.source-list > div {
+    overflow: hidden;
+}
+
 .toggle-panel {
     float: right;
     height: fit-content;
