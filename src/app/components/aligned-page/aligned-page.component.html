@@ -1,5 +1,59 @@
 <div class="alignment-page">
   @if (alignedResponse) {
+    @if (showAlignmentWarning) {
+      <aside class="alignment-warning-banner" role="status">
+        <div class="alignment-warning-header">
+          <p class="alignment-warning-lead">
+            <strong>Alignment warning.</strong>
+            The chant text and the melody do not have the same number of words
+            or syllables, so they cannot be underlaid correctly.
+            @if (warningIncluded.length) {
+              <span>{{ warningIncluded.length }} included with incomplete text underlay.</span>
+            }
+            @if (warningOmitted.length) {
+              <span>{{ warningOmitted.length }} excluded from the alignment.</span>
+            }
+            @if (!warningOmitted.length) {
+              <span>All selected chants remain in the alignment.</span>
+            }
+          </p>
+          <div class="alignment-warning-actions">
+            <button mat-button type="button" (click)="warningDetailsOpen = !warningDetailsOpen">
+              {{ warningDetailsOpen ? 'Hide list' : 'Show list' }}
+            </button>
+            <button mat-button type="button" (click)="dismissAlignmentWarning()">Dismiss</button>
+          </div>
+        </div>
+        @if (warningDetailsOpen) {
+          @if (warningIncluded.length) {
+            <p class="alignment-warning-heading">Included in the alignment</p>
+            <ul class="alignment-warning-list">
+              @for (chant of visibleIncluded; track chant.id) {
+                <li>
+                  <a target="_blank" [routerLink]="['/chants', chant.id]">{{ chant.label }}</a>
+                </li>
+              }
+            </ul>
+            @if (hiddenIncludedCount) {
+              <p class="alignment-warning-more">and {{ hiddenIncludedCount }} more</p>
+            }
+          }
+          @if (warningOmitted.length) {
+            <p class="alignment-warning-heading">Excluded from the alignment</p>
+            <ul class="alignment-warning-list">
+              @for (chant of visibleOmitted; track chant.id) {
+                <li>
+                  <a target="_blank" [routerLink]="['/chants', chant.id]">{{ chant.label }}</a>
+                </li>
+              }
+            </ul>
+            @if (hiddenOmittedCount) {
+              <p class="alignment-warning-more">and {{ hiddenOmittedCount }} more</p>
+            }
+          }
+        }
+      </aside>
+    }
     <app-aligned
       [alignment]="alignedResponse.alignment">
     </app-aligned>
@@ -9,6 +63,4 @@
       <span>Generation in progress...</span>
     </div>
   }
-
-
 </div>

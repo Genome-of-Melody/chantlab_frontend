@@ -2,9 +2,8 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ChantService} from '../../services/chant.service';
 import {AlignmentService} from '../../services/alignment.service';
 import {Alignment, AlignmentResponse} from '../../models/alignment';
-import {AlignmentErrorDialogComponent} from '../dialogs/alignment-error-dialog/alignment-error-dialog.component';
+import {AlignmentIssueChant} from '../dialogs/alignment-error-dialog/alignment-error-dialog.component';
 import {IChant} from '../../interfaces/chant.interface';
-import { MatDialog } from '@angular/material/dialog';
 import {AlignmentManagementService} from '../../services/alignment-management.service';
 import {ActivatedRoute} from '@angular/router';
 import {GenerationErrorService} from '../../services/generation-error.service';
@@ -37,13 +36,17 @@ export class AlignedPageComponent implements OnInit {
   inputAlignment: Alignment = undefined;
   requestedAlignmentName: string = undefined;
 
+  warningIncluded: AlignmentIssueChant[] = [];
+  warningOmitted: AlignmentIssueChant[] = [];
+  warningDetailsOpen = false;
+  private readonly warningListLimit = 40;
+
   constructor(
     private chantService: ChantService,
     private alignmentService: AlignmentService,
     private alignmentManagementService: AlignmentManagementService,
     private route: ActivatedRoute,
-    private generationErrorService: GenerationErrorService,
-    public dialog: MatDialog
+    private generationErrorService: GenerationErrorService
   ) { }
 
   ngOnInit(): void {
@@ -123,34 +126,13 @@ export class AlignedPageComponent implements OnInit {
             response.errors.ids,
             this.alignmentService.alignment
           );
-          
-          
 
-          // The errors are also handled here -- the AlignedComponent is meant
-          // to display the alignment, not to deal with what was *not* aligned.
-          console.log(this.alignedResponse);
-          const visualizedIds = new Set(this.flattenIds(this.alignmentService.alignment.ids));
-          const selectedIds = this.flattenIds(this.idsToAlign);
-          const issueById = new Map(
-            this.alignedResponse.errorShortNames.map((_, i) => {
-              const id = this.alignedResponse.errorIds[i];
-              return [id, { id, label: this.chantIssueLabel(id) }] as const;
-            })
+          // Keep this off the modal overlay: a blocking dialog plus a large
+          // concatenated alignment freezes the page. A compact banner does not.
+          this.setAlignmentWarning(
+            this.collectAlignmentIssues(this.alignmentService.alignment.ids)
           );
-          const included = selectedIds
-            .filter(id => visualizedIds.has(id) && issueById.has(id))
-            .map(id => issueById.get(id));
-          const omitted = selectedIds
-            .filter(id => !visualizedIds.has(id))
-            .map(id => issueById.get(id) ?? { id, label: this.chantIssueLabel(id) });
 
-          if (included.length || omitted.length) {
-            const dialogRef = this.dialog.open(AlignmentErrorDialogComponent);
-            const instance = dialogRef.componentInstance;
-            instance.included = included;
-            instance.omitted = omitted;
-          }
-  
           console.log('AlignedPage: finished subscribe()');
         },
         error: err => {
@@ -172,6 +154,62 @@ export class AlignedPageComponent implements OnInit {
 
 
     console.log('AlignedPage: onInit() done.');
+  }
+
+  get showAlignmentWarning(): boolean {
+    return this.warningIncluded.length > 0 || this.warningOmitted.length > 0;
+  }
+
+  get visibleIncluded(): AlignmentIssueChant[] {
+    return this.warningIncluded.slice(0, this.warningListLimit);
+  }
+
+  get visibleOmitted(): AlignmentIssueChant[] {
+    return this.warningOmitted.slice(0, this.warningListLimit);
+  }
+
+  get hiddenIncludedCount(): number {
+    return Math.max(0, this.warningIncluded.length - this.warningListLimit);
+  }
+
+  get hiddenOmittedCount(): number {
+    return Math.max(0, this.warningOmitted.length - this.warningListLimit);
+  }
+
+  dismissAlignmentWarning(): void {
+    this.warningIncluded = [];
+    this.warningOmitted = [];
+    this.warningDetailsOpen = false;
+  }
+
+  private setAlignmentWarning(
+    issues: { included: AlignmentIssueChant[]; omitted: AlignmentIssueChant[] }
+  ): void {
+    this.warningIncluded = issues.included;
+    this.warningOmitted = issues.omitted;
+    this.warningDetailsOpen = false;
+  }
+
+  private collectAlignmentIssues(visualizedIdsSource: unknown): {
+    included: AlignmentIssueChant[];
+    omitted: AlignmentIssueChant[];
+  } {
+    const visualizedIds = new Set(this.flattenIds(visualizedIdsSource));
+    const selectedIds = this.flattenIds(this.idsToAlign);
+    const issueById = new Map(
+      this.alignedResponse.errorShortNames.map((_, i) => {
+        const id = this.alignedResponse.errorIds[i];
+        return [id, { id, label: this.chantIssueLabel(id) }] as const;
+      })
+    );
+    return {
+      included: selectedIds
+        .filter(id => visualizedIds.has(id) && issueById.has(id))
+        .map(id => issueById.get(id)),
+      omitted: selectedIds
+        .filter(id => !visualizedIds.has(id))
+        .map(id => issueById.get(id) ?? { id, label: this.chantIssueLabel(id) }),
+    };
   }
 
   private flattenIds(ids: unknown): number[] {

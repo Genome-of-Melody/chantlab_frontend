@@ -8,7 +8,7 @@
     <p class="issue-heading">Included in the alignment</p>
     <p class="issue-note">Displayed with incomplete text underlay.</p>
     <ul>
-      @for (chant of included; track chant.id) {
+      @for (chant of included.slice(0, 40); track chant.id) {
         <li>
           <a target="_blank" [routerLink]="['/chants', chant.id]">
             {{ chant.label }}
@@ -16,12 +16,15 @@
         </li>
       }
     </ul>
+    @if (included.length > 40) {
+      <p class="issue-note">and {{ included.length - 40 }} more</p>
+    }
   }
   @if (omitted.length) {
     <p class="issue-heading">Excluded from the alignment</p>
     <p class="issue-note">These chants could not be aligned.</p>
     <ul>
-      @for (chant of omitted; track chant.id) {
+      @for (chant of omitted.slice(0, 40); track chant.id) {
         <li>
           <a target="_blank" [routerLink]="['/chants', chant.id]">
             {{ chant.label }}
@@ -29,6 +32,9 @@
         </li>
       }
     </ul>
+    @if (omitted.length > 40) {
+      <p class="issue-note">and {{ omitted.length - 40 }} more</p>
+    }
   } @else {
     <p class="issue-note">All selected chants remain in the alignment.</p>
   }
