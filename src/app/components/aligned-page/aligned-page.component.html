@@ -8,13 +8,13 @@
             The chant text and the melody do not have the same number of words
             or syllables, so they cannot be underlaid correctly.
             @if (warningIncluded.length) {
-              <span>{{ warningIncluded.length }} included with incomplete text underlay.</span>
+              <span> {{ warningIncluded.length }} included with incomplete text underlay.</span>
             }
             @if (warningOmitted.length) {
-              <span>{{ warningOmitted.length }} excluded from the alignment.</span>
+              <span> {{ warningOmitted.length }} excluded from the alignment.</span>
             }
             @if (!warningOmitted.length) {
-              <span>All selected chants remain in the alignment.</span>
+              <span> All selected chants remain in the alignment.</span>
             }
           </p>
           <div class="alignment-warning-actions">
